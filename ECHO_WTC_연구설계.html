@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>ECHO 모형 × WTC 측정 설계</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=Noto+Sans+KR:wght@400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --teal: #1D9E75;
+  --teal-light: #E1F5EE;
+  --teal-dark: #085041;
+  --purple: #534AB7;
+  --purple-light: #EEEDFE;
+  --purple-dark: #26215C;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --coral: #D85A30;
+  --coral-light: #FAECE7;
+  --gray-bg: #F5F4F0;
+  --gray-line: #E0DED8;
+  --text: #1e1e1c;
+  --text-sub: #5a5956;
+  --text-muted: #93918c;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--gray-bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.wrap { max-width: 820px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+/* ── 헤더 ── */
+.header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1.5px solid var(--gray-line); }
+.header h1 { font-family: 'Noto Serif KR', serif; font-size: 20px; font-weight: 600; margin-bottom: 0.4rem; }
+.header p { font-size: 12px; color: var(--text-muted); }
+
+/* ── 섹션 제목 ── */
+.sec-title {
+  display: flex; align-items: center; gap: 10px;
+  margin: 2rem 0 1rem;
+}
+.sec-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0;
+  background: var(--text); color: #fff;
+}
+.sec-title h2 { font-size: 15px; font-weight: 600; }
+
+/* ── 이론 체인 ── */
+.chain {
+  display: flex; flex-direction: column; gap: 0;
+  background: #fff; border-radius: 12px;
+  border: 0.5px solid var(--gray-line);
+  overflow: hidden; margin-bottom: 2rem;
+}
+.chain-row {
+  display: grid; grid-template-columns: 180px 1fr;
+  border-bottom: 0.5px solid var(--gray-line);
+}
+.chain-row:last-child { border-bottom: none; }
+.chain-label {
+  padding: 14px 16px; font-size: 12px; font-weight: 600;
+  display: flex; align-items: flex-start; gap: 8px;
+  border-right: 0.5px solid var(--gray-line);
+}
+.chain-label .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  margin-top: 5px; flex-shrink: 0;
+}
+.chain-content { padding: 14px 16px; font-size: 13px; color: var(--text-sub); }
+.chain-content strong { color: var(--text); font-weight: 600; display: block; margin-bottom: 3px; }
+
+/* ── 핵심 인사이트 박스 ── */
+.insight {
+  background: var(--purple-light);
+  border-left: 3px solid var(--purple);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 16px;
+  font-size: 13px;
+  margin-bottom: 2rem;
+}
+.insight strong { color: var(--purple-dark); font-weight: 600; display: block; margin-bottom: 4px; font-size: 13px; }
+
+/* ── ECHO-WTC 매핑 ── */
+.mapping { margin-bottom: 2rem; }
+.map-row {
+  display: grid; grid-template-columns: 120px 1fr 1fr 80px;
+  gap: 0;
+  background: #fff;
+  border: 0.5px solid var(--gray-line);
+  border-radius: 0;
+  border-bottom: none;
+}
+.map-row:first-child { border-radius: 12px 12px 0 0; }
+.map-row:last-child { border-radius: 0 0 12px 12px; border-bottom: 0.5px solid var(--gray-line); }
+.map-row.header-row { background: var(--gray-bg); }
+.map-cell {
+  padding: 12px 14px;
+  border-right: 0.5px solid var(--gray-line);
+  font-size: 12px;
+}
+.map-cell:last-child { border-right: none; }
+.map-row.header-row .map-cell { font-weight: 600; color: var(--text-muted); font-size: 11px; }
+
+.echo-badge {
+  display: inline-flex; align-items: center;
+  font-size: 12px; font-weight: 700;
+  padding: 3px 10px; border-radius: 4px;
+  margin-bottom: 4px;
+}
+.e-badge { background: var(--teal-light); color: var(--teal-dark); }
+.c-badge { background: var(--purple-light); color: var(--purple-dark); }
+.h-badge { background: var(--amber-light); color: var(--amber); }
+.o-badge { background: var(--coral-light); color: var(--coral); }
+
+.wtc-dim {
+  display: inline-block;
+  font-size: 10px; font-weight: 600;
+  padding: 1px 6px; border-radius: 3px;
+  background: #E8E7E2; color: var(--text-sub);
+  margin-bottom: 4px;
+}
+.q-ref { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
+/* ── 문항표 ── */
+.q-section { background: #fff; border-radius: 12px; border: 0.5px solid var(--gray-line); overflow: hidden; margin-bottom: 2rem; }
+.q-header { padding: 14px 18px; border-bottom: 0.5px solid var(--gray-line); background: var(--gray-bg); }
+.q-header h3 { font-size: 13px; font-weight: 600; }
+.q-header p { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+.q-item {
+  display: grid; grid-template-columns: 64px 1fr;
+  border-bottom: 0.5px solid var(--gray-line);
+}
+.q-item:last-child { border-bottom: none; }
+.q-side {
+  padding: 14px 10px 14px 18px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+  border-right: 0.5px solid var(--gray-line);
+}
+.q-num { font-size: 18px; font-weight: 600; color: var(--gray-line); }
+.q-body { padding: 14px 18px; }
+.q-text { font-size: 13px; font-weight: 500; margin-bottom: 5px; line-height: 1.6; }
+.q-sub { font-size: 11px; color: var(--text-muted); }
+.q-src { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+.scale-bar {
+  display: flex; gap: 0; margin-top: 1.5rem;
+  border-radius: 8px; overflow: hidden; border: 0.5px solid var(--gray-line);
+}
+.scale-item {
+  flex: 1; padding: 8px 4px; text-align: center;
+  font-size: 11px; font-weight: 500;
+  border-right: 0.5px solid var(--gray-line);
+  background: #fff;
+}
+.scale-item:last-child { border-right: none; }
+.scale-item.s1 { background: #FCEBEB; color: #A32D2D; }
+.scale-item.s2 { background: #FDF5EE; color: #854F0B; }
+.scale-item.s3 { background: var(--gray-bg); color: var(--text-sub); }
+.scale-item.s4 { background: #EAFAF4; color: #0F6E56; }
+.scale-item.s5 { background: var(--teal-light); color: var(--teal-dark); }
+
+/* ── 증거 체계 ── */
+.evidence {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px; margin-bottom: 2rem;
+}
+.ev-card { background: #fff; border-radius: 10px; border: 0.5px solid var(--gray-line); padding: 14px; }
+.ev-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 3px; margin-bottom: 8px; display: inline-block; }
+.ev-name { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.ev-body { font-size: 11px; color: var(--text-sub); line-height: 1.6; }
+.ev-connect { font-size: 11px; color: var(--purple); font-weight: 500; margin-top: 6px; }
+
+/* ── 일관성 다이어그램 ── */
+.coherence {
+  background: #fff; border-radius: 12px;
+  border: 0.5px solid var(--gray-line);
+  padding: 20px; margin-bottom: 2rem;
+}
+.coh-flow { display: flex; align-items: stretch; gap: 0; }
+.coh-box {
+  flex: 1; padding: 14px 12px;
+  border-radius: 8px; font-size: 12px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.coh-arrow {
+  display: flex; align-items: center; padding: 0 6px;
+  color: var(--text-muted); font-size: 16px;
+}
+.coh-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.coh-main { font-size: 12px; font-weight: 600; }
+.coh-sub { font-size: 11px; opacity: 0.85; line-height: 1.5; }
+
+.c1 { background: var(--teal-light); }
+.c1 .coh-label, .c1 .coh-main { color: var(--teal-dark); }
+.c1 .coh-sub { color: #0F6E56; }
+
+.c2 { background: var(--purple-light); }
+.c2 .coh-label, .c2 .coh-main { color: var(--purple-dark); }
+.c2 .coh-sub { color: var(--purple); }
+
+.c3 { background: var(--amber-light); }
+.c3 .coh-label, .c3 .coh-main { color: #412402; }
+.c3 .coh-sub { color: var(--amber); }
+
+.c4 { background: var(--coral-light); }
+.c4 .coh-label, .c4 .coh-main { color: #4A1B0C; }
+.c4 .coh-sub { color: var(--coral); }
+
+/* ── 출처 ── */
+.ref { background: var(--gray-bg); border-radius: 8px; padding: 14px 16px; font-size: 11px; color: var(--text-muted); line-height: 1.8; }
+.ref strong { color: var(--text-sub); }
+
+@media (max-width: 600px) {
+  .map-row { grid-template-columns: 90px 1fr; }
+  .map-row .map-cell:nth-child(3), .map-row .map-cell:nth-child(4) { display: none; }
+  .evidence { grid-template-columns: 1fr; }
+  .coh-flow { flex-direction: column; }
+  .coh-arrow { transform: rotate(90deg); justify-content: center; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="header">
+  <h1>ECHO 모형 × WTC 측정 — 연구 설계의 일관성</h1>
+  <p>연구 필요목적 → ECHO 모형 → 자기표현 역량(WTC) 함양의 체계적 연결 | 대전동화중 · 2026</p>
+</div>
+
+
+<!-- ① 이론적 연결 체인 -->
+<div class="sec-title">
+  <span class="sec-num">1</span>
+  <h2>이론적 연결 체인: 왜 WTC가 이 연구의 측정 도구인가</h2>
+</div>
+
+<div class="chain">
+  <div class="chain-row">
+    <div class="chain-label">
+      <span class="dot" style="background:var(--coral)"></span>
+      연구 필요성
+    </div>
+    <div class="chain-content">
+      <strong>표현 단절 문제</strong>
+      "1년간 영어 수업에서 한 것을 하나도 기억 못한다"는 학생들. 지식은 전달되지만 자신의 생각과 경험을 영어로 꺼내는 기회가 없었다. 표현 의지 자체가 형성되지 않은 상태.
+    </div>
+  </div>
+  <div class="chain-row">
+    <div class="chain-label">
+      <span class="dot" style="background:var(--teal)"></span>
+      WTC 이론
+    </div>
+    <div class="chain-content">
+      <strong>MacIntyre et al.(1998): 의사소통 의지는 실제 표현 행동의 전제 조건</strong>
+      WTC(Willingness to Communicate)는 "특정 상황에서 언어를 사용해 표현을 시작하려는 의도"다. WTC가 높을수록 실제 표현 시도가 빈번해지고, 이 시도가 누적될수록 표현 역량이 길러진다. 표현을 가르치기 전에 표현하고 싶은 마음이 먼저다.
+    </div>
+  </div>
+  <div class="chain-row">
+    <div class="chain-label">
+      <span class="dot" style="background:var(--purple)"></span>
+      ECHO 개입
+    </div>
+    <div class="chain-content">
+      <strong>ECHO는 WTC를 높이도록 설계된 수업 환경이다</strong>
+      E단계는 표현 장벽을 낮추고(비공개 댓글), C단계는 "내 표현이 수업을 만든다"는 Co-Agency 인식으로 WTC를 강화하고, H단계는 안전한 상호작용으로 WTC를 확장하고, O단계는 실제 맥락에서의 성공 경험으로 WTC를 내면화한다.
+    </div>
+  </div>
+  <div class="chain-row">
+    <div class="chain-label">
+      <span class="dot" style="background:var(--teal)"></span>
+      측정
+    </div>
+    <div class="chain-content">
+      <strong>WTC 척도(사전·사후) + 실제 표현 데이터 분석</strong>
+      ECHO 적용 전후 WTC 변화를 설문으로 측정하고, 실제 표현 행동 변화(응답 어절 수·질적 깊이)로 수렴 타당도를 확보한다.
+    </div>
+  </div>
+  <div class="chain-row">
+    <div class="chain-label">
+      <span class="dot" style="background:var(--amber)"></span>
+      연구 결과
+    </div>
+    <div class="chain-content">
+      <strong>영어 자기표현 역량 함양 확인</strong>
+      WTC 상승 + 실제 표현의 양·질 향상 = 영어 자기표현 역량이 길러졌다는 복합 증거.
+    </div>
+  </div>
+</div>
+
+<div class="insight">
+  <strong>이 연구의 독창적 기여: C(Capture)가 WTC 이론을 확장한다</strong>
+  기존 WTC 연구는 학생 내부 요인(자신감, 불안)에 집중했다. 이 연구는 교사의 C(Capture) — 학생 표현을 포착·시각화해서 돌려주는 행위 — 가 "내 표현이 수업에 반영된다"는 Co-Agency 인식을 통해 WTC를 외부적으로 높이는 새로운 메커니즘을 제안한다. 이것이 이 연구의 이론적 기여다.
+</div>
+
+
+<!-- ② ECHO-WTC 매핑 -->
+<div class="sec-title">
+  <span class="sec-num">2</span>
+  <h2>ECHO 4단계 × WTC 하위 차원 매핑</h2>
+</div>
+
+<div class="mapping">
+  <div class="map-row header-row">
+    <div class="map-cell">ECHO 단계</div>
+    <div class="map-cell">설계 메커니즘 (수업 사례)</div>
+    <div class="map-cell">WTC 작동 방식</div>
+    <div class="map-cell">해당 문항</div>
+  </div>
+  <div class="map-row">
+    <div class="map-cell">
+      <span class="echo-badge e-badge">E · Express</span><br>
+      <span style="font-size:11px;color:var(--text-muted)">사고의 언어화</span>
+    </div>
+    <div class="map-cell">
+      <span style="font-size:12px">비공개 댓글로 표현 부담 낮추기<br>
+      "What We Did Last Class" 매 차시 루틴<br>
+      <span style="color:var(--text-muted)">→ 실패 없이 표현하는 반복 경험</span></span>
+    </div>
+    <div class="map-cell">
+      <span class="wtc-dim">쓰기 표현 의지</span><br>
+      <span style="font-size:11px;color:var(--text-sub)">표현 불안 감소 → WTC 발현<br>낮은 위험의 반복 표현으로 의지 형성</span>
+    </div>
+    <div class="map-cell" style="text-align:center">
+      <span class="q-ref">Q1 · Q2</span>
+    </div>
+  </div>
+  <div class="map-row">
+    <div class="map-cell">
+      <span class="echo-badge c-badge">C · Capture</span><br>
+      <span style="font-size:11px;color:var(--text-muted)">교사의 감식안</span>
+    </div>
+    <div class="map-cell">
+      <span style="font-size:12px">Gemini 학급 통계 인포그래픽으로 환류<br>
+      학생 응답을 수업 자료로 전환·공유<br>
+      <span style="color:var(--text-muted)">→ "내 표현이 수업을 만든다"는 경험</span></span>
+    </div>
+    <div class="map-cell">
+      <span class="wtc-dim">Co-Agency 인식 ★</span><br>
+      <span style="font-size:11px;color:var(--text-sub)">표현의 외적 가치 인식<br>기존 WTC 연구에 없던 새 차원</span>
+    </div>
+    <div class="map-cell" style="text-align:center">
+      <span class="q-ref">Q7 · Q8</span>
+    </div>
+  </div>
+  <div class="map-row">
+    <div class="map-cell">
+      <span class="echo-badge h-badge">H · Harmonize</span><br>
+      <span style="font-size:11px;color:var(--text-muted)">상호작용</span>
+    </div>
+    <div class="map-cell">
+      <span style="font-size:12px">Pair Reading, 짝과 감정Tag 비교<br>
+      모둠 토의 → 데이터 기반 토론<br>
+      <span style="color:var(--text-muted)">→ 안전한 맥락에서 구어 표현 연습</span></span>
+    </div>
+    <div class="map-cell">
+      <span class="wtc-dim">상호작용 표현 의지</span><br>
+      <span style="font-size:11px;color:var(--text-sub)">1:1 → 소그룹 → 전체 순서로<br>WTC 확장 (점진적 노출)</span>
+    </div>
+    <div class="map-cell" style="text-align:center">
+      <span class="q-ref">Q3 · Q4</span>
+    </div>
+  </div>
+  <div class="map-row">
+    <div class="map-cell">
+      <span class="echo-badge o-badge">O · Organize</span><br>
+      <span style="font-size:11px;color:var(--text-muted)">의미 재구성</span>
+    </div>
+    <div class="map-cell">
+      <span style="font-size:12px">GRASPS 프로젝트 산출물<br>
+      자기 문장 쓰기, 시험 돌아보기<br>
+      <span style="color:var(--text-muted)">→ 실제 맥락에서 표현 성공 경험</span></span>
+    </div>
+    <div class="map-cell">
+      <span class="wtc-dim">표현 자기효능감</span><br>
+      <span style="font-size:11px;color:var(--text-sub)">성공 경험 누적 → "할 수 있다" 믿음<br>→ WTC의 안정적 내면화</span>
+    </div>
+    <div class="map-cell" style="text-align:center">
+      <span class="q-ref">Q5 · Q6</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ③ WTC 측정 문항 -->
+<div class="sec-title">
+  <span class="sec-num">3</span>
+  <h2>영어 자기표현 WTC 척도 — 8문항</h2>
+</div>
+
+<div class="q-section">
+  <div class="q-header">
+    <h3>영어 자기표현 의지 척도 (Korean EFL-Adapted WTC Scale)</h3>
+    <p>기반: MacIntyre et al.(1998) + Cao & Philp(2006) Classroom WTC + 이 연구의 Co-Agency 차원 추가 | 측정 시기: 3월 초(사전) / 7월(중간) / 12월(사후)</p>
+  </div>
+
+  <!-- 쓰기 표현 의지 -->
+  <div class="q-item">
+    <div class="q-side">
+      <span class="q-num" style="color:var(--teal)">01</span>
+      <span class="echo-badge e-badge" style="font-size:10px;padding:1px 6px">E</span>
+    </div>
+    <div class="q-body">
+      <div class="q-text">나는 영어 수업에서 내 생각이나 경험을 영어로 쓰고 싶다.</div>
+      <div class="q-sub">쓰기 표현 의지 · Written Expression WTC</div>
+      <div class="q-src">기반: MacIntyre et al.(1998) WTC 쓰기 하위 척도</div>
+    </div>
+  </div>
+  <div class="q-item">
+    <div class="q-side">
+      <span class="q-num" style="color:var(--teal)">02</span>
+      <span class="echo-badge e-badge" style="font-size:10px;padding:1px 6px">E</span>
+    </div>
+    <div class="q-body">
+      <div class="q-text">수업에서 무언가를 이해했거나 느꼈을 때, 그것을 영어로 표현해보고 싶다.</div>
+      <div class="q-sub">쓰기 표현 의지 · 사고의 언어화 의지</div>
+      <div class="q-src">기반: Cao & Philp(2006) Classroom WTC, 표현 시작 의도 문항</div>
+    </div>
+  </div>
+
+  <!-- 상호작용 표현 의지 -->
+  <div class="q-item">
+    <div class="q-side">
+      <span class="q-num" style="color:var(--amber)">03</span>
+      <span class="echo-badge h-badge" style="font-size:10px;padding:1px 6px">H</span>
+    </div>
+    <div class="q-body">
+      <div class="q-text">영어 수업에서 짝이나 모둠과 이야기할 때, 내 생각을 말하고 싶다.</div>
+      <div class="q-sub">상호작용 표현 의지 · Interactional WTC</div>
+      <div class="q-src">기반: MacIntyre et al.(1998) 소그룹 대화 WTC 문항</div>
+    </div>
+  </div>
+  <div class="q-item">
+    <div class="q-side">
+      <span class="q-num" style="color:var(--amber)">04</span>
+      <span class="echo-badge h-badge" style="font-size:10px;padding:1px 6px">H</span>
+    </div>
+    <div class="q-body">
+      <div class="q-text">영어 수업에서 내가 모르거나 궁금한 것이 생기면 짝이나 선생님에게 묻고 싶다.</div>
+      <div class="q-sub">상호작용 표현 의지 · 질문 시작 의지</div>
+      <div class="q-src">기반: Cao & Philp(2006) 질문 행동 WTC, 교실 상황 문항</div>
+    </div>
+  </div>
+
+  <!-- 표현 자기효능감 -->
+  <div class="q-item">
+    <div class="q-side">
+      <span class="q-num" style="color:var(--coral)">05</span>
+      <span class="echo-badge o-badge" style="font-size:10px;padding:1px 6px">O</span>
+    </div>
+    <div class="q-body">
+      <div class="q-text">나는 내 생각이나 경험을 영어 문장으로 표현할 수 있다고 생각한다.</div>
+      <div class="q-sub">표현 자기효능감 · Self-efficacy for Expression</div>
+      <div class="q-src">기반: Bandura(1997) 자기효능감 이론, 영어 쓰기 효능감 척도</div>
+    </div>
+  </div>
+  <div class="q-item">
+    <div class="q-side">
+      <span class="q-num" style="color:var(--coral)">06</span>
+      <span class="echo-badge o-badge" style="font-size:10px;padding:1px 6px">O</span>
+    </div>
+    <div class="q-body">
+      <div class="q-text">영어 수업에서 새로운 표현 활동이 주어졌을 때, 나는 해볼 수 있을 것 같다.</div>
+      <div class="q-sub">표현 자기효능감 · 도전 의지</div>
+      <div class="q-src">기반: Bandura(1997) 효능감 기대 문항, EFL 학습자 적용 버전</div>
+    </div>
+  </div>
+
+  <!-- Co-Agency 인식 ★ 이 연구의 독자적 차원 -->
+  <div class="q-item" style="background:#FAFAF8">
+    <div class="q-side">
+      <span class="q-num" style="color:var(--purple)">07</span>
+      <span class="echo-badge c-badge" style="font-size:10px;padding:1px 6px">C</span>
+    </div>
+    <div class="q-body">
+      <div class="q-text">내가 영어 수업에서 표현한 것이 수업 내용에 반영된다고 느낀다.</div>
+      <div class="q-sub">Co-Agency 인식 ★ · Sense of Co-Creation in Learning</div>
+      <div class="q-src">기반: OECD Learning Compass 2030 Co-Agency 개념 + Fullan(2025) Deep Partnership → 이 연구에서 새로 추가한 WTC 차원</div>
+    </div>
+  </div>
+  <div class="q-item" style="background:#FAFAF8">
+    <div class="q-side">
+      <span class="q-num" style="color:var(--purple)">08</span>
+      <span class="echo-badge c-badge" style="font-size:10px;padding:1px 6px">C</span>
+    </div>
+    <div class="q-body">
+      <div class="q-text">나의 영어 표현과 생각이 우리 반 수업을 함께 만들어간다고 생각한다.</div>
+      <div class="q-sub">Co-Agency 인식 ★ · 학습 공동 구성 인식</div>
+      <div class="q-src">기반: OECD(2019) "Co-agency: students, teachers, parents and communities work together" + Fullan(2025) p.95</div>
+    </div>
+  </div>
+
+  <div style="padding:16px 18px">
+    <div class="scale-bar">
+      <div class="scale-item s1">1<br><span style="font-size:9px">전혀<br>그렇지 않다</span></div>
+      <div class="scale-item s2">2<br><span style="font-size:9px">그렇지<br>않다</span></div>
+      <div class="scale-item s3">3<br><span style="font-size:9px">보통이다</span></div>
+      <div class="scale-item s4">4<br><span style="font-size:9px">그렇다</span></div>
+      <div class="scale-item s5">5<br><span style="font-size:9px">매우<br>그렇다</span></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ④ 증거 수렴 체계 -->
+<div class="sec-title">
+  <span class="sec-num">4</span>
+  <h2>자기표현 역량 증거 수렴 체계</h2>
+</div>
+
+<div class="evidence">
+  <div class="ev-card">
+    <span class="ev-tag" style="background:var(--teal-light);color:var(--teal-dark)">양적 · 설문</span>
+    <div class="ev-name">WTC 척도 (Q1–Q8)</div>
+    <div class="ev-body">
+      3월 / 7월 / 12월 3회 측정<br>
+      하위 차원별 점수 변화 추이<br>
+      특히 Q7·Q8 Co-Agency 차원 변화 주목
+    </div>
+    <div class="ev-connect">→ 표현 의지의 변화</div>
+  </div>
+  <div class="ev-card">
+    <span class="ev-tag" style="background:var(--purple-light);color:var(--purple-dark)">양적 · 행동</span>
+    <div class="ev-name">응답 데이터 분석</div>
+    <div class="ev-body">
+      What We Did Last Class 댓글<br>
+      어절 수·영어 문장 수 월별 추이<br>
+      (3월·5월·7월·12월 샘플링)
+    </div>
+    <div class="ev-connect">→ 표현 행동의 변화</div>
+  </div>
+  <div class="ev-card">
+    <span class="ev-tag" style="background:var(--amber-light);color:var(--amber)">질적 · 텍스트</span>
+    <div class="ev-name">비공개 댓글 질적 분석</div>
+    <div class="ev-body">
+      OT "기억 안나요" → 학기말 응답<br>
+      내용 깊이·자기성찰 변화 분석<br>
+      ECHO C단계 감식안의 증거 동시 활용
+    </div>
+    <div class="ev-connect">→ 표현 역량의 질적 성장</div>
+  </div>
+</div>
+
+
+<!-- ⑤ 연구 일관성 한눈에 -->
+<div class="sec-title">
+  <span class="sec-num">5</span>
+  <h2>연구 필요목적 → ECHO → 측정 — 일관성 구조</h2>
+</div>
+
+<div class="coherence">
+  <div class="coh-flow">
+    <div class="coh-box c1">
+      <span class="coh-label">연구 필요성</span>
+      <span class="coh-main">표현 단절</span>
+      <span class="coh-sub">수업은 있지만<br>자기 표현 경험이 없다</span>
+    </div>
+    <div class="coh-arrow">→</div>
+    <div class="coh-box c2">
+      <span class="coh-label">ECHO 개입</span>
+      <span class="coh-main">표현-포착-<br>상호작용-재구성</span>
+      <span class="coh-sub">E→C→H→O<br>환류 순환 구조</span>
+    </div>
+    <div class="coh-arrow">→</div>
+    <div class="coh-box c3">
+      <span class="coh-label">WTC 이론</span>
+      <span class="coh-main">표현 의지가<br>역량의 전제</span>
+      <span class="coh-sub">MacIntyre(1998)<br>+ Co-Agency 확장</span>
+    </div>
+    <div class="coh-arrow">→</div>
+    <div class="coh-box c4">
+      <span class="coh-label">역량 함양</span>
+      <span class="coh-main">영어 자기표현<br>역량 향상</span>
+      <span class="coh-sub">설문 + 행동 +<br>질적 복합 증거</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- 참고문헌 -->
+<div class="ref">
+  <strong>주요 이론적 기반</strong><br>
+  MacIntyre, P. D., Clément, R., Dörnyei, Z., &amp; Noels, K. A. (1998). Conceptualizing willingness to communicate in a L2: A situational model of L2 confidence and affiliation. <em>Modern Language Journal, 82</em>, 545–562.<br>
+  Cao, Y., &amp; Philp, J. (2006). Interactional context and willingness to communicate: A comparison of behavior in whole class, group and dyadic interaction. <em>System, 34</em>(4), 480–493.<br>
+  Bandura, A. (1997). <em>Self-efficacy: The exercise of control.</em> Freeman.<br>
+  OECD. (2019). <em>OECD Learning Compass 2030.</em> OECD Publishing. [Co-Agency 개념]<br>
+  Fullan, M. (2025). <em>The disconnect: Regaining our humanity together.</em> Corwin. [Deep Partnership 개념]
+</div>
+
+</div>
+</body>
+</html>
