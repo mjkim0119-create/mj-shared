@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>1차 심사 기준 대비 자료 정비 분석</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; font-size: 15px; line-height: 1.7; background: #f7f6f2; color: #2c2c2a; }
+  .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem; }
+  h1 { font-size: 20px; font-weight: 600; margin-bottom: 0.3rem; color: #1a1a18; }
+  .subtitle { font-size: 13px; color: #888780; margin-bottom: 2rem; }
+
+  .score-overview { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 2rem; }
+  .score-card { background: #fff; border-radius: 10px; border: 0.5px solid #d3d1c7; padding: 14px 12px; }
+  .score-card .label { font-size: 11px; color: #888780; margin-bottom: 4px; }
+  .score-card .pts { font-size: 22px; font-weight: 600; }
+  .score-card .desc { font-size: 11px; color: #888780; margin-top: 2px; }
+  .pts.good { color: #1D9E75; }
+  .pts.warn { color: #BA7517; }
+  .pts.alert { color: #D85A30; }
+
+  .section { background: #fff; border-radius: 12px; border: 0.5px solid #d3d1c7; margin-bottom: 1.2rem; overflow: hidden; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; cursor: pointer; user-select: none; }
+  .section-header:hover { background: #f7f6f2; }
+  .section-title { display: flex; align-items: center; gap: 10px; }
+  .section-title .num { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+  .num.cat1 { background: #E1F5EE; color: #0F6E56; }
+  .num.cat2 { background: #E6F1FB; color: #185FA5; }
+  .num.cat3 { background: #FAEEDA; color: #854F0B; }
+  .num.cat4 { background: #FBEAF0; color: #993556; }
+  .section-title h2 { font-size: 15px; font-weight: 600; }
+  .pts-badge { font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .pts-badge.green { background: #E1F5EE; color: #0F6E56; }
+  .pts-badge.amber { background: #FAEEDA; color: #854F0B; }
+  .pts-badge.coral { background: #FAECE7; color: #993C1D; }
+  .chevron { font-size: 14px; color: #888780; transition: transform 0.2s; }
+  .chevron.open { transform: rotate(180deg); }
+
+  .section-body { padding: 0 18px 18px; display: none; }
+  .section-body.open { display: block; }
+
+  .criteria-row { border: 0.5px solid #d3d1c7; border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+  .criteria-header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #f7f6f2; font-size: 13px; font-weight: 600; }
+  .criteria-pts { font-size: 11px; color: #888780; }
+  .bar-wrap { flex: 1; height: 6px; background: #e8e7e2; border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; }
+  .bg-green { background: #1D9E75; }
+  .bg-amber { background: #BA7517; }
+  .bg-coral { background: #D85A30; }
+
+  .criteria-body { padding: 12px 14px; }
+  .criteria-body .eval-q { font-size: 12px; color: #5F5E5A; margin-bottom: 10px; }
+  .criteria-body .eval-q li { margin-bottom: 3px; padding-left: 12px; position: relative; }
+  .criteria-body .eval-q li::before { content: '■'; position: absolute; left: 0; font-size: 8px; top: 4px; color: #b4b2a9; }
+
+  .status-row { margin-bottom: 8px; }
+  .status-tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-right: 6px; }
+  .tag-good { background: #E1F5EE; color: #085041; }
+  .tag-warn { background: #FAEEDA; color: #633806; }
+  .tag-alert { background: #FAECE7; color: #712B13; }
+  .tag-urgent { background: #FCEBEB; color: #501313; }
+
+  .content-block { font-size: 13px; line-height: 1.7; }
+  .content-block strong { font-weight: 600; color: #1a1a18; }
+  .content-block .quote { background: #f7f6f2; border-left: 3px solid #d3d1c7; padding: 8px 12px; border-radius: 0 6px 6px 0; font-size: 12px; color: #5F5E5A; margin: 8px 0; }
+  .content-block .action { background: #FAEEDA; border-left: 3px solid #BA7517; padding: 8px 12px; border-radius: 0 6px 6px 0; font-size: 12px; color: #412402; margin: 8px 0; }
+  .content-block .fix { background: #FCEBEB; border-left: 3px solid #D85A30; padding: 8px 12px; border-radius: 0 6px 6px 0; font-size: 12px; color: #501313; margin: 8px 0; }
+  .divider { height: 0.5px; background: #e8e7e2; margin: 12px 0; }
+
+  .urgent-box { background: #FCEBEB; border: 1px solid #f0a0a0; border-radius: 10px; padding: 14px 16px; margin-bottom: 1.5rem; }
+  .urgent-box h3 { font-size: 14px; color: #A32D2D; font-weight: 600; margin-bottom: 8px; }
+  .urgent-box ul { font-size: 13px; color: #501313; padding-left: 16px; }
+  .urgent-box li { margin-bottom: 4px; }
+
+  .action-plan { background: #fff; border-radius: 12px; border: 0.5px solid #d3d1c7; padding: 18px; margin-bottom: 1.5rem; }
+  .action-plan h3 { font-size: 15px; font-weight: 600; margin-bottom: 14px; color: #1a1a18; }
+  .phase { margin-bottom: 14px; }
+  .phase-title { font-size: 12px; font-weight: 600; color: #888780; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .task-list { list-style: none; }
+  .task-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; margin-bottom: 6px; }
+  .task-dot { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .dot-red { background: #FCEBEB; color: #A32D2D; }
+  .dot-amber { background: #FAEEDA; color: #633806; }
+  .dot-green { background: #E1F5EE; color: #085041; }
+
+  @media (max-width: 600px) {
+    .score-overview { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>1차 심사 기준 대비 자료 정비 분석</h1>
+  <p class="subtitle">2026학년도 중등수업혁신사례연구대회 · 참가 신청서 + 수업 아이디어 + 수업 기록 검토</p>
+
+  <!-- 긴급 수정 사항 -->
+  <div class="urgent-box">
+    <h3>⚠️ 즉시 수정 필요: 신청서 오류 발견</h3>
+    <ul>
+      <li><strong>실행 과제 내 약어 불일치</strong>: 신청서에는 <strong>ECHO = Express–Capture–Highlight–Organize</strong>로 기재되어 있으나, 연구 아이디어 및 수업 기록 전반에서는 <strong>Harmonize</strong>를 사용하고 있음 → <strong>Highlight → Harmonize</strong> 로 즉시 수정</li>
+      <li><strong>영향 범위</strong>: 연구보고서 전체와 신청서가 불일치 상태이므로 보고서 제출 전 반드시 통일</li>
+    </ul>
+  </div>
+
+  <!-- 전체 점수 개요 -->
+  <div class="score-overview">
+    <div class="score-card">
+      <div class="label">① 교육과정 방향·혁신 반영</div>
+      <div class="pts good">50점</div>
+      <div class="desc">가장 비중 큰 영역 · 강점</div>
+    </div>
+    <div class="score-card">
+      <div class="label">② 현장 적합성·연구 방법</div>
+      <div class="pts warn">20점</div>
+      <div class="desc">연구 방법 구체화 필요</div>
+    </div>
+    <div class="score-card">
+      <div class="label">③ 내용과 실천의 정합성</div>
+      <div class="pts good">15점</div>
+      <div class="desc">수업 기록 환류 구조화 필요</div>
+    </div>
+    <div class="score-card">
+      <div class="label">④ 현장 교육 기여도</div>
+      <div class="pts alert">15점</div>
+      <div class="desc">수업 나눔 기록 보완 필요</div>
+    </div>
+  </div>
+
+  <!-- 영역 1 -->
+  <div class="section">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-title">
+        <span class="num cat1">①</span>
+        <h2>교육과정의 방향과 수업 혁신 노력 반영</h2>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="pts-badge green">50점</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <!-- 교육과정 방향 반영 -->
+      <div class="criteria-row">
+        <div class="criteria-header">
+          <span>교육과정 방향 반영</span>
+          <span class="criteria-pts">20점</span>
+          <div class="bar-wrap"><div class="bar-fill bg-green" style="width:80%"></div></div>
+        </div>
+        <div class="criteria-body">
+          <ul class="eval-q">
+            <li>수업 설계와 실천이 교육과정에서 추구하는 인간상과 핵심역량을 기르는 방향과 일치하는가?</li>
+            <li>성취기준, 핵심 개념을 바탕으로 깊이 있는 학습이 이루어지도록 수업을 구성하였는가?</li>
+            <li>학생의 삶과 연계된 학습 경험을 고려하여 수업을 구성하였는가?</li>
+          </ul>
+          <div class="status-row">
+            <span class="status-tag tag-good">✓ 강점</span>
+          </div>
+          <div class="content-block">
+            <p>OECD Learning Compass 2030의 Co-Agency, Fullan(2025)의 Deep Partnership 등 이론적 토대가 탄탄하고, 2022 개정 교육과정의 핵심역량(의사소통, 자기관리) 방향과 명확히 연결되어 있습니다. 특히 학생의 삶과 연계한 수업(자기 경험 언어화, GRASPS 과제 등)이 실제 수업에서 풍부하게 구현되고 있습니다.</p>
+            <div class="divider"></div>
+            <span class="status-tag tag-warn">▲ 보완</span>
+            <div class="action">
+              <strong>성취기준 명시가 필요합니다.</strong> 연구보고서에서 영어과 2학년 해당 단원의 구체적 성취기준([9영02-04], [9영03-02] 등)과 ECHO 모형 각 단계가 어떻게 연결되는지 명시적으로 매핑하는 표를 추가하세요. 아이디어 문서에는 이론 틀만 있고 성취기준 연결이 빠져 있습니다.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 학생 참여 중심 수업 -->
+      <div class="criteria-row">
+        <div class="criteria-header">
+          <span>학생 참여 중심 수업</span>
+          <span class="criteria-pts">20점</span>
+          <div class="bar-wrap"><div class="bar-fill bg-green" style="width:85%"></div></div>
+        </div>
+        <div class="criteria-body">
+          <ul class="eval-q">
+            <li>학생의 질문을 활성화하고 토의·토론, 프로젝트, 탐구 등 학생의 능동적 참여를 유도할 수 있는 수업으로 설계되었는가?</li>
+            <li>학생의 사고 과정과 상호작용, 협력이 수업 전반에 드러나며 학습의 주체가 학생으로 전환되었는가?</li>
+          </ul>
+          <div class="status-row">
+            <span class="status-tag tag-good">✓ 강점</span>
+          </div>
+          <div class="content-block">
+            <p>수업 기록에 Pair Reading, 모둠 활동, 비공개 댓글, 설문 통계 환류, GRASPS 과제, 감정Tag 녹음 활동 등 학생 참여의 구체적 증거가 매우 풍부합니다. "학습의 주체가 학생으로 전환"되는 장면이 실제로 많이 있습니다.</p>
+            <div class="quote">예시: "2-3반 감정Tag 활동 - 학생들이 서로 비교하고 6문장 골라서 감정을 살려 녹음하기", "GRASPS 결과물 - 내용 구성 상(42%): 학급 취약점 정확히 분석하고 구체적 해결책 제시"</div>
+            <div class="divider"></div>
+            <span class="status-tag tag-warn">▲ 보완</span>
+            <div class="action">
+              <strong>학생의 '사고 과정' 가시화 전략이 필요합니다.</strong> 수업 기록에는 성찰이 있지만, 연구보고서에서 "학생의 사고 과정이 수업 전반에 드러난다"는 것을 심사위원이 확인할 수 있도록 ① 학생 응답 데이터 분석 결과(반별 통계, 주요 댓글 인용), ② Before/After 사고 변화 사례를 체계적으로 구조화해서 제시해야 합니다.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 교육환경 변화 -->
+      <div class="criteria-row">
+        <div class="criteria-header">
+          <span>교육환경 변화 및 수업 혁신 노력 반영</span>
+          <span class="criteria-pts">10점</span>
+          <div class="bar-wrap"><div class="bar-fill bg-green" style="width:90%"></div></div>
+        </div>
+        <div class="criteria-body">
+          <ul class="eval-q">
+            <li>AI 도구, 학습지원 SW와 같은 교육환경의 변화를 반영한 수업 방법 등 수업 혁신 노력이 드러나는가?</li>
+            <li>교수학습과 평가의 연계를 통해 학습의 질을 개선하려는 노력이 반영되었는가?</li>
+          </ul>
+          <div class="status-row">
+            <span class="status-tag tag-good">✓ 가장 강한 영역</span>
+          </div>
+          <div class="content-block">
+            <p>Gemini(인포그래픽 생성), NotebookLM(탐구 활용), 클래스카드(어휘 학습), 블루킷(게임 기반 학습), 동글이(AI 피드백), 구글 클래스룸(데이터 수집) 등 다양한 AI/에듀테크 도구가 수업에 체계적으로 통합되어 있습니다. E.C.H.O. 모형의 C(Capture) 단계에서 AI 데이터 시각화가 수업 혁신의 핵심으로 작동하는 구조는 매우 독창적입니다.</p>
+            <div class="divider"></div>
+            <span class="status-tag tag-warn">▲ 보완</span>
+            <div class="action">
+              <strong>교수-평가 연계를 더 명확히 드러내야 합니다.</strong> 단원평가 → GRASPS → 수업 조정의 순환 고리가 보고서에 명시적으로 제시되면 이 영역에서 높은 점수를 받을 수 있습니다. 특히 "영어 시험 돌아보기" 수업처럼 평가 결과를 수업으로 환류하는 사례를 과정중심평가 관점에서 부각하세요.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 영역 2 -->
+  <div class="section">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-title">
+        <span class="num cat2">②</span>
+        <h2>현장 적합성 및 연구 방법 적절성</h2>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="pts-badge amber">20점</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="criteria-row">
+        <div class="criteria-header">
+          <span>현장 적합성</span>
+          <span class="criteria-pts">10점</span>
+          <div class="bar-wrap"><div class="bar-fill bg-amber" style="width:70%"></div></div>
+        </div>
+        <div class="criteria-body">
+          <ul class="eval-q">
+            <li>학생의 특성, 학교 여건을 고려하여 현장에서 실제 적용 가능한 수업 설계인가?</li>
+            <li>학생의 자기주도적 학습이 실제 수업 상황에서 실현 가능한 구조인가?</li>
+            <li>일반 교사가 무리 없이 적용할 수 있는 현실적인 수업 모델인가?</li>
+          </ul>
+          <div class="status-row">
+            <span class="status-tag tag-warn">▲ 보완 필요</span>
+          </div>
+          <div class="content-block">
+            <p>수업 기록에서 학생 특성(엎드리는 학생, 영어 어려워하는 학생 등)을 세심하게 파악하고 있고, 패드 활용 가능한 학교 환경이 잘 활용되고 있습니다. 그러나 보고서 관점에서 이 맥락이 충분히 드러나지 않을 수 있습니다.</p>
+            <div class="action">
+              <strong>세 가지를 명시적으로 기술해야 합니다:</strong><br>
+              1. 학교 여건 소개: 대전동화중, 패드 1인 1대 환경, 2학년 8학급 223명, 학생 특성(학습 의욕 편차, 정의적 특성 데이터)<br>
+              2. "일반 교사가 적용 가능한가?" — ECHO 모형이 특별한 장비나 전문 기술 없이도 구글 클래스룸 + 클래스카드만으로도 구동 가능함을 강조<br>
+              3. 수업 설계 과정에서 학급별 피드백을 반영해 루틴을 조정한 사례(2반 → 3반 수업 개선 등)를 '현장 적합성의 검증' 사례로 제시
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="criteria-row">
+        <div class="criteria-header">
+          <span>연구 방법 적절성</span>
+          <span class="criteria-pts">10점</span>
+          <div class="bar-wrap"><div class="bar-fill bg-coral" style="width:45%"></div></div>
+        </div>
+        <div class="criteria-body">
+          <ul class="eval-q">
+            <li>연구 과제 해결에 적합한 연구 방법을 활용하여 수업 개선 연구를 추진하였는가?</li>
+            <li>연구 과제를 해결하기 위하여 다양한 사례 및 연구 방법을 검토하였는가?</li>
+            <li>연구수업 실행 결과에 대한 분석과 근거 제시가 충실하였는가?</li>
+          </ul>
+          <div class="status-row">
+            <span class="status-tag tag-alert">⚑ 가장 취약한 부분</span>
+          </div>
+          <div class="content-block">
+            <p>현재 아이디어 문서에는 이론적 근거(Fullan, OECD, 맹성현, 박주용 등)가 잘 정리되어 있지만, <strong>연구 방법 자체가 구체화되어 있지 않습니다.</strong> 무엇을 어떻게 측정하고 분석할 것인지가 빠져 있습니다.</p>
+            <div class="fix">
+              <strong>즉시 구체화 필요 — 연구 방법 설계:</strong><br>
+              • <strong>자료 수집 방법</strong>: 수업 관찰 일지(이미 있음), 학생 응답 데이터(클래스룸 댓글), 정의적 영역 설문(3월/12월 사전-사후), 수업 동영상 기록<br>
+              • <strong>분석 방법</strong>: 학생 응답의 텍스트 분석(E.C.H.O. 단계별 질적 분석), 설문 통계 분석, 교사 성찰일지 분석<br>
+              • <strong>연구 도구</strong>: 의사소통 역량 자기평가 척도(수정·개발), Co-Agency 관련 정의적 특성 설문<br>
+              • <strong>연구 기간 구조</strong>: 1사이클(3~4월) → 분석 → 2사이클(5~7월) → 분석 → 3사이클(9~12월)로 명확히 구조화
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 영역 3 -->
+  <div class="section">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-title">
+        <span class="num cat3">③</span>
+        <h2>내용과 실천의 정합성</h2>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="pts-badge green">15점</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="criteria-row">
+        <div class="criteria-header">
+          <span>실천의 충실성</span>
+          <span class="criteria-pts">10점</span>
+          <div class="bar-wrap"><div class="bar-fill bg-green" style="width:80%"></div></div>
+        </div>
+        <div class="criteria-body">
+          <ul class="eval-q">
+            <li>연구보고서에 제시한 수업혁신 내용이 실제 수업 실천으로 일관되게 구현되었는가?</li>
+            <li>수업 설계-실행-평가가 서로 유기적으로 연결되어 운영되었는가?</li>
+            <li>연구 과제가 형식적 제시에 그치지 않고 실제 수업 변화로 이어졌는가?</li>
+          </ul>
+          <div class="status-row">
+            <span class="status-tag tag-good">✓ 잠재적 강점</span>
+          </div>
+          <div class="content-block">
+            <p>수업 기록을 보면 E.C.H.O. 모형이 실제 수업에서 매우 충실하게 구현되고 있습니다. 특히 매 차시 루틴(What We Did Last Class → 수업 → 성찰 댓글)이 일관되게 적용되고 있고, 설문 데이터가 다음 수업에 반영되는 구조가 실제로 작동하고 있습니다.</p>
+            <div class="divider"></div>
+            <span class="status-tag tag-warn">▲ 보완</span>
+            <div class="action">
+              <strong>E.C.H.O. 모형과 실제 차시의 매핑 테이블이 필요합니다.</strong> 보고서에서 "우리는 이 모형을 계획했고 → 실제로 이렇게 운영했다"는 것을 심사위원이 한눈에 볼 수 있도록:<br>
+              예시) 1단원 본문(5) - 정보 인출하기 수업 → E.C.H.O. 중 O(Organize) 단계 실현 장면 + 학생 반응 데이터<br>
+              수업 기록에 이미 다 있으니, 이를 보고서 형식으로 구조화하는 것이 핵심 작업입니다.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="criteria-row">
+        <div class="criteria-header">
+          <span>성찰 및 환류</span>
+          <span class="criteria-pts">5점</span>
+          <div class="bar-wrap"><div class="bar-fill bg-green" style="width:90%"></div></div>
+        </div>
+        <div class="criteria-body">
+          <ul class="eval-q">
+            <li>실천 과정에 대한 성찰과 환류를 통해 연구 내용을 보완하며 수행하였는가?</li>
+          </ul>
+          <div class="status-row">
+            <span class="status-tag tag-good">✓ 명확한 강점</span>
+          </div>
+          <div class="content-block">
+            <p>수업 기록의 매 차시 Reflection은 이 항목의 가장 강력한 증거입니다. 특히 반 간 비교를 통해 수업 설계를 수정하는 과정이 매우 잘 드러납니다.</p>
+            <div class="quote">예시: "감정Tag 수업 - 2-1반에서 소란스러웠음 → 2-2반에서 먼저 개별 활동 넣는 방식으로 수정 → 훨씬 안정적으로 진행. 같은 활동이어도 순서에 따라 이렇게 달라진다는 것이 놀랍다."</div>
+            <div class="action">
+              이 환류 사례들을 보고서에서 "<strong>실행-성찰-수정의 순환 사이클</strong>"로 명시적으로 구조화하세요. 예: "1차 실행(2-1반) → 성찰 → 수정 설계 → 2차 실행(2-2반) → 개선 결과"처럼 시각화하면 심사위원에게 매우 인상적으로 보입니다.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 영역 4 -->
+  <div class="section">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-title">
+        <span class="num cat4">④</span>
+        <h2>현장 교육 기여도</h2>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="pts-badge coral">15점</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="criteria-row">
+        <div class="criteria-header">
+          <span>확산 가능성</span>
+          <span class="criteria-pts">10점</span>
+          <div class="bar-wrap"><div class="bar-fill bg-coral" style="width:40%"></div></div>
+        </div>
+        <div class="criteria-body">
+          <ul class="eval-q">
+            <li>수업혁신 사례가 다른 학급·학년·교과에도 적용이 가능하도록 구조화되어 있는가?</li>
+            <li>수업 절차, 자료, 운영 방식이 명확히 제시되었는가?</li>
+            <li>동료 교원과의 수업 나눔(함께학교 수업의 숲 서비스 활용 등), 전문적학습공동체 등 수업 개선 노력을 지속적으로 하였는가?</li>
+          </ul>
+          <div class="status-row">
+            <span class="status-tag tag-alert">⚑ 가장 큰 보완 필요</span>
+          </div>
+          <div class="content-block">
+            <p>E.C.H.O. 모형 자체는 교과 범용성이 높은 구조이지만, 현재 자료에서는 이것이 충분히 드러나지 않고 있습니다. 특히 <strong>동료 교원 수업 나눔이 전혀 기록되어 있지 않습니다.</strong></p>
+            <div class="fix">
+              <strong>세 가지 긴급 과제:</strong><br>
+              1. <strong>함께학교 수업의 숲 업로드</strong>: 심사 기준에 '함께학교 수업의 숲 서비스 활용'이 명시되어 있음. 대전 함께학교(togetherschool.go.kr → 교원연구실 → 수업의 숲)에 수업 자료 업로드 후 기록 남기기<br>
+              2. <strong>전학공(전문적학습공동체) 수업 나눔 기록</strong>: 동학교 또는 교내 영어과 교사들과 ECHO 모형 공유한 기록 필요. 현재 자료에 없음 → 즉시 실행 및 기록<br>
+              3. <strong>타 교과 적용 가능성 제시</strong>: 보고서에 "사회과의 경우 E단계에서...", "수학과의 경우 C단계에서..." 등 타교과 적용 예시 섹션 추가
+            </div>
+            <div class="action">
+              <strong>ECHO 모형 적용 가이드 1페이지</strong>를 별도 부록으로 제작하세요. 단계별 수업 절차, 필요 도구, 예상 소요 시간, 적용 가능 교과를 한눈에 볼 수 있게 정리하면 확산 가능성 항목에서 높은 점수를 기대할 수 있습니다.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="criteria-row">
+        <div class="criteria-header">
+          <span>기여도</span>
+          <span class="criteria-pts">5점</span>
+          <div class="bar-wrap"><div class="bar-fill bg-amber" style="width:65%"></div></div>
+        </div>
+        <div class="criteria-body">
+          <ul class="eval-q">
+            <li>학생의 학습 성장과 학교 수업 문화 개선에 기여할 수 있는 사례인가?</li>
+          </ul>
+          <div class="status-row">
+            <span class="status-tag tag-warn">▲ 보완</span>
+          </div>
+          <div class="content-block">
+            <p>학생 성장의 증거(비공개 댓글 내용 변화, 설문 점수 추이 등)가 수업 기록에 있지만, 이것이 "기여"로 해석되려면 정량적 변화 데이터와 질적 서술이 함께 제시되어야 합니다.</p>
+            <div class="action">
+              3월 초 정의적 영역 설문 결과(사전)와 학기 말 재설문 결과(사후)를 비교한 데이터를 반드시 수집하고 보고서에 제시하세요. "바디 랭귀지 점수 2.45 → 3.2" 식의 변화가 있다면 강력한 증거가 됩니다.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 종합 액션 플랜 -->
+  <div class="action-plan">
+    <h3>📋 우선순위별 실행 계획</h3>
+
+    <div class="phase">
+      <div class="phase-title">🔴 즉시 (이번 주)</div>
+      <ul class="task-list">
+        <li><span class="task-dot dot-red">!</span><span><strong>신청서 수정</strong>: ECHO 약어 Highlight → Harmonize 통일 (신청서, 보고서 전체 검색·교체)</span></li>
+        <li><span class="task-dot dot-red">!</span><span><strong>성취기준 매핑</strong>: 2학년 영어 1·2단원 성취기준 확인 후 ECHO 단계와 연결 표 작성</span></li>
+        <li><span class="task-dot dot-red">!</span><span><strong>함께학교 수업의 숲</strong>: 수업 자료 1건 이상 업로드 (togetherschool.go.kr)</span></li>
+      </ul>
+    </div>
+
+    <div class="phase">
+      <div class="phase-title">🟡 단기 (이번 달)</div>
+      <ul class="task-list">
+        <li><span class="task-dot dot-amber">2</span><span><strong>연구 방법 구체화</strong>: 자료 수집 도구(설문지) 제작, 분석 방법 기술 (1~2페이지)</span></li>
+        <li><span class="task-dot dot-amber">2</span><span><strong>전학공 수업 나눔 실행</strong>: 동교 또는 교내 교사 대상 ECHO 모형 소개 → 기록 남기기</span></li>
+        <li><span class="task-dot dot-amber">2</span><span><strong>학생 응답 데이터 체계화</strong>: 수업 기록의 학생 댓글/설문 응답을 ECHO 단계별로 정리</span></li>
+        <li><span class="task-dot dot-amber">2</span><span><strong>학기말 사후 설문</strong>: 3월 사전 설문과 동일한 척도로 재측정 (의사소통 역량, 정의적 특성)</span></li>
+      </ul>
+    </div>
+
+    <div class="phase">
+      <div class="phase-title">🟢 보고서 작성 시 (7월)</div>
+      <ul class="task-list">
+        <li><span class="task-dot dot-green">3</span><span><strong>환류 사이클 시각화</strong>: 반 간 수업 수정 과정(실행-성찰-수정)을 도표로 제시</span></li>
+        <li><span class="task-dot dot-green">3</span><span><strong>ECHO 적용 가이드 부록</strong>: 1페이지, 타교과 적용 예시 포함</span></li>
+        <li><span class="task-dot dot-green">3</span><span><strong>교수-평가 연계 체계화</strong>: 단원평가 → 수업 환류 → GRASPS → 다음 단원 설계 구조 명시</span></li>
+        <li><span class="task-dot dot-green">3</span><span><strong>사전-사후 데이터 분석</strong>: 의사소통 역량 설문 통계, 학생 응답 질 변화 분석 제시</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <p style="font-size:12px;color:#888780;text-align:center;padding-bottom:1rem">분석 기준: 2026학년도 중등수업혁신사례연구대회 운영 계획(대전광역시교육청) 1차 심사 기준</p>
+</div>
+
+<script>
+function toggle(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+// 첫 번째 섹션 기본으로 열기
+document.querySelector('.section-body').classList.add('open');
+document.querySelector('.chevron').classList.add('open');
+</script>
+</body>
+</html>
