@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 체험학습 진로 탐색 챌린지 — 우수작 발표</title>
+<style>
+  :root {
+    --bg: #0a0e27;
+    --bg2: #1a0838;
+    --primary: #ff4081;
+    --secondary: #00e5ff;
+    --accent: #ffd700;
+    --purple: #7c4dff;
+    --m1: #ff006e;
+    --m2: #7c4dff;
+    --m3: #00b4d8;
+    --text: #f0f4ff;
+    --muted: #b8c5ff;
+    --card-bg: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Pretendard', 'Noto Sans KR', '맑은 고딕', 'Malgun Gothic', sans-serif;
+    background:
+      radial-gradient(ellipse 1000px 700px at 80% 0%, rgba(255, 0, 153, 0.25), transparent 60%),
+      radial-gradient(ellipse 800px 600px at 20% 100%, rgba(0, 200, 255, 0.20), transparent 60%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg2) 50%, var(--bg) 100%);
+    background-attachment: fixed;
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    word-break: keep-all;
+  }
+
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 60px 40px;
+  }
+
+  /* ─── 헤더 ─── */
+  .header {
+    text-align: center;
+    margin-bottom: 70px;
+    position: relative;
+  }
+  .header::before {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .school-id {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 10px 22px;
+    background: rgba(255, 215, 0, 0.12);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    border-radius: 999px;
+    margin-bottom: 24px;
+    font-weight: 700; font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .school-id .dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, var(--accent), #ffaa00);
+    color: var(--bg2);
+    font-weight: 900; font-size: 16px;
+    border-radius: 999px;
+    margin-bottom: 22px;
+    letter-spacing: -0.02em;
+    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.4);
+  }
+
+  h1.title {
+    font-weight: 900;
+    font-size: clamp(38px, 6vw, 64px);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    margin-bottom: 16px;
+  }
+  h1.title .fx {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 50%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .subtitle {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: -0.02em;
+  }
+
+  /* ─── 섹션 공통 ─── */
+  section {
+    margin-bottom: 80px;
+  }
+  .section-h {
+    display: flex; align-items: baseline; gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .section-h .num {
+    background: var(--primary);
+    color: #fff;
+    font-weight: 900; font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    letter-spacing: 0.1em;
+  }
+  .section-h h2 {
+    font-weight: 900; font-size: 32px;
+    letter-spacing: -0.03em;
+    color: #fff;
+  }
+  .section-h .lead {
+    font-size: 17px; color: var(--muted);
+    font-weight: 500;
+    margin-left: 12px;
+    flex-basis: 100%;
+    margin-top: 4px;
+  }
+
+  /* ─── 취지 박스 ─── */
+  .pitch {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 18px;
+    padding: 32px 36px;
+    font-size: 18px;
+    line-height: 1.75;
+  }
+  .pitch p { margin-bottom: 16px; }
+  .pitch p:last-child { margin-bottom: 0; }
+  .pitch b { color: var(--accent); font-weight: 800; }
+  .pitch em { color: var(--secondary); font-style: normal; font-weight: 700; }
+
+  /* ─── 학년 venue 칩 ─── */
+  .venues {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 28px;
+  }
+  .venue {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 16px;
+    text-align: center;
+  }
+  .venue .grade {
+    display: block;
+    font-weight: 900; font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+  .venue .place {
+    font-weight: 700; font-size: 17px;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+  @media (max-width: 600px) {
+    .venues { grid-template-columns: 1fr; }
+  }
+
+  /* ─── 우수작 카드 — 대표상 (큼) ─── */
+  .best-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .best-card {
+    border-radius: 24px;
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+  }
+  .best-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+  }
+  .best-card.m1::before { background: linear-gradient(90deg, var(--m1), #ffaa00); }
+  .best-card.m2::before { background: linear-gradient(90deg, var(--m2), #ff4081); }
+  .best-card.m3::before { background: linear-gradient(90deg, var(--m3), #00e5ff); }
+
+  .best-card .top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 20px;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .best-card .grade-info {
+    font-weight: 700; font-size: 14px;
+    color: var(--muted);
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .best-card .name-block {
+    display: flex; align-items: baseline; gap: 12px;
+    flex-wrap: wrap;
+  }
+  .best-card .name {
+    font-weight: 900; font-size: 36px;
+    color: #fff;
+    letter-spacing: -0.03em;
+  }
+  .best-card .award-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, var(--accent), #ffaa00);
+    color: var(--bg2);
+    font-weight: 900; font-size: 13px;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .answer-block {
+    background: rgba(0,0,0,0.25);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-bottom: 24px;
+  }
+  .answer-block .a-label {
+    font-weight: 700; font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .answer-block .a-text {
+    font-weight: 900; font-size: 26px;
+    color: #fff;
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+  }
+  .best-card.m1 .answer-block .a-text { color: #ff80b5; }
+  .best-card.m2 .answer-block .a-text { color: #c4a3ff; }
+  .best-card.m3 .answer-block .a-text { color: #80e5ff; }
+  .answer-block .a-extra {
+    font-size: 16px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.55;
+    letter-spacing: -0.02em;
+  }
+  .answer-block .a-extra b {
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .why-block {
+    border-radius: 14px;
+    padding: 22px 26px;
+    background: rgba(255,255,255,0.04);
+    border: 1px dashed var(--border);
+  }
+  .why-block .why-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-weight: 900; font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+  .why-block .why-text {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .why-block .why-text b {
+    color: #fff;
+    font-weight: 700;
+  }
+
+  /* ─── 우수상 (작은 카드 그리드) ─── */
+  .merit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+  .merit-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 26px;
+    transition: transform 0.2s;
+  }
+  .merit-card:hover { transform: translateY(-3px); }
+  .merit-card .merit-tag {
+    display: inline-block;
+    padding: 5px 12px;
+    background: rgba(255, 215, 0, 0.15);
+    color: var(--accent);
+    font-weight: 900; font-size: 12px;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+    margin-bottom: 14px;
+  }
+  .merit-card .grade-info {
+    font-size: 13px; color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .merit-card .name {
+    font-weight: 900; font-size: 22px;
+    color: #fff;
+    margin-bottom: 16px;
+    letter-spacing: -0.03em;
+  }
+  .merit-card .quote {
+    background: rgba(0,0,0,0.20);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text);
+    border-left: 3px solid var(--secondary);
+  }
+  .merit-card .quote .qlabel {
+    display: block;
+    font-weight: 700; font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .merit-card .quote .qtext {
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+  .merit-card .why {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--muted);
+    letter-spacing: -0.02em;
+  }
+  .merit-card .why b { color: #fff; font-weight: 700; }
+
+  /* ─── 마무리 (동기 유발) ─── */
+  .closing {
+    text-align: center;
+    padding: 64px 40px 56px;
+    background:
+      radial-gradient(ellipse 600px 400px at 50% 50%, rgba(0, 229, 255, 0.18), transparent 70%),
+      var(--card-bg);
+    border: 1px solid rgba(0, 229, 255, 0.25);
+    border-radius: 24px;
+    margin-top: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .closing::before, .closing::after {
+    content: "✦";
+    position: absolute;
+    color: var(--accent);
+    font-size: 24px;
+    text-shadow: 0 0 12px var(--accent);
+  }
+  .closing::before { top: 30px; left: 60px; }
+  .closing::after { bottom: 30px; right: 60px; }
+
+  .closing h3 {
+    font-weight: 900; font-size: 30px;
+    letter-spacing: -0.03em;
+    margin-bottom: 22px;
+    background: linear-gradient(135deg, var(--accent), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+  }
+  .closing p {
+    font-size: 17.5px;
+    color: var(--text);
+    line-height: 1.85;
+    max-width: 660px;
+    margin: 0 auto 16px;
+    letter-spacing: -0.02em;
+  }
+  .closing p b { color: var(--secondary); font-weight: 700; }
+  .closing .next-line {
+    margin-top: 32px;
+    padding: 22px 30px;
+    background: linear-gradient(135deg, rgba(255, 64, 129, 0.15), rgba(255, 215, 0, 0.15));
+    border: 1.5px solid rgba(255, 215, 0, 0.4);
+    border-radius: 16px;
+    display: inline-block;
+    font-weight: 900;
+    font-size: 20px;
+    color: #fff;
+    letter-spacing: -0.03em;
+    line-height: 1.4;
+  }
+  .closing .next-line .hl {
+    color: var(--accent);
+  }
+
+  .footer {
+    text-align: center;
+    padding: 30px 0;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 40px 20px; }
+    h1.title { font-size: 36px; }
+    .best-card { padding: 24px; }
+    .answer-block .a-text { font-size: 22px; }
+    .closing { padding: 44px 24px; }
+    .closing h3 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ─── HEADER ─── -->
+  <header class="header">
+    <div class="school-id">
+      <span class="dot"></span>
+      P.L.A.N.-A 미래설계 · 진로연계 학교자율시간 연구학교
+    </div>
+    <br>
+    <span class="badge">★ 우수작 발표</span>
+    <h1 class="title">
+      <span class="fx">오늘, 진로의 단서를</span><br>
+      <span class="fx">수집한 학생들</span>
+    </h1>
+    <p class="subtitle">2026 체험학습 진로 탐색 챌린지 · 우리 시선으로 발견한 ‘직업의 풍경’</p>
+  </header>
+
+  <!-- ─── 챌린지 취지 ─── -->
+  <section>
+    <div class="section-h">
+      <span class="num">01</span>
+      <h2>왜 이 챌린지를 했을까요</h2>
+    </div>
+    <div class="pitch">
+      <p>체험학습은 단순히 ‘다녀온 곳’이 아닙니다. 우리 학교는 학생들이 <b>그 자리에서 직접 발견한 직업의 단서</b>를 자기 진로의 언어로 기록하도록 ‘진로 탐색 챌린지’를 운영했습니다. 이는 진로연계 학교자율시간 「<em>진로탐색</em>」 영역의 핵심 활동으로, 학생이 ‘교실 밖 풍경’을 자기 진로 관점에서 해석하는 힘을 기르는 것을 목적으로 합니다.</p>
+      <p>학년별로 세 개의 다른 풍경에서, 같은 발문에 답을 적었습니다. 그 결과는 단순한 설문 응답이 아니라 <b>한 사람이 한 풍경을 보는 시선</b>의 기록이 되었습니다. 그중 <em>그 자리의 풍경을 정확히 본 학생들</em>의 답변을 우수작으로 선정해 발표합니다.</p>
+
+      <div class="venues">
+        <div class="venue">
+          <span class="grade">1학년</span>
+          <span class="place">현대아울렛 영화관</span>
+        </div>
+        <div class="venue">
+          <span class="grade">2학년</span>
+          <span class="place">국립중앙과학관</span>
+        </div>
+        <div class="venue">
+          <span class="grade">3학년</span>
+          <span class="place">한밭수목원</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 대표상 ─── -->
+  <section>
+    <div class="section-h">
+      <span class="num">02</span>
+      <h2>학년별 대표상</h2>
+      <div class="lead">‘오늘 그 자리의 풍경’을 가장 정확히 본 학생, 학년별 한 명씩</div>
+    </div>
+
+    <div class="best-grid">
+
+      <!-- 1학년 정OO -->
+      <div class="best-card m1">
+        <div class="top">
+          <div>
+            <div class="grade-info">1학년 · 현대아울렛 영화관</div>
+            <div class="name-block">
+              <div class="name">정 ○ ○</div>
+              <span class="award-tag">⭐ 1학년 대표상</span>
+            </div>
+          </div>
+        </div>
+        <div class="answer-block">
+          <div class="a-label">‘영웅 직업’ 답변</div>
+          <div class="a-text">표 확인하는 사람</div>
+          <div class="a-extra">→ 이 사람이 1시간이라도 자리를 비우면 <b>“사람들이 나이 상관 안 하고 미성년자가 19세 초과 영화를 본다”</b>고 답함.</div>
+        </div>
+        <div class="why-block">
+          <div class="why-label">▷ 이 답이 우수작인 이유</div>
+          <div class="why-text">
+            영화관에는 누구나 보는 직원(매표·매점)과 <b>‘잘 보지 않는 시스템 지킴이’</b>가 함께 있습니다. 이 학생은 후자, 즉 ‘보이지 않지만 영화관의 핵심 규칙을 작동시키는 게이트키퍼’를 정확히 발견했습니다. 사라졌을 때의 결과까지 <b>구체적·법적 결과(미성년자 관람)</b>로 묘사한 점이 이 답을 단순한 직업 나열에서 ‘진짜 발견’으로 끌어올렸습니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- 2학년 이O -->
+      <div class="best-card m2">
+        <div class="top">
+          <div>
+            <div class="grade-info">2학년 · 국립중앙과학관</div>
+            <div class="name-block">
+              <div class="name">이 ○</div>
+              <span class="award-tag">⭐ 2학년 대표상</span>
+            </div>
+          </div>
+        </div>
+        <div class="answer-block">
+          <div class="a-label">‘영웅 직업’ 답변</div>
+          <div class="a-text">중앙관제실 운영자</div>
+          <div class="a-extra">→ “화재·침입·시설 이상 경보를 즉시 확인하기 어려워진다. 전기와 냉난방 및 일부 전시 시스템 문제에 대한 대응이 늦어진다. 관람객 안전 상황을 통합적으로 관리하는 데 차질이 생긴다…”(전체 5문장)</div>
+        </div>
+        <div class="why-block">
+          <div class="why-label">▷ 이 답이 우수작인 이유</div>
+          <div class="why-text">
+            관람객 대부분은 ‘전시’만 봅니다. 이 학생은 <b>그 전시가 작동하기 위해 뒤에서 돌아가는 시스템</b>을 본 거예요. ‘중앙관제실 운영자’라는 어른의 정확한 직업 명명, ‘화재/침입/전기/냉난방/긴급 상황 전달’이라는 <b>다층의 책임 영역</b>, 그리고 5문장에 걸친 입체적 묘사 — 모두 학년 평균을 압도하는 깊이입니다. 본 챌린지가 의도한 ‘보이지 않는 노동의 발견’이 가장 완벽하게 작동한 사례.
+          </div>
+        </div>
+      </div>
+
+      <!-- 3학년 강OO -->
+      <div class="best-card m3">
+        <div class="top">
+          <div>
+            <div class="grade-info">3학년 · 한밭수목원 (졸업사진 촬영)</div>
+            <div class="name-block">
+              <div class="name">강 ○ ○</div>
+              <span class="award-tag">⭐ 3학년 대표상</span>
+            </div>
+          </div>
+        </div>
+        <div class="answer-block">
+          <div class="a-label">‘영웅 직업’ 답변</div>
+          <div class="a-text">사진작가</div>
+          <div class="a-extra">→ 이 사람이 1시간이라도 자리를 비우면 <b>“졸업사진을 찍지 못함”</b>이라고 답함.</div>
+        </div>
+        <div class="why-block">
+          <div class="why-label">▷ 이 답이 우수작인 이유</div>
+          <div class="why-text">
+            한밭수목원에 다녀온 그날은 단순한 야외 체험이 아니라 <b>‘우리의 졸업사진을 만든 날’</b>이었습니다. 이 학생은 그 사실을 잊지 않고, 그날의 풍경을 가능하게 한 ‘진짜 주인공’을 정확히 알아봤어요. 평이해 보이는 ‘사진작가’ 한 단어가 사실은 <b>중3 졸업이라는 인생의 한 챕터를 기록한 사람</b>을 가리킨다는 점에서, 이 답은 그날 가장 따뜻하고 가장 정확한 발견입니다.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── 우수상 ─── -->
+  <section>
+    <div class="section-h">
+      <span class="num">03</span>
+      <h2>학년별 우수상</h2>
+      <div class="lead">대표상 못지않게 그 자리의 풍경을 잘 본 학생들</div>
+    </div>
+
+    <div class="merit-grid">
+
+      <!-- 1학년 우수상 -->
+      <div class="merit-card">
+        <span class="merit-tag">🎬 1학년 우수상</span>
+        <div class="grade-info">1학년 · 영화관</div>
+        <div class="name">김 ○ ○</div>
+        <div class="quote">
+          <span class="qlabel">영웅 / 도감</span>
+          <span class="qtext">영화관 직원 + 푸드코트 메뉴 촬영 스타일리스트</span>
+        </div>
+        <div class="why">
+          영웅 직업도 도감 카드도 <b>모두 영화관 맥락</b>으로 답한 일관성이 돋보입니다. 특히 도감의 ‘메뉴 촬영 스타일리스트’는 어른도 잘 모르는 직업으로, 푸드코트의 메뉴판 사진 한 장을 만들기 위해 어떤 노동이 필요한지를 본 결과입니다.
+        </div>
+      </div>
+
+      <div class="merit-card">
+        <span class="merit-tag">🎬 1학년 우수상</span>
+        <div class="grade-info">1학년 · 영화관</div>
+        <div class="name">김 ○ ○</div>
+        <div class="quote">
+          <span class="qlabel">영웅 / 사라지면</span>
+          <span class="qtext">아르바이트생 → “팝콘을 준다”</span>
+        </div>
+        <div class="why">
+          ‘팝콘’ 한 단어가 영화관을 정확히 부릅니다. 영웅을 ‘아르바이트생’으로 본 것 자체가 <b>‘낮은 직급의 노동도 영웅의 자리에 둘 수 있다’</b>는 평등한 시선을 보여 주고, 그 노동의 핵심 결과물(팝콘)을 정확히 짚었습니다.
+        </div>
+      </div>
+
+      <!-- 2학년 우수상 -->
+      <div class="merit-card">
+        <span class="merit-tag">🔬 2학년 우수상</span>
+        <div class="grade-info">2학년 · 과학관</div>
+        <div class="name">김 ○ ○</div>
+        <div class="quote">
+          <span class="qlabel">영웅 / 도감</span>
+          <span class="qtext">과학관 시설·안전 관리자 + 과학 전시 기획자</span>
+        </div>
+        <div class="why">
+          영웅과 도감 모두 과학관 정확. ‘과학 전시 기획자’는 <b>큐레이터 직군의 정식 명칭</b>으로, 학생 답변에서 어른의 직업 어휘가 정확히 등장한 드문 사례입니다. ‘과학 원리를 사람들이 쉽고 재미있게 이해하도록…’이라는 묘사도 직업의 본질을 정조준합니다.
+        </div>
+      </div>
+
+      <div class="merit-card">
+        <span class="merit-tag">🔬 2학년 우수상</span>
+        <div class="grade-info">2학년 · 과학관</div>
+        <div class="name">조 ○ ○</div>
+        <div class="quote">
+          <span class="qlabel">영웅 / 사라지면</span>
+          <span class="qtext">전기 안전 관리 전문가 → “전기 관련 실험에서 기계 과열·감전·큰 불 발생”</span>
+        </div>
+        <div class="why">
+          과학관 전시의 ‘체험’ 환경을 학생 시선에서 가장 정밀하게 본 답입니다. 도감 카드는 <b>‘과학기술 복원 연구원 — 옛 자동시계를 복원하는 직업’</b>으로, 박물관·과학관에 실제로 존재하지만 학생들이 거의 모르는 직군을 발견했습니다.
+        </div>
+      </div>
+
+      <!-- 3학년 우수상 -->
+      <div class="merit-card">
+        <span class="merit-tag">🌳 3학년 우수상</span>
+        <div class="grade-info">3학년 · 한밭수목원</div>
+        <div class="name">안 ○ ○</div>
+        <div class="quote">
+          <span class="qlabel">영웅 / 도감</span>
+          <span class="qtext">사진작가 (영웅 + 도감 모두 동일)</span>
+        </div>
+        <div class="why">
+          영웅도 도감도 모두 ‘사진작가’로 답한 게 의도적인 진심으로 보입니다. <b>그날의 한 사람</b>을 두 번 답에 새긴 것 — 졸업사진을 찍어준 분에 대한 학생만의 감사가 답에 그대로 묻어납니다.
+        </div>
+      </div>
+
+      <div class="merit-card">
+        <span class="merit-tag">🌳 3학년 우수상</span>
+        <div class="grade-info">3학년 · 한밭수목원</div>
+        <div class="name">임 ○ ○</div>
+        <div class="quote">
+          <span class="qlabel">도감</span>
+          <span class="qtext">보안 요원 → “공원 내 안전을 지키고 사고를 예방한다”</span>
+        </div>
+        <div class="why">
+          한밭수목원의 ‘공원 안전’이라는 보이지 않는 노동을 정확히 발견. ‘책임감/판단력/대응력’이라는 능력 묘사 또한 직업의 본질에 닿아 있습니다.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── 마무리 (동기 유발) ─── -->
+  <section>
+    <div class="closing">
+      <h3>친구의 시선이, 당신의 시선을 자라게 합니다</h3>
+      <p>여기 실린 답들은 그저 ‘잘 쓴 답안’이 아니에요. 친구들이 그날 그 풍경 속에서 <b>찾아낸 작은 단서들</b>입니다. 한 사람의 시선이 다른 사람의 시선을 자라게 합니다.</p>
+      <p>친구의 답을 천천히 읽으며 한번 자문해 보세요. <b>‘나는 그날 무엇을 더 볼 수 있었지?’</b> ‘그 풍경 안에 내가 놓친 또 다른 단서는 없었을까?’ 그 질문이 곧 여러분의 다음 발견이 됩니다.</p>
+
+      <div class="next-line">
+        🎬🔬🌳 다음 챌린지에서는 — <span class="hl">It's your turn.</span> 당신의 시선이 실릴 차례!
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    P.L.A.N.-A 미래설계 · 진로연계 학교자율시간 연구학교 · 2026 체험학습 진로 탐색 챌린지 우수작 발표
+  </div>
+
+</div>
+</body>
+</html>
