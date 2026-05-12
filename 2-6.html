@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리가 만든 영어 시험 돌아보기 — 2-6반</title>
+<style>
+  :root { color-scheme: light; --p1: #B45309; --p2: #D97706; --gold: #F59E0B; --bg: #FAFAF8; --text: #1F2937; --soft: #6B7280; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+  .hero { min-height: 100vh; background: radial-gradient(circle at 20% 30%, rgba(217,119,6,0.45) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(180,83,9,0.55) 0%, transparent 50%), linear-gradient(135deg, #78350F 0%, #92400E 100%); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 4rem 2rem 2rem; position: relative; overflow: hidden; }
+  .hero::before, .hero::after { content: ''; position: absolute; width: 220px; height: 220px; border-radius: 50%; filter: blur(60px); animation: float 8s ease-in-out infinite; }
+  .hero::before { top: 10%; left: 10%; background: rgba(251,191,36,0.4); }
+  .hero::after { bottom: 10%; right: 10%; background: rgba(252,165,165,0.3); animation-direction: reverse; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-30px) translateX(20px)} }
+  .hero-tag { display: inline-block; padding: 8px 20px; background: rgba(255,255,255,0.15); border-radius: 999px; font-size: 0.95rem; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.25); z-index: 2; position: relative; }
+  .hero h1 { font-size: clamp(2.5rem,6vw,5rem); font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem; z-index: 2; position: relative; }
+  .hero h1 .accent { background: linear-gradient(120deg, #FBBF24, #FCA5A5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p.lead { font-size: clamp(1.1rem,2vw,1.5rem); max-width: 760px; color: rgba(255,255,255,0.85); z-index: 2; position: relative; }
+  .scroll-cue { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.7); font-size: 0.9rem; animation: bounce 2s ease-in-out infinite; z-index: 2; }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(10px)} }
+  section.block { padding: 6rem 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .block-tag { display: inline-block; background: #FEF3C7; color: #92400E; padding: 6px 16px; border-radius: 999px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.25rem; }
+  .block-tag.r { background: #FEE2E2; color: #B91C1C; }
+  .block-tag.b { background: #DBEAFE; color: #1E3A8A; }
+  h2.block-title { font-size: clamp(2rem,4vw,3.2rem); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
+  h2.block-title em { font-style: normal; background: linear-gradient(120deg, var(--p1), var(--p2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  h2.block-title em.warm { background: linear-gradient(120deg, #DC2626, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  p.block-lead { font-size: 1.15rem; color: var(--soft); max-width: 720px; margin-bottom: 3rem; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+  .stat-card { background: white; border-radius: 24px; padding: 2rem 1.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(180,83,9,0.08); border: 1px solid rgba(180,83,9,0.08); transition: transform 0.3s ease; position: relative; overflow: hidden; }
+  .stat-card:hover { transform: translateY(-4px); }
+  .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--p1), var(--p2)); }
+  .stat-card.gold::before { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
+  .stat-card.rose::before { background: linear-gradient(90deg, #DC2626, #F59E0B); }
+  .stat-card.gray::before { background: linear-gradient(90deg, #9CA3AF, #6B7280); }
+  .stat-num { font-size: 4rem; font-weight: 800; line-height: 1; background: linear-gradient(120deg, var(--p1), var(--p2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+  .stat-card.gold .stat-num { background: linear-gradient(120deg, #F59E0B, #FBBF24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .stat-card.rose .stat-num { background: linear-gradient(120deg, #DC2626, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .stat-card.gray .stat-num { background: linear-gradient(120deg, #9CA3AF, #6B7280); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .stat-label { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .stat-sub { font-size: 0.9rem; color: var(--soft); }
+  .stat-sub.note { color: #9CA3AF; font-style: italic; }
+
+  .spotlight { background: linear-gradient(135deg, #FEE2E2 0%, #FED7AA 100%); border-radius: 32px; padding: 3rem 2.5rem; margin-top: 2rem; position: relative; overflow: hidden; }
+  .spotlight-q { display: inline-block; background: white; color: #DC2626; font-size: 5rem; font-weight: 800; padding: 0.5rem 2rem; border-radius: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); margin-bottom: 1.5rem; line-height: 1; }
+  .spotlight h3 { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.3; color: #7F1D1D; }
+  .spotlight p { font-size: 1.1rem; color: #7C2D12; max-width: 700px; line-height: 1.7; }
+  .vote-row { display: flex; gap: 8px; align-items: center; margin-top: 1rem; flex-wrap: wrap; font-size: 0.95rem; color: #444; }
+  .vote-bar { height: 32px; border-radius: 16px; flex-grow: 1; max-width: 360px; color: white; display: flex; align-items: center; padding-left: 14px; font-weight: 700; font-size: 0.9rem; }
+
+  .qmap-wrap { background: white; border-radius: 24px; padding: 2rem; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
+  .qmap-grid { display: grid; grid-template-columns: repeat(13, 1fr); gap: 6px; }
+  @media (max-width: 760px) { .qmap-grid { grid-template-columns: repeat(7, 1fr); } }
+  .qmap-cell { aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; color: #6B7280; background: #F3F4F6; transition: transform 0.2s ease; }
+  .qmap-cell:hover { transform: scale(1.15); z-index: 2; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .qmap-cell.h0 { background: #F3F4F6; color: #9CA3AF; }
+  .qmap-cell.h1 { background: #FEF3C7; color: #92400E; }
+  .qmap-cell.h2 { background: #FDE68A; color: #78350F; }
+  .qmap-cell.h3 { background: #FBBF24; color: #78350F; }
+  .qmap-cell.h4 { background: #D97706; color: white; }
+  .qmap-cell.hpeak { background: linear-gradient(135deg, #B45309, #DC2626); color: white; box-shadow: 0 4px 12px rgba(180,83,9,0.4); }
+  .qmap-cell.hwarn { background: #DC2626; color: white; box-shadow: 0 4px 12px rgba(220,38,38,0.3); }
+  .qmap-legend { display: flex; align-items: center; gap: 0.5rem; margin-top: 1.25rem; flex-wrap: wrap; font-size: 0.85rem; color: var(--soft); }
+  .legend-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 4px; margin-right: 4px; vertical-align: middle; }
+
+  .activity-stack { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 2rem; }
+  .activity-card { background: white; border-radius: 24px; padding: 2rem; border: 1px solid rgba(0,0,0,0.06); display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: start; }
+  @media (max-width: 700px) { .activity-card { grid-template-columns: 1fr; } }
+  .act-num-big { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 100px; padding: 1rem; border-radius: 18px; }
+  .act-num-big.peak { background: linear-gradient(135deg, #FEF3C7, #FED7AA); }
+  .act-num-big.warm { background: linear-gradient(135deg, #FEF3C7, #FFE4E6); }
+  .act-num-big.cool { background: linear-gradient(135deg, #E0F2FE, #DBEAFE); }
+  .act-num-big.green { background: linear-gradient(135deg, #ECFDF5, #D1FAE5); }
+  .act-num-big .num { font-size: 2.5rem; font-weight: 800; line-height: 1; }
+  .act-num-big.peak .num { color: #B45309; }
+  .act-num-big.warm .num { color: #C2410C; }
+  .act-num-big.cool .num { color: #0369A1; }
+  .act-num-big.green .num { color: #047857; }
+  .act-num-big .count { font-size: 0.85rem; font-weight: 700; margin-top: 0.5rem; color: #4B5563; }
+  .act-body h4 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; }
+  .activity-pill { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 0.85rem; font-weight: 600; margin-right: 6px; margin-bottom: 4px; background: #FEF3C7; color: #92400E; }
+  .activity-pill.cool { background: #E0F2FE; color: #0369A1; }
+  .activity-pill.green { background: #D1FAE5; color: #065F46; }
+  .student-quote { font-size: 0.95rem; color: #4B5563; line-height: 1.6; padding: 0.5rem 0 0.5rem 1rem; border-left: 3px solid rgba(180,83,9,0.2); margin-top: 0.5rem; }
+  .act-takeaway { margin-top: 1rem; background: #F9FAFB; padding: 0.85rem 1rem; border-radius: 12px; font-size: 0.95rem; color: #1F2937; border-left: 3px solid var(--gold); }
+  .act-takeaway strong { color: var(--p1); }
+
+  .nlm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+  .nlm-card { background: white; border-radius: 22px; padding: 1.75rem; border: 1px solid rgba(0,0,0,0.06); }
+  .nlm-card .pattern-tag { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; margin-bottom: 0.85rem; background: #FEF3C7; color: #92400E; }
+  .nlm-card h5 { font-size: 1.1rem; font-weight: 700; line-height: 1.4; margin-bottom: 0.75rem; }
+  .nlm-card .nlm-q { background: #F9FAFB; padding: 0.65rem 0.9rem; border-radius: 10px; font-size: 0.9rem; color: #4B5563; line-height: 1.5; margin-bottom: 0.5rem; font-style: italic; }
+  .nlm-card .nlm-meaning { font-size: 0.9rem; color: var(--soft); line-height: 1.6; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(0,0,0,0.05); }
+  .nlm-card .nlm-meaning strong { color: var(--p1); }
+
+  .quotes-stack { display: flex; flex-direction: column; gap: 1.5rem; }
+  .big-quote { background: white; border-radius: 24px; padding: 2.5rem 2rem 2rem; border-left: 6px solid var(--p1); position: relative; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
+  .big-quote.q2 { border-color: #D97706; }
+  .big-quote.q3 { border-color: var(--gold); }
+  .big-quote::before { content: '"'; position: absolute; top: -15px; left: 1.5rem; font-size: 8rem; color: rgba(180,83,9,0.15); line-height: 1; font-weight: 800; }
+  .big-quote .quote-text { font-size: 1.3rem; font-weight: 600; line-height: 1.55; color: #111; margin-bottom: 1rem; position: relative; z-index: 1; }
+  .big-quote .quote-meta { font-size: 0.95rem; color: var(--soft); margin-bottom: 0.75rem; }
+  .big-quote .quote-takeaway { font-size: 0.95rem; padding: 0.6rem 1rem; border-radius: 12px; display: inline-block; font-weight: 500; background: #FEF3C7; color: #92400E; }
+
+  .bridge { background: white; border-radius: 32px; padding: 3rem 2rem; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+  .bridge-row { display: grid; grid-template-columns: 1fr 0.5fr 1fr 0.5fr 1fr; align-items: stretch; gap: 0.5rem; margin-bottom: 2rem; }
+  @media (max-width: 760px) { .bridge-row { grid-template-columns: 1fr; gap: 1rem; } .bridge-arrow { transform: rotate(90deg); height: 40px; } }
+  .bridge-step { text-align: center; padding: 1.5rem 1rem; border-radius: 20px; }
+  .bridge-step.s1 { background: #FEF3C7; }
+  .bridge-step.s2 { background: #FED7AA; }
+  .bridge-step.s3 { background: linear-gradient(135deg, #FEE2E2, #FFE4E6); }
+  .bridge-arrow { display: flex; align-items: center; justify-content: center; color: var(--p1); }
+  .bridge-step .level { font-size: 0.85rem; font-weight: 700; color: #92400E; margin-bottom: 0.5rem; text-transform: uppercase; }
+  .bridge-step.s2 .level { color: #C2410C; }
+  .bridge-step.s3 .level { color: #B91C1C; }
+  .bridge-step h4 { font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .bridge-step p { font-size: 0.9rem; color: #4B5563; line-height: 1.5; }
+  .bridge-note { background: #F9FAFB; border-radius: 16px; padding: 1.25rem 1.5rem; font-size: 1rem; color: #444; border-left: 4px solid var(--gold); }
+  .bridge-note strong { color: var(--p1); font-weight: 700; }
+
+  .discuss-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
+  .discuss-card { background: white; border-radius: 24px; padding: 2rem 1.75rem; border: 2px dashed rgba(180,83,9,0.3); transition: all 0.3s ease; }
+  .discuss-card:hover { border-style: solid; border-color: var(--p1); transform: translateY(-2px); background: linear-gradient(135deg, #FEFEFE, #FFFBEB); }
+  .discuss-num { width: 40px; height: 40px; background: linear-gradient(135deg, var(--p1), var(--p2)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; margin-bottom: 1rem; }
+  .discuss-card h4 { font-size: 1.15rem; font-weight: 700; line-height: 1.45; margin-bottom: 0.75rem; }
+  .discuss-card p { font-size: 0.95rem; color: var(--soft); line-height: 1.6; }
+
+  .closing { background: linear-gradient(135deg, #78350F 0%, #92400E 100%); color: white; padding: 6rem 2rem; text-align: center; margin: 6rem 0 0; position: relative; overflow: hidden; }
+  .closing::before { content: ''; position: absolute; top: 50%; left: 50%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(251,191,36,0.2), transparent 70%); transform: translate(-50%, -50%); }
+  .closing-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+  .closing h2 { font-size: clamp(2rem,4vw,3.5rem); font-weight: 800; line-height: 1.25; margin-bottom: 1.5rem; }
+  .closing h2 .accent { background: linear-gradient(120deg, #FBBF24, #FCA5A5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .closing p { font-size: 1.2rem; color: rgba(255,255,255,0.85); line-height: 1.7; margin-bottom: 0.75rem; }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .hi { background: linear-gradient(180deg, transparent 60%, #FDE68A 60%); padding: 0 4px; font-weight: 700; }
+  .hi-warn { background: linear-gradient(180deg, transparent 60%, #FECACA 60%); padding: 0 4px; font-weight: 700; }
+  .footer-note { text-align: center; padding: 2rem 1rem; font-size: 0.85rem; color: var(--soft); }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-tag">2-6반 영어 시험 돌아보기</div>
+  <h1>우리가 만든 <span class="accent">영어 시험 이야기</span></h1>
+  <p class="lead">28명이 함께 만든 데이터로,<br>학습지 한 장 한 장에 우리 수업이 어떻게 시험에 닿았는지가 담겼어요.</p>
+  <div class="scroll-cue">아래로 스크롤 ↓</div>
+</section>
+
+<section class="block">
+  <div class="reveal">
+    <span class="block-tag">우리 반의 숫자</span>
+    <h2 class="block-title">우리가 함께 <em>남긴 흔적</em></h2>
+    <p class="block-lead">NotebookLM 댓글 제출은 이번엔 잊고 갔지만, 학습지에는 우리 수업 활동이 시험과 어떻게 연결되는지 가장 또렷이 그려졌어요. <strong>태블릿·모둠·영영풀이</strong> — 활동의 풍부함이 우리 반의 특징이에요.</p>
+  </div>
+  <div class="stats-grid reveal">
+    <div class="stat-card"><div class="stat-num" data-count="28">28</div><div class="stat-label">우리 반 친구들</div><div class="stat-sub">함께 시험을 돌아봤어요</div></div>
+    <div class="stat-card gold"><div class="stat-num" data-count="25">25</div><div class="stat-label">학습지를 채운 친구</div><div class="stat-sub">시험 후 우리 생각을 직접 정리</div></div>
+    <div class="stat-card rose"><div class="stat-num" data-count="10">10</div><div class="stat-label">22번을 가장 인상 깊다고 한 친구</div><div class="stat-sub">우리 반의 가장 또렷한 정서</div></div>
+    <div class="stat-card gray"><div class="stat-num" data-count="0">0</div><div class="stat-label">NotebookLM 댓글</div><div class="stat-sub note">선생님이 안내 깜빡, 다음 차시에 ✏️</div></div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="reveal">
+    <span class="block-tag r">가장 인상 깊었던 문제</span>
+    <h2 class="block-title">우리가 <em class="warm">22번</em>에서 만난 것</h2>
+  </div>
+  <div class="spotlight reveal">
+    <div class="spotlight-q">22번</div>
+    <h3>"이 문제만 아니었으면<br>100점이었기 때문이다."</h3>
+    <p>22번이 우리 반에서도 가장 많이 등장한 인상 깊은 문제예요. 한 친구의 말이 가장 솔직해요 — <strong>"22번. 이 문제만 아니었으면 100점이었기 때문이다."</strong> 우리는 22번에서 정확하게 어디서 막혔는지 알고 있어요. 그게 다음 출발점이에요.</p>
+    <div class="vote-row"><span style="font-weight:600">22번 →</span><div class="vote-bar" style="max-width: 360px; background: linear-gradient(90deg, #DC2626, #F59E0B);">10명 (40%)</div></div>
+    <div class="vote-row" style="margin-top: 0.5rem"><span style="font-weight:600">26번 →</span><div class="vote-bar" style="max-width: 160px; background: linear-gradient(90deg, #F59E0B, #B45309);">4명</div></div>
+    <div class="vote-row" style="margin-top: 0.5rem"><span style="font-weight:600">기타 →</span><div class="vote-bar" style="max-width: 180px; background: #9CA3AF;">11명</div></div>
+  </div>
+</section>
+
+<section class="block" style="background: linear-gradient(180deg, transparent, #FEF3C7 30%, #FED7AA 70%, transparent); padding: 6rem 1.5rem; max-width: none;">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="reveal">
+      <span class="block-tag">학습지 2번 — 수업이 떠오르는 문제</span>
+      <h2 class="block-title">어떤 <em>수업</em>이 어떤 <em>문항</em>에 닿았나</h2>
+      <p class="block-lead">우리 반은 <strong>태블릿·모둠·영영풀이</strong>같이 구체적 도구·활동 인용이 가장 풍부해요. 다음 차시 수업 설계에 그대로 환류할 수 있는 데이터입니다.</p>
+    </div>
+
+    <div class="qmap-wrap reveal">
+      <p style="font-size: 0.95rem; color: var(--soft); margin-bottom: 1rem;">26개 문항 중 우리가 '수업이 떠오른다'고 적은 문항</p>
+      <div class="qmap-grid">
+        <div class="qmap-cell h0" title="1번: 0명">1</div>
+        <div class="qmap-cell h1" title="2번: 1명">2</div>
+        <div class="qmap-cell h3" title="3번: 5명 - 태블릿 영영풀이 ⭐">3</div>
+        <div class="qmap-cell h2" title="4번: 2명">4</div>
+        <div class="qmap-cell h1" title="5번: 1명">5</div>
+        <div class="qmap-cell h1" title="6번: 1명">6</div>
+        <div class="qmap-cell h1" title="7번: 1명">7</div>
+        <div class="qmap-cell h0" title="8번: 0명">8</div>
+        <div class="qmap-cell h0" title="9번: 0명">9</div>
+        <div class="qmap-cell h2" title="10번: 2명">10</div>
+        <div class="qmap-cell h1" title="11번: 1명">11</div>
+        <div class="qmap-cell h0" title="12번: 0명">12</div>
+        <div class="qmap-cell h1" title="13번: 1명">13</div>
+        <div class="qmap-cell h2" title="14번: 2명">14</div>
+        <div class="qmap-cell h1" title="15번: 1명">15</div>
+        <div class="qmap-cell h0" title="16번: 0명">16</div>
+        <div class="qmap-cell h0" title="17번: 0명">17</div>
+        <div class="qmap-cell h0" title="18번: 0명">18</div>
+        <div class="qmap-cell h2" title="19번: 2명">19</div>
+        <div class="qmap-cell h0" title="20번: 0명">20</div>
+        <div class="qmap-cell h0" title="21번: 0명">21</div>
+        <div class="qmap-cell hwarn" title="22번: 0명 - 단절 지점!">22</div>
+        <div class="qmap-cell h0" title="23번: 0명">23</div>
+        <div class="qmap-cell h3" title="24번: 5명 - 단어카드/영영풀이">24</div>
+        <div class="qmap-cell h1" title="25번: 1명">25</div>
+        <div class="qmap-cell hpeak" title="26번: 9명 - 모둠/태블릿 점수 매기기 ⭐⭐">26</div>
+      </div>
+      <div class="qmap-legend">
+        <span><span class="legend-swatch" style="background:#F3F4F6"></span>0명</span>
+        <span><span class="legend-swatch" style="background:#FEF3C7"></span>1명</span>
+        <span><span class="legend-swatch" style="background:#FDE68A"></span>2명</span>
+        <span><span class="legend-swatch" style="background:#FBBF24"></span>5명</span>
+        <span><span class="legend-swatch" style="background:#B45309"></span>9명 ⭐</span>
+        <span><span class="legend-swatch" style="background:#DC2626"></span>22번 — 단절 지점</span>
+      </div>
+    </div>
+
+    <div class="activity-stack reveal">
+      <div class="activity-card">
+        <div class="act-num-big peak"><div class="num">26</div><div class="count">9명 ⭐⭐</div></div>
+        <div class="act-body">
+          <h4>모둠 + 태블릿 점수 매기기가 도표 문항으로</h4>
+          <span class="activity-pill">모둠 활동</span>
+          <span class="activity-pill">태블릿 점수 매기기</span>
+          <span class="activity-pill">학생 설문조사</span>
+          <p class="student-quote">"모둠을 만들고 태블릿으로 점수를 매겼다"</p>
+          <p class="student-quote">"수업에서 설문조사한 결과가 시험에 그대로 나왔다"</p>
+          <div class="act-takeaway"><strong>다음 환류 단서:</strong> 모둠 + 태블릿이라는 두 가지 학습 모드를 결합한 활동이 가장 또렷한 기억. 디지털 도구와 협력 학습의 결합 효과 확인.</div>
+        </div>
+      </div>
+      <div class="activity-card">
+        <div class="act-num-big green"><div class="num">3 · 24</div><div class="count">5명+5명</div></div>
+        <div class="act-body">
+          <h4>태블릿 영영풀이가 어휘 문항으로</h4>
+          <span class="activity-pill green">태블릿 영영풀이</span>
+          <span class="activity-pill green">단어 카드 게임</span>
+          <p class="student-quote">"3번 — 태블릿으로 영영풀이 관련 문제를 풀었다"</p>
+          <p class="student-quote">"24번 — 단어 카드/영영풀이 활동에서 같은 단어가 떠올랐다"</p>
+          <div class="act-takeaway"><strong>다음 환류 단서:</strong> 태블릿 활용 어휘 학습이 5명+5명에 또렷이 인지됨. 어휘 평가 문항에 일관되게 연결되는 표준 활동.</div>
+        </div>
+      </div>
+      <div class="activity-card">
+        <div class="act-num-big cool"><div class="num">14 · 19</div><div class="count">2명+2명</div></div>
+        <div class="act-body">
+          <h4>본문 분석·문법 강의가 본문·어법 문항으로</h4>
+          <span class="activity-pill cool">본문 함께 분석</span>
+          <span class="activity-pill cool">문법 강의</span>
+          <p class="student-quote">"본문을 같이 분석한 게 답을 찾는데 도움됨"</p>
+          <div class="act-takeaway"><strong>다음 환류 단서:</strong> 본문 분석과 문법 강의가 일정 효과. 다만 인지율은 낮은 편이라 활동 결합(예: 본문 + 문법 미니 활동)이 도움될 것.</div>
+        </div>
+      </div>
+      <div class="activity-card">
+        <div class="act-num-big" style="background: linear-gradient(135deg, #FEE2E2, #FED7AA);">
+          <div class="num" style="color: #DC2626">22</div>
+          <div class="count">0명 ⚠️</div>
+        </div>
+        <div class="act-body">
+          <h4>22번 — 인상 10명 vs 수업 연결 0명</h4>
+          <span class="activity-pill" style="background:#FEE2E2; color:#991B1B;">단절 지점</span>
+          <p class="student-quote" style="border-left-color: rgba(220,38,38,0.3)">"이 문제만 아니었으면 100점이었기 때문이다" — 한 친구의 솔직한 자평. 22번 같은 외부 지문·변형 어휘는 우리 수업에서 명시적으로 다뤄지지 않았어요.</p>
+          <div class="act-takeaway"><strong>다음 환류 단서:</strong> 22번 같은 변별력 어휘 문제를 미리 수업에서 만나는 활동 부재. 단원마다 "낯선 외부 지문 한 편 같이 분석" 같은 활동 1회 배치.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="reveal">
+    <span class="block-tag">다음에 함께 해볼 일</span>
+    <h2 class="block-title">NotebookLM, <em>다음엔 이렇게</em> 써보면 어떨까?</h2>
+    <p class="block-lead">이번 차시엔 선생님이 NotebookLM 댓글 제출 안내를 깜빡 잊으셨어요. 그래도 우리 반의 진짜 데이터는 학습지에 다 있어요. 다음 차시에 시도해볼 5가지 패턴을 미리 봐요.</p>
+  </div>
+
+  <div class="nlm-grid reveal">
+    <div class="nlm-card">
+      <span class="pattern-tag">패턴 1 — 거시 비교형</span>
+      <h5>세 시험은 어떻게 연결되나?</h5>
+      <div class="nlm-q">"중2 중간고사, 고1 모의고사, 수능의 공통점은?"</div>
+      <p class="nlm-meaning"><strong>학습 의의:</strong> 우리가 본 시험을 더 큰 지도 안에 위치시키는 메타 인지. 시작하기 가장 쉬운 질문.</p>
+    </div>
+    <div class="nlm-card">
+      <span class="pattern-tag">패턴 2 — 자기 진단형</span>
+      <h5>"22번 하나 틀렸는데 모의고사에선?"</h5>
+      <div class="nlm-q">"이 문제만 아니었으면 100점이었는데, 보완 방법은?"</div>
+      <p class="nlm-meaning"><strong>학습 의의:</strong> 자기 위치를 객관적으로 보고 미래 시험과 연결지어 예측. 우리 반에 딱 맞는 패턴.</p>
+    </div>
+    <div class="nlm-card">
+      <span class="pattern-tag">패턴 3 — 지문 호기심형</span>
+      <h5>시험 지문 너머의 호기심</h5>
+      <div class="nlm-q">"지문에 나온 학술 주제가 더 궁금해"</div>
+      <p class="nlm-meaning"><strong>학습 의의:</strong> 시험을 점수의 도구가 아닌 새 지식의 통로로 인식.</p>
+    </div>
+    <div class="nlm-card">
+      <span class="pattern-tag">패턴 4 — 문제 분석형</span>
+      <h5>22번을 깊이 파보기</h5>
+      <div class="nlm-q">"22번 같은 문맥 추론 어휘 문제를 푸는 전략은?"</div>
+      <p class="nlm-meaning"><strong>학습 의의:</strong> 우리 반이 22번에서 만난 단절을 메우는 핵심 패턴. 가장 추천하는 다음 시도.</p>
+    </div>
+    <div class="nlm-card">
+      <span class="pattern-tag">패턴 5 — 시험 문제 직접 묻기</span>
+      <h5>AI를 풀이 도우미로</h5>
+      <div class="nlm-q">"22번 답이 무엇인지, 왜 그런지 설명해줘"</div>
+      <p class="nlm-meaning"><strong>학습 의의:</strong> 시험 문제 자체를 NotebookLM에 직접 묻기. 가장 적극적인 활용 — 다른 반 친구는 81,998자까지 갔어요.</p>
+    </div>
+    <div class="nlm-card" style="background: linear-gradient(135deg, #FEF3C7, #FED7AA); border: none;">
+      <span class="pattern-tag" style="background: var(--p1); color: white;">우리 반 도전</span>
+      <h5>다음 시험 후엔 짝과 함께 1개라도</h5>
+      <p style="font-size: 0.95rem; color: #4B5563; line-height: 1.7;">다음 시험이 끝나면 짝과 NotebookLM에 위 5가지 패턴 중 <strong style="color: var(--p1)">최소 한 가지</strong>를 함께 시도해봐요. 우리 반은 학습지에 이미 깊은 자기 분석을 적은 반이라, 디지털 도구와 결합하면 더 큰 시너지를 낼 수 있어요.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block" style="background: linear-gradient(180deg, transparent, #FFFBEB 30%, #FEF3C7 70%, #FFFBEB); padding: 6rem 1.5rem; max-width: none;">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="reveal">
+      <span class="block-tag">우리 반 친구들의 깨달음</span>
+      <h2 class="block-title">학습지에 <em>이런 말</em>을 적었어요</h2>
+    </div>
+    <div class="quotes-stack reveal">
+      <div class="big-quote">
+        <p class="quote-text">"22번. 이 문제만 아니었으면<br><strong>100점이었기 때문이다.</strong>"</p>
+        <p class="quote-meta">— 22번에 대한 가장 솔직한 자평</p>
+        <span class="quote-takeaway">막힌 자리를 정확히 짚어내는 자기 인식</span>
+      </div>
+      <div class="big-quote q2">
+        <p class="quote-text">"모둠을 만들고 <strong>태블릿으로 점수를 매겼다.</strong><br>그게 시험에 그대로 나왔다."</p>
+        <p class="quote-meta">— 26번을 만난 한 친구의 회상</p>
+        <span class="quote-takeaway" style="background:#FED7AA; color:#C2410C">디지털 + 협력 활동이 평가로 연결되는 순간</span>
+      </div>
+      <div class="big-quote q3">
+        <p class="quote-text">"사고능력과 <strong>대화 능력</strong>을 길러준다.<br>영어 학습의 기초 토대를 마련한다."</p>
+        <p class="quote-meta">— Q4 답변 중에서</p>
+        <span class="quote-takeaway" style="background:#FEF3C7; color:#92400E">시험을 능력의 토대로 보는 시각</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="reveal">
+    <span class="block-tag b">중2에서 수능까지의 연결</span>
+    <h2 class="block-title">우리가 발견한 <em>시험의 다리</em></h2>
+  </div>
+  <div class="bridge reveal">
+    <div class="bridge-row">
+      <div class="bridge-step s1"><div class="level">지금 우리</div><h4>중2 중간고사</h4><p>26문항 / 교과서 본문 / 설문·어법·태블릿 활동 / 외부 지문(22번)</p></div>
+      <div class="bridge-arrow"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M5 20 L30 20 M22 12 L30 20 L22 28" stroke="#B45309" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="bridge-step s2"><div class="level">곧 만날 시험</div><h4>고1 모의고사</h4><p>45문항 / 외부 지문 / 학술 주제 / 어법·심경 더 깊게</p></div>
+      <div class="bridge-arrow"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M5 20 L30 20 M22 12 L30 20 L22 28" stroke="#D97706" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="bridge-step s3"><div class="level">최종 시험</div><h4>수능 영어</h4><p>철학·과학·사회 학술 지문 / 추론·논리 / 낯선 지문</p></div>
+    </div>
+    <div class="bridge-note">
+      <strong>핵심:</strong> 22번에서 만난 외부 지문은 고1·수능에서 더 자주 나옵니다. 우리 반의 강점인 <strong>태블릿·모둠 활동</strong>을 외부 지문 분석에도 적용하면, 22번 같은 문제를 미리 만나볼 수 있어요.
+    </div>
+  </div>
+</section>
+
+<section class="block" style="background: linear-gradient(180deg, transparent, #FEF3C7 30%, #FED7AA 70%, transparent); padding: 6rem 1.5rem; max-width: none;">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="reveal">
+      <span class="block-tag">오늘 함께 나눠볼 이야기</span>
+      <h2 class="block-title">자, 이제 <em>우리 차례</em>예요</h2>
+    </div>
+    <div class="discuss-grid reveal">
+      <div class="discuss-card"><div class="discuss-num">1</div><h4>22번에서 만난 "이 문제만 아니었으면" 자리, 어떻게 보완할까?</h4><p>NotebookLM을 다음에 쓴다면 22번 같은 문제부터 분석해보면 어떨까요?</p></div>
+      <div class="discuss-card"><div class="discuss-num">2</div><h4>태블릿·모둠 활동이 우리 반의 강점!</h4><p>26번에서 잘 작동한 이 디자인을 다른 문항·다음 단원에도 어떻게 적용하면 좋을까요?</p></div>
+      <div class="discuss-card"><div class="discuss-num">3</div><h4>다음 차시에 NotebookLM을 한 번 시도한다면?</h4><p>5가지 패턴 중 우리 반에 가장 어울리는 패턴은? 짝과 한 번 정해봐요.</p></div>
+      <div class="discuss-card"><div class="discuss-num">4</div><h4>"100점 가까이 갈 뻔" 한 우리, 다음엔 어떻게?</h4><p>22번만 풀면 우리도 100점. 다음 시험 전에 우리가 시도할 한 가지는?</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="closing reveal">
+  <div class="closing-content">
+    <h2>구체적 활동으로 시험에 닿은 <span class="accent">2-6반</span></h2>
+    <p>NotebookLM 댓글은 다음 차시로 미뤘지만, 학습지의 한 줄 한 줄에 우리의 실제 수업이 그대로 새겨져 있어요.</p>
+    <p>태블릿 · 모둠 · 영영풀이 — 가장 구체적인 활동 인용이 우리 반의 정체성.</p>
+    <p style="margin-top: 1.5rem; font-size: 1.1rem;">우리가 만든 데이터가 우리에게 알려준 한 줄 —</p>
+    <p style="font-size: 1.6rem; font-weight: 700; margin-top: 1rem; line-height: 1.4;">"22번만 풀면 100점,<br>다음엔 그 자리를 같이 가요."</p>
+  </div>
+</section>
+
+<div class="footer-note">2-6반 · 2026.5.11 · 영어 시험 돌아보기 활동 자료</div>
+
+<script>
+  const observer = new IntersectionObserver((entries) => entries.forEach(e => e.isIntersecting && e.target.classList.add('visible')), { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  const sObs = new IntersectionObserver((entries) => entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target, t = parseInt(el.dataset.count); let c = 0;
+      if (t === 0) { el.textContent = '0'; sObs.unobserve(el); return; }
+      const inc = t / 40, tick = () => { c += inc; if (c >= t) el.textContent = t; else { el.textContent = Math.floor(c); setTimeout(tick, 30); } };
+      tick(); sObs.unobserve(el);
+    }
+  }), { threshold: 0.4 });
+  document.querySelectorAll('.stat-num[data-count]').forEach(el => { el.textContent = '0'; sObs.observe(el); });
+</script>
+</body>
+</html>
