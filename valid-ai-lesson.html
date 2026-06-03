@@ -21,15 +21,16 @@
   .plana{font-weight:800; color:var(--navy); letter-spacing:1px;}
   .htitle{color:var(--ink); font-weight:500;}
   .hsep{color:var(--line);}
-  .hright{margin-left:auto; color:var(--navy); font-weight:700; font-size:16px;}
-  .hright em{color:var(--muted); font-style:normal; font-weight:400; margin-left:8px;}
+  .hright{display:none;}
+  .hright em{display:none;}
   .hrule{position:absolute; top:64px; left:56px; right:56px; border-bottom:2px solid #dcd5c6;}
   .cap{position:absolute; top:98px; left:56px; display:flex; align-items:center; gap:12px; color:var(--orange); font-weight:700; font-size:20px;}
   .cap .l{width:36px; height:3px; background:var(--orange); display:inline-block;}
   .title{position:absolute; top:124px; left:56px; right:56px; font-size:48px; font-weight:800; color:var(--navy); line-height:1.18;}
   .hl{background:linear-gradient(transparent 55%, var(--yellow) 55%); padding:0 4px;}
   .foot{position:absolute; bottom:26px; left:56px; right:56px; display:flex; align-items:center; font-size:15px; color:var(--muted);}
-  .foot .pg{margin-left:auto; color:var(--navy); font-weight:700; font-size:16px;}
+  .foot .pg{display:none;}
+  .foot{justify-content:flex-start;}
   .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px 24px;}
   .card.t-navy{border-top:5px solid var(--navy);} .card.t-orange{border-top:5px solid var(--orange);} .card.t-purple{border-top:5px solid var(--purple);}
   .ct{font-size:24px; font-weight:800; color:var(--navy);} .ct.o{color:var(--orange);}
@@ -49,9 +50,9 @@
   .cover .cinfo{position:absolute; bottom:74px; left:80px; color:#aebfd0; font-size:19px; line-height:1.7;}
   .cover .cinfo b{color:#fff; font-weight:700; font-size:23px;}
   .divider{background:var(--navy);} .divider .hbar{background:var(--orange);}
-  .divider .dnum{position:absolute; top:250px; left:80px; color:var(--orange); font-size:30px; font-weight:800; letter-spacing:3px;}
-  .divider .dt{position:absolute; top:300px; left:80px; right:80px; color:#fff; font-size:56px; font-weight:800;}
-  .divider .ds{position:absolute; top:400px; left:80px; right:80px; color:#cfe0f0; font-size:24px; font-weight:500;}
+  .divider .dnum{position:absolute; top:196px; left:80px; color:var(--orange); font-size:28px; font-weight:800; letter-spacing:3px;}
+  .divider .dt{position:absolute; top:252px; left:80px; right:80px; color:#fff; font-size:52px; font-weight:800; line-height:1.18;}
+  .divider .ds{position:absolute; top:476px; left:80px; right:80px; color:#cfe0f0; font-size:24px; font-weight:500;}
   .divider .foot{color:#aebfd0;} .divider .foot .pg{color:#fff;}
   @media print{ html,body{background:#fff;} .slide{margin:0; box-shadow:none; page-break-after:always;} }
 </style>
@@ -78,7 +79,7 @@
     <div class="card t-navy"><span class="pill">2025</span><div class="ct" style="margin-top:14px;">과정중심평가 연구학교</div><div class="cb">‘정말 효과가 있나’ 분석과 개선</div></div>
     <div class="card t-orange"><span class="pill orange">2026</span><div class="ct o" style="margin-top:14px;">지금, 나누는 중</div><div class="cb">지식샘터·콘퍼런스·자격연수에서 공유</div></div>
   </div>
-  <div class="sumbar"><span class="lab">복선</span><span class="txt">이 슬라이드, 지금은 그냥 제 이력입니다. <b>마지막에 다시 만나요.</b></span></div>
+  <div class="sumbar"><span class="lab">복선</span><span class="txt">이 슬라이드, <b>마지막에 다시 만나요.</b></span></div>
   <div class="foot"><span>들어가며</span><span class="pg">02 / 36</span></div>
 </section>
 
@@ -88,11 +89,10 @@
   <div class="hrule"></div>
   <div class="cap"><span class="l"></span> 3시간, 이렇게 갑니다</div>
   <div class="title" style="font-size:42px;">오늘의 <span class="hl">흐름</span></div>
-  <div style="position:absolute; top:235px; left:56px; right:56px; display:grid; grid-template-columns:repeat(2,1fr); gap:18px 22px;">
-    <div class="card t-navy"><span class="pill">PART 1 · 1교시</span><div class="ct" style="margin-top:12px;">타당한 설계란?</div><div class="cb">‘설계’의 의미 · 타당성 4차원 · 수업 타당화 5단계</div></div>
-    <div class="card t-navy"><span class="pill">PART 2 · 1교시</span><div class="ct" style="margin-top:12px;">내 영어 수업으로 보는 5단계</div><div class="cb">‘대화습관 → 환류’ 수업으로 모델링</div></div>
-    <div class="card t-navy"><span class="pill">PART 3 · 2교시</span><div class="ct" style="margin-top:12px;">내 수업으로 설계하기 (실습)</div><div class="cb">5단계 워크시트로 내 한 수업 설계</div></div>
-    <div class="card t-orange"><span class="pill orange">PART 4 · 3교시</span><div class="ct o" style="margin-top:12px;">나누고 성찰하기</div><div class="cb">설계 공유 · 핵심아이디어 도출 · 성찰</div></div>
+  <div style="position:absolute; top:255px; left:56px; right:56px; display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+    <div class="card t-navy"><span class="pill">1교시</span><div class="ct" style="margin-top:14px;">타당한 설계란?</div><div class="cb">‘설계’의 의미 · 타당성 4차원 · 수업 타당화 5단계 — 영어 수업 사례로 모델링</div></div>
+    <div class="card t-navy"><span class="pill">2교시</span><div class="ct" style="margin-top:14px;">내 수업으로 설계하기</div><div class="cb">5단계 워크시트로 내 한 수업을 직접 설계 (실습)</div></div>
+    <div class="card t-orange"><span class="pill orange">3교시</span><div class="ct o" style="margin-top:14px;">나누고 성찰하기</div><div class="cb">설계 공유 · 핵심아이디어 도출 · 성찰</div></div>
   </div>
   <div class="foot"><span>오늘의 흐름</span><span class="pg">03 / 36</span></div>
 </section>
@@ -102,10 +102,10 @@
   <div class="head"><span class="secnum">00<span>▶</span></span><span class="plana">INTRO</span><span class="hsep">|</span><span class="htitle">현장의 고민</span><span class="hright">04 / 36 <em>도발</em></span></div>
   <div class="hrule"></div>
   <div class="cap"><span class="l"></span> 내가 잘하고 있는 걸까?</div>
-  <div class="title">"내가 잘하고 있는 건지<br><span class="hl">확신이 서질 않아요.</span>"</div>
-  <div style="position:absolute; bottom:150px; left:56px; right:56px; font-size:26px; color:var(--body); line-height:1.6;">디지털이 교실에 들어온 지 몇 해. 그런데 우리는 무엇을 기준으로 ‘좋은 수업’이라 확신하나요?</div>
+  <div class="title" style="top:150px;">"내가 잘하고 있는 건지<br><span class="hl">확신이 서질 않아요.</span>"</div>
+  <div style="position:absolute; top:360px; left:56px; right:56px; font-size:25px; color:var(--body); line-height:1.6;">디지털이 교실에 들어온 지 몇 해. 그런데 우리는 무엇을 기준으로 ‘좋은 수업’이라 확신하나요?</div>
   <div class="sumbar"><span class="lab">핵심</span><span class="txt">모든 고민의 핵심은 ‘기술’이 아니라, <b>‘좋은 수업’을 판단할 기준</b>입니다.</span></div>
-  <div class="foot"><span>도발 · 1교시</span><span class="pg">04 / 36</span></div>
+  <div class="foot"><span>1교시</span></div>
 </section>
 
 <section class="slide">
@@ -122,7 +122,7 @@
     <div class="card"><div class="keypt">데이터</div><div class="cb">참여는 다 데이터화되는데, 학생에게 의미가 있었나?</div></div>
     <div class="card t-orange"><div class="keypt">그래서</div><div class="cb">못 써서가 아니라, ‘타당한지’ 몰라서 막막하다.</div></div>
   </div>
-  <div class="foot"><span>도발 · 1교시</span><span class="pg">05 / 36</span></div>
+  <div class="foot"><span>1교시</span></div>
 </section>
 
 <section class="slide">
@@ -130,14 +130,14 @@
   <div class="head"><span class="secnum">00<span>▶</span></span><span class="plana">INTRO</span><span class="hsep">|</span><span class="htitle">고민의 진화</span><span class="hright">06 / 36 <em>도발</em></span></div>
   <div class="hrule"></div>
   <div class="cap"><span class="l"></span> 해결한 게 아니라, 안고 성장</div>
-  <div class="title" style="font-size:42px;">내 고민도 해마다 자랐습니다</div>
+  <div class="title" style="font-size:42px;">고민도 해마다 자랐습니다</div>
   <div style="position:absolute; top:250px; left:56px; right:56px; display:grid; grid-template-columns:repeat(4,1fr); gap:18px;">
     <div class="card t-navy"><span class="pill">2023</span><div class="ct" style="margin-top:14px; font-size:26px;">흥미</div><div class="cb">디지털, 아이들이 신나긴 하는데…</div></div>
     <div class="card t-navy"><span class="pill">2024</span><div class="ct" style="margin-top:14px; font-size:26px;">학습</div><div class="cb">흥미가 배움으로 이어지나?</div></div>
     <div class="card t-navy"><span class="pill">2025</span><div class="ct" style="margin-top:14px; font-size:26px;">과정중심평가</div><div class="cb">그 배움을 어떻게 확인하지?</div></div>
     <div class="card t-orange"><span class="pill orange">2026</span><div class="ct o" style="margin-top:14px; font-size:26px;">학습데이터</div><div class="cb">데이터로 무엇을 어디까지?</div></div>
   </div>
-  <div class="foot"><span>도발 · 1교시</span><span class="pg">06 / 36</span></div>
+  <div class="foot"><span>1교시</span></div>
 </section>
 
 <section class="slide">
@@ -161,10 +161,10 @@
   <div class="hrule"></div>
   <div class="cap"><span class="l"></span> 기술은 도구일 뿐</div>
   <div class="title" style="font-size:42px;">판단의 주체는 <span class="hl">교사</span>입니다</div>
-  <div style="position:absolute; top:255px; left:56px; right:56px; display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
-    <div class="card t-navy"><div class="ct">인격적 만남</div><div class="cb">기술이 대체할 수 없는 신뢰와 유대</div></div>
-    <div class="card t-navy"><div class="ct">교육적 판단</div><div class="cb">데이터를 해석하고 방향을 정하는 전문성</div></div>
-    <div class="card t-navy"><div class="ct">관계 속 성장</div><div class="cb">서로 배우며 함께 자라나는 과정</div></div>
+  <div style="position:absolute; top:250px; left:56px; right:56px; display:grid; grid-template-columns:1fr 1.3fr 1fr; align-items:stretch; gap:18px;">
+    <div class="card t-navy" style="opacity:.85;"><div class="ct" style="font-size:22px;">인격적 만남</div><div class="cb">기술이 대체할 수 없는 신뢰와 유대</div></div>
+    <div class="card t-orange" style="border-width:2px; border-color:var(--orange); border-top-width:7px;"><div class="keypt">AI 시대 교사의 핵심</div><div class="ct o" style="font-size:32px; margin-top:6px;">교육적 판단</div><div class="cb" style="font-size:19px;">데이터를 해석하고 <b style="color:var(--orange)">방향을 정하는</b> 전문성</div></div>
+    <div class="card t-navy" style="opacity:.85;"><div class="ct" style="font-size:22px;">관계 속 성장</div><div class="cb">서로 배우며 함께 자라나는 과정</div></div>
   </div>
   <div class="sumbar"><span class="lab">먼저</span><span class="txt">“어떤 도구를 쓸까”보다 <b>“무엇을 위해 이 도구를 쓰는가”</b>를 먼저 묻습니다.</span></div>
   <div class="foot"><span>관점 · 1교시</span><span class="pg">08 / 36</span></div>
@@ -188,7 +188,7 @@
     <div class="card t-navy"><div class="ct">설계의 정의</div><div class="cb" style="font-size:19px;">성취기준에서 출발해, 학생의 <b style="color:var(--navy)">깊이 있는 학습 경험을 의도적으로 디자인</b>하고, 그 효과를 점검·환류하는 일</div></div>
     <div class="card t-orange"><div class="ct o">그래서 AI 설계는</div><div class="cb" style="font-size:19px;">차시 활동을 배열하는 게 아니라, <b style="color:var(--orange)">“왜 이 경험인가”</b>를 묻는 것. AI는 그 설계 <b style="color:var(--orange)">위에 얹는</b> 도구.</div></div>
   </div>
-  <div class="sumbar"><span class="lab">연결</span><span class="txt">설계가 뭔지는 앞 시간에 보셨죠. <b>저는 그 설계에 AI디지털을 얹습니다.</b></span></div>
+  <div class="sumbar"><span class="lab">연결</span><span class="txt">교육과정에 대해 앞 시간에 보셨죠. <b>저는 그 교육과정에 AI디지털 기반 설계를 구체화합니다.</b></span></div>
   <div class="foot"><span>2022 개정 총론 · 영어과 별책</span><span class="pg">10 / 36</span></div>
 </section>
 
@@ -212,9 +212,9 @@
   <div class="cap"><span class="l"></span> 도구를 판단하는 네 가지 질문</div>
   <div class="title" style="font-size:40px;">타당성의 <span class="hl">네 가지 차원</span></div>
   <div style="position:absolute; top:225px; left:56px; right:56px; display:grid; grid-template-columns:1fr 1fr; gap:18px;">
-    <div class="card t-navy"><div class="keypt">WHY · 목적적</div><div class="ct" style="margin-top:6px;">왜 이 기술을 쓰는가?</div><div class="cb">이 도구 없이도 가능한가?</div></div>
+    <div class="card t-navy"><div class="keypt">WHY · 목적적</div><div class="ct" style="margin-top:6px;">왜 이 기술을 쓰는가?</div><div class="cb">어떤 고민과 문제를 해결하기 위함인가?</div></div>
     <div class="card t-navy"><div class="keypt">WHAT · 내용적</div><div class="ct" style="margin-top:6px;">내용과 연결되는가?</div><div class="cb">성취기준 달성에 기여하는가?</div></div>
-    <div class="card t-navy"><div class="keypt">HOW · 방법적</div><div class="ct" style="margin-top:6px;">교육학적으로 적절한가?</div><div class="cb">어떤 이론으로 설명 가능한가?</div></div>
+    <div class="card t-navy"><div class="keypt">HOW · 방법적</div><div class="ct" style="margin-top:6px; font-size:21px;">교육학적으로 적절한가?<br>실제로 실행 가능한가?</div><div class="cb">어떤 이론으로 설명 가능한가? · 현장에서 작동 가능한가?</div></div>
     <div class="card t-orange"><div class="keypt">CHECK · 평가적</div><div class="ct o" style="margin-top:6px;">효과를 검증할 수 있는가?</div><div class="cb">어떤 데이터로 판단할 것인가?</div></div>
   </div>
   <div class="foot"><span>도재우 외(2025) · Why-What-How-Check</span><span class="pg">12 / 36</span></div>
@@ -285,7 +285,7 @@
 <section class="slide divider">
   <div class="hbar"></div>
   <div class="dnum">PART 2 · 1교시</div>
-  <div class="dt">내 영어 수업으로<br>보는 5단계</div>
+  <div class="dt">영어 수업 사례로<br>보는 5단계</div>
   <div class="ds">‘대화습관 → 환류’ 수업으로 모델링</div>
   <div class="foot"><span>PART 2</span><span class="pg">17 / 36</span></div>
 </section>
@@ -325,13 +325,14 @@
   <div class="hrule"></div>
   <div class="cap"><span class="l"></span> STAGE 02 · 도구를 4차원으로</div>
   <div class="title" style="font-size:38px;">NotebookLM, <span class="hl">왜 여기서</span> 썼나</div>
-  <div style="position:absolute; top:225px; left:56px; right:56px; display:grid; grid-template-columns:1fr 1fr; gap:18px;">
-    <div class="card t-navy"><div class="keypt">의도</div><div class="cb" style="font-size:19px;">학생이 교육과정을 직접 따져 묻게 (소비자 → 탐구자)</div></div>
-    <div class="card t-navy"><div class="keypt">내용</div><div class="cb" style="font-size:19px;">의사소통 성취기준 이해를 스스로 연결</div></div>
-    <div class="card t-navy"><div class="keypt">기능</div><div class="cb" style="font-size:19px;">교육과정 PDF 올리고 공유 링크만 있으면 작동</div></div>
-    <div class="card t-orange"><div class="keypt">효과</div><div class="cb" style="font-size:19px;">아이들이 노트북에 스스로 질문을 더 던지면 성공</div></div>
+  <div style="position:absolute; top:210px; left:56px; right:56px; display:grid; grid-template-columns:repeat(4,1fr); gap:14px;">
+    <div class="card t-navy" style="padding:18px 18px;"><div class="keypt">① 의도</div><div class="cb" style="font-size:16px; margin-top:8px;">시험 점수에 목메는 아이들. 점수의 숫자를 넘어, 영어라는 과목이 좀 더 유의미했으면.</div></div>
+    <div class="card t-navy" style="padding:18px 18px;"><div class="keypt">② 내용</div><div class="cb" style="font-size:14px; margin-top:8px; line-height:1.45;">[영어과 목표 ②] 영어에 대한 흥미·관심을 바탕으로 스스로 영어 사용의 필요성을 파악해 학습 목표를 세우고, 다양한 전략으로 자기주도적으로 학습을 지속한다.</div></div>
+    <div class="card t-navy" style="padding:18px 18px;"><div class="keypt">③ 기능</div><div class="cb" style="font-size:16px; margin-top:8px;">중간고사 시험지·고1 모의고사·수능 기출 PDF 업로드, 공유 링크는 구글클래스룸에 게시.</div></div>
+    <div class="card t-orange" style="padding:18px 18px;"><div class="keypt">④ 효과</div><div class="cb" style="font-size:16px; margin-top:8px;">학습지 발문으로 수업·시험을 연결, 중·고 영어 시험을 관통하는 분석 → ‘나의 영어 공부법’을 스스로 질문.</div></div>
   </div>
-  <div class="foot"><span>지식·이해를 키우는 도구</span><span class="pg">20 / 36</span></div>
+  <div style="position:absolute; top:188px; left:56px; right:56px; color:var(--muted); font-size:15px; text-align:right;">옆 칸으로 갈수록 develop →</div>
+  <div class="foot"><span>지식·이해를 키우는 도구</span></div>
 </section>
 
 <section class="slide">
@@ -374,7 +375,7 @@
     <div class="card t-navy"><div class="ct">④ 분석·개선</div><div class="cb" style="font-size:19px;">발화량·수정 횟수·성찰 댓글이 늘면 효과 신호. 다음 차시를 조정.</div></div>
     <div class="card t-orange"><div class="ct o">⑤ 공유·확산</div><div class="cb" style="font-size:19px;">다른 단원에도 ‘환류 루프’를 적용. 동료와 나누며 함께 다듬기.</div></div>
   </div>
-  <div class="sumbar"><span class="lab">완성</span><span class="txt">이 다섯 단계를 <b>저는 실제로 몇 해에 걸쳐 다 돌렸습니다.</b></span></div>
+  <div class="sumbar"><span class="lab">완성</span><span class="txt">이 다섯 단계를 <b>미시(차시·활동), 거시(학기·학교)로 돌리면 성장합니다.</b></span></div>
   <div class="foot"><span>모델링 · 1교시</span><span class="pg">23 / 36</span></div>
 </section>
 
@@ -431,7 +432,7 @@
     <div class="card t-navy"><div class="ct" style="font-size:26px;">기능</div><div class="cb">내 교실에서 작동하나?</div></div>
     <div class="card t-orange"><div class="ct o" style="font-size:26px;">효과</div><div class="cb">무엇을 보면 효과일까?</div></div>
   </div>
-  <div class="sumbar"><span class="lab">규칙</span><span class="txt">카드를 못 채우면, <b>그 도구는 안 씁니다.</b></span></div>
+  <div class="sumbar"><span class="lab">규칙</span><span class="txt">카드를 못 채우면, <b>그 도구를 꼭 써야 하는지 다시 생각해 봅니다.</b></span></div>
   <div class="foot"><span>도구 점검 카드 · 2교시</span><span class="pg">27 / 36</span></div>
 </section>
 
