@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L4 ECHO 차시별 대시보드</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+  :root{ color-scheme:light; --bg:#f4f6f8; --card:#fff; --ink:#1f2933; --muted:#69727d; --accent:#2f5d8a; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 50px}
+  h1{font-size:19px;margin:0 0 3px}
+  .sub{color:var(--muted);font-size:12.5px}
+  .live{display:inline-block;margin-left:6px;background:#e7f5ec;color:#1f7a44;border:1px solid #bfe3cc;border-radius:999px;padding:1px 9px;font-size:11px;font-weight:700}
+  .bar-ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 6px}
+  .bar-ctrl .lab{font-size:12px;color:var(--muted);margin-right:2px}
+  .bar-ctrl button{font-size:12px;border:1px solid #cdd6df;background:#fff;border-radius:7px;padding:5px 11px;cursor:pointer;color:#3a4753}
+  .bar-ctrl button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .bar-ctrl button.refresh{margin-left:auto;background:#eef3f8;border-color:#cbd9e6;color:#2f5d8a;font-weight:600}
+  .roster-row{display:flex;flex-wrap:wrap;gap:7px 10px;align-items:center;margin:2px 0 4px;padding:9px 11px;background:#eef3f8;border:1px solid #d9e3ec;border-radius:9px}
+  .roster-row .lab{font-size:12px;color:#2f5d8a;font-weight:700;margin-right:2px}
+  .roster-row label{display:inline-flex;align-items:center;gap:3px;font-size:11.5px;color:#566570}
+  .roster-row input{width:46px;font-size:12px;padding:4px 5px;border:1px solid #cdd6df;border-radius:6px;text-align:center}
+  .roster-row .hint{font-size:11px;color:#8a939c;margin-left:auto}
+  .roster-row button.clear{font-size:11px;border:1px solid #cdd6df;background:#fff;border-radius:6px;padding:3px 8px;cursor:pointer;color:#8a939c}
+  .status{font-size:12px;color:var(--muted);margin:8px 0 10px;min-height:16px}
+  .status.err{color:#b5462f}
+  .sec-h{margin:16px 0 12px;padding:12px 16px;border-radius:11px;background:#eef3f8;border:1px solid #d9e3ec;color:#2f5d8a;font-weight:800;font-size:15px}
+  .sec-h .s{font-weight:500;font-size:12px;color:#69727d;margin-left:8px}
+  .sec-h.gold{background:#fffaef;border-color:#ece1c2;color:#8a6d2f}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .panel{background:var(--card);border:1px solid #e7ecf1;border-radius:12px;padding:16px;box-shadow:0 1px 2px rgba(20,40,60,.04)}
+  .panel.full{grid-column:1/-1}
+  .p-h{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
+  .p-h .n{font-size:11px;font-weight:700;color:#fff;background:var(--accent);border-radius:6px;padding:1px 7px}
+  .p-h .n.manual{background:#8a6d2f}
+  .p-h h2{font-size:15px;margin:0}
+  .read{font-size:11.5px;color:var(--muted);margin:2px 0 12px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .kpi{background:#f7f9fb;border:1px solid #eaeff4;border-radius:10px;padding:12px 10px;text-align:center}
+  .kpi .v{font-size:21px;font-weight:800;color:var(--accent)}
+  .kpi.warn .v{color:#c0563c}
+  .kpi .l{font-size:11px;color:var(--muted);margin-top:3px}
+  .chartbox{position:relative;height:240px}
+  table.cov{width:100%;border-collapse:separate;border-spacing:3px;font-size:11.5px}
+  table.cov th{font-size:11px;color:var(--muted);font-weight:600;padding:3px;text-align:center}
+  table.cov td.rk{text-align:left;color:#3a4753;white-space:nowrap;padding-right:6px;font-weight:600}
+  .cc{height:26px;border-radius:5px;text-align:center;font-weight:700;color:#23303a;font-variant-numeric:tabular-nums}
+  table.miss{width:100%;border-collapse:collapse;font-size:12px}
+  table.miss th{font-size:11px;color:var(--muted);font-weight:600;text-align:left;padding:6px 8px;border-bottom:1.5px solid #e7ecf1;white-space:nowrap}
+  table.miss td{padding:7px 8px;border-bottom:1px solid #f0f3f6;vertical-align:top}
+  table.miss td.ban{font-weight:700;color:#2f5d8a;white-space:nowrap}
+  table.miss td.num{text-align:center;font-variant-numeric:tabular-nums}
+  table.miss .nums{color:#c0563c;font-weight:600;line-height:1.7}
+  table.miss .nums.ok{color:#1f7a44}
+  table.miss .needroster{color:#aab2bb;font-style:italic}
+  table.miss .over{display:block;margin-top:3px;font-size:11px;color:#8a6d1f}
+  .ratepill{display:inline-block;min-width:42px;text-align:center;border-radius:6px;padding:2px 8px;font-weight:700;color:#23303a;font-variant-numeric:tabular-nums}
+  .kings{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  .king{background:#fffdf3;border:1px solid #ece1c2;border-radius:11px;padding:12px 12px;text-align:center}
+  .king .kb{font-size:11px;color:#9a7d2f;font-weight:700}
+  .king .kn{font-size:15px;font-weight:800;color:#7a5c1a;margin:4px 0 2px}
+  .king .kc{font-size:11.5px;color:#a8965f}
+  .lv{display:inline-block;min-width:30px;text-align:center;border-radius:6px;padding:1px 9px;font-size:11.5px;font-weight:700;color:#fff}
+  .lv.s{background:#2f8a55}.lv.m{background:#cf9626}.lv.h{background:#cf5b3f}.lv.q{background:#aab2bb}
+  .stage-sel{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 8px}
+  .stage-sel .lab{font-size:12px;color:var(--muted);margin-right:2px;min-width:26px}
+  .stage-sel button{font-size:12px;border:1px solid #cdd6df;background:#fff;border-radius:7px;padding:4px 11px;cursor:pointer;color:#3a4753}
+  .stage-sel button.on{background:#8a6d2f;color:#fff;border-color:#8a6d2f}
+  .cmp{font-size:11.5px;color:#69727d;margin:6px 0 8px;line-height:1.8}
+  .cmp .cl{font-weight:700;color:#8a6d2f;margin-right:4px}
+  .cmp b{color:#2f5d8a;font-variant-numeric:tabular-nums}
+  .rubric{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+  .rubric .rb{flex:1;min-width:185px;background:#f7f9fb;border:1px solid #eaeff4;border-radius:9px;padding:9px 11px;font-size:11.5px;line-height:1.5}
+  .sumchips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+  .sumchips .sc{background:#f7f9fb;border:1px solid #eaeff4;border-radius:8px;padding:6px 11px;font-size:12px}
+  .sumchips .sc b{font-size:15px}
+  .sumchips .sc.big{background:#eef3f8;border-color:#cbd9e6}
+  .sumchips .sc.big b{color:#2f5d8a;font-size:18px}
+  .stage-meta{font-size:11.5px;color:#8a939c;margin-top:10px;line-height:1.7}
+  .insight{font-size:12px;color:#5a4a1f;background:#fffbef;border:1px solid #ece1c2;border-radius:9px;padding:10px 12px;margin-bottom:12px;line-height:1.6}
+  .insight b{color:#8a6d2f}
+  .reflect{margin:12px 0 0;padding:11px 14px;background:#f3f7fb;border-left:4px solid #2f5d8a;border-radius:0 9px 9px 0;font-size:12px;color:#3a4753;line-height:1.7}
+  .reflect .rh{font-weight:700;color:#2f5d8a;font-size:11.5px;margin-bottom:4px}
+  .reflect .seqtag{font-weight:700;color:#8a6d2f;background:#fdf3df;border-radius:5px;padding:1px 7px;font-size:11px;margin-left:6px}
+  .reflect.gold{background:#fdf8ee;border-left-color:#8a6d2f}
+  .reflect.gold .rh{color:#8a6d2f}
+  .reflect.none{color:#9aa4ae;font-style:italic;border-left-color:#cdd6df;background:#fbfcfd}
+  .reflect.top{margin:0 0 14px}
+  .foot{margin-top:22px;font-size:11.5px;color:#8a939c;text-align:center}
+  .empty{display:flex;align-items:center;justify-content:center;height:160px;color:#9aa4ae;font-size:13px;border:1.5px dashed #d7dee5;border-radius:10px;text-align:center;padding:14px;background:#fbfcfd}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+  .printbtn{margin-left:auto;font:inherit;font-size:11.5px;color:#2f5d8a;background:#eef3f8;border:1px solid #cfe0ef;border-radius:7px;padding:3px 9px;cursor:pointer}
+  .printbtn:hover{background:#e2edf7}
+  .dist{display:flex;height:24px;border-radius:6px;overflow:hidden;font-size:11px;color:#fff;font-weight:700;margin:9px 0 6px}
+  .dist span{display:flex;align-items:center;justify-content:center;white-space:nowrap;min-width:24px}
+  .dist .s{background:#2f8a55}.dist .m{background:#cf9626}.dist .h{background:#cf5b3f}
+  .ladder{margin:8px 0 4px}
+  .rung{display:flex;align-items:center;gap:10px;margin:8px 0}
+  .rung .rl{width:172px;font-size:12px;font-weight:700;color:#3a4753;flex:none}
+  .rung .rl small{display:block;font-weight:400;color:#8a939c;font-size:10.5px}
+  .rung .rbar{flex:1;background:#eef1f4;border-radius:7px;height:24px}
+  .rung .rfill{height:100%;border-radius:7px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-weight:700;font-size:11.5px;min-width:34px;box-sizing:border-box}
+  .rung.drop .rl{color:#c0392b}
+  .wcloud{display:flex;flex-wrap:wrap;gap:5px 16px;align-items:baseline;justify-content:center;padding:16px 10px;line-height:1.5;background:#fbfcfd;border:1px solid var(--line);border-radius:10px;margin:8px 0}
+  .wcloud span{font-weight:700;color:#3a4753}
+  .clsrow{display:flex;align-items:center;gap:8px;margin:7px 0}
+  .clsrow .cll{width:58px;font-size:12px;font-weight:700;color:#3a4753;flex:none}
+  .clsrow .dist{flex:1;margin:0}
+  .nodata{font-size:12px;color:#9aa4ae;font-style:italic;flex:1}
+  .picks{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .pk{background:#eef3f8;border:1px solid #d6e2ee;border-radius:14px;padding:2px 11px;font-size:12.5px;color:#2f5d8a;font-weight:700}
+  .pk b{color:#8a6d2f}
+  @media print{
+    @page{ margin:14mm; }
+    body{background:#fff}
+    body *{ visibility:hidden; }
+    #panel8, #panel8 *{ visibility:visible; }
+    #panel8{ position:absolute; left:0; top:0; width:100%; border:none; box-shadow:none; padding:0; margin:0; }
+    #panel8 .printbtn{ display:none; }
+    #panel8 .read{ display:none; }
+    #panel8 tr,#panel8 td,#panel8 th{ break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>L4 「New Places and Friends」 · ECHO 차시별 대시보드</h1>
+    <div class="sub">차시 버튼으로 섹션 전환 · 학생 이름·번호는 익명 처리(학생 A·B·C) · 동료 공유용 보기</div>
+  </header>
+
+  <div class="bar-ctrl">
+    <span class="lab">차시</span>
+    <button data-ch="1" class="on" onclick="pick('1')">1차시 E·인식</button>
+    <button data-ch="2" onclick="pick('2')">2차시 H·선택</button>
+    <button data-ch="3" onclick="pick('3')">3차시 E+H</button>
+    <button data-ch="4" onclick="pick('4')">4차시 H</button>
+  </div>
+
+
+
+  <div id="sec1">
+    <div class="sec-h" id="sec1head">1차시 · 인식<span class="s">1단계 「요소 인식」 도달 + 선생님 성찰</span></div>
+    <div class="grid">
+      <section class="panel full" id="panel7">
+        <div class="p-h"><span class="n manual">패널 7 · 수동</span><h2>1단계 「요소 인식」 도달 + 회차·성찰</h2></div>
+        <div class="read">읽는 법 — 1단계(요소 인식) 상/중/하 판정. <b>반 탭은 수업 진행 순서(왼→오)</b>로 배열돼 있고, 반을 누르면 그 반의 도달률과 <b>선생님 성찰</b>이 함께 떠요.</div>
+        <div id="stagebox"></div>
+      </section>
+    </div>
+  </div>
+
+  <div id="sec2" style="display:none">
+    <div class="sec-h gold">2차시 · 선택<span class="s">흥미로운 정보 · 현재완료 이해 · 선택의 이유 (학습지 스캔 · 반 탭 선택)</span></div>
+    <div class="grid">
+      <section class="panel full" id="panel8">
+        <div class="p-h"><span class="n manual">패널 8 · 수동</span><h2>무엇에 흥미를 느꼈나</h2><button class="printbtn" onclick="printPanel8()">🖨 이 패널만 인쇄</button></div>
+        <div class="read">읽는 법 — 2차시 첫 질문(가장 흥미로운 내용+이유) 답 모음. <b>「전체」 탭</b>은 이름·번호를 빼고 내용만 모아, <b>학생들과 다 같이 보며</b> 「우리에게 흥미로운 건 무엇일까?」를 발견하는 용도(다음 글쓰기의 밑바탕). 반 탭은 교사용 상세.</div>
+        <div class="insight">같은 본문을 읽어도 고른 정보가 반마다·학생마다 갈려요 — 흥미가 흩어지는 것 자체가 「경험은 선택의 결과」라는 증거. 「전체」로 함께 보고, 반 탭으로 비교해 보세요.</div>
+        <div id="interestsel"></div>
+        <div class="chartbox" style="height:240px"><canvas id="interestChart"></canvas></div>
+        <div id="intTable" style="margin-top:12px"></div>
+      </section>
+      <section class="panel full">
+        <div class="p-h"><span class="n manual">패널 9 · 수동</span><h2>현재완료 이해 (③ 내가 이해한 대로 정리)</h2></div>
+        <div class="read">읽는 법 — 학습지 ③ 「현재완료시제 정리」 칸을 상/중/하 판정. 문법 개념 이해도.</div>
+        <div class="insight">문법 개념 이해도(현재완료)와 화자의 <b>선택 의도</b>를 읽는 능력(패널10)은 서로 다른 역량 — 같은 반에서 두 패널의 도달률을 비교해 보세요.</div>
+        <div id="grammarbox"></div>
+      </section>
+      <section class="panel full">
+        <div class="p-h"><span class="n manual">패널 10 · 수동</span><h2>선택의 이유 — 2단계 「의도 추론」 도달</h2></div>
+        <div class="read">읽는 법 — Exit Ticket(왜 현재완료를 골랐나)으로 2단계 의도 추론 도달을 판정.</div>
+        <div id="stagebox2"></div>
+      </section>
+    </div>
+  </div>
+
+  <div id="sec3" style="display:none">
+    <div class="sec-h gold">3차시 · 선택 효과 체감<span class="s">시제·문형도 '선택'이다 — 4·3·8·1·5반 + 2반(부분) · 3단계</span></div>
+    <div class="stage-meta" style="margin:0 0 8px;background:#eef6f1;border:1px solid #cfe5d8;border-radius:8px;padding:8px 12px">✓ <b>1반·5반 추가 판독 완료</b>(비전으로 직접 읽음 · 각 25/24명 전수). 2반만 OCR 일부(~15명)라 비교용 비율로 보지 마세요 — 아래 <b>2반*</b> 표기 참고.</div>
+    <div class="insight" style="margin:0 0 12px">데이터 해석 주의 — <b>학습지 완성도 ≠ 학습량.</b> 4·3반은 <b>학생 간·교사와의 상호작용</b>으로 배우는 반이라 종이에 덜 남고(3반은 어조를 <b>구두로</b> 풍부히 진행 — 아래 성찰), 8반은 <b>강의식+학습지 정리</b>가 주 방식이라 종이가 충실합니다. 그래서 8반이 수치상 높아 보여도 '학습 양식의 차이'일 수 있어요 — <b>반 간 도달률은 아래 성찰과 함께</b> 읽어주세요.</div>
+    <div class="grid">
+      <section class="panel">
+        <div class="p-h"><span class="n manual">3-A · 핵심</span><h2>어조 비교 (명령 ↔ 부탁 · 첫 질문)</h2></div>
+        <div class="read">읽는 법 — 첫 질문 "Take me… ↔ I asked Amelia to take me…"의 어조 차이(직접 명령 vs 부탁·서술)를 짚었나. <b>문형 선택이 어조를 바꾼다</b>는 3단계 체감.</div>
+        <div class="clsrow"><span class="cll">8반</span><div class="dist"><span class="s" style="width:68%">상 17</span><span class="m" style="width:16%">중 4</span><span class="h" style="width:16%">하 4</span></div></div>
+        <div class="clsrow"><span class="cll">4반</span><div class="dist"><span class="s" style="width:59%">상 16</span><span class="m" style="width:22%">중 6</span><span class="h" style="width:19%">하 5</span></div></div>
+        <div class="clsrow"><span class="cll">3반</span><span class="nodata">거의 전원 첫 쌍 미기재 — 구두로 진행(데이터 없음)</span></div>
+        <div class="clsrow"><span class="cll">1반†</span><div class="dist"><span class="s" style="width:20%">작성 5</span><span class="h" style="width:80%">공란 20</span></div></div>
+        <div class="clsrow"><span class="cll">5반†</span><div class="dist"><span class="s" style="width:38%">작성 9</span><span class="h" style="width:62%">공란 15</span></div></div>
+        <div class="clsrow"><span class="cll">2반*</span><span class="nodata">OCR 부분판독(~15명) — 첫 질문 작성 3명뿐, 나머지 공란</span></div>
+        <div class="stage-meta">도달(상): 8반 <b>68%</b> · 4반 <b>59%</b> · 3반 — · 2반 부분(작성 3/15). <b>†1·5반은 '작성 여부'만</b> 집계(작성/공란) — 상/중/하 질 평가가 아니라 8·4반 막대와 직접 비교 금물. 눈에 띄는 점: <b>1반 80%·5반 62%가 첫 박스 공란</b> — 둘째 박스나 돌아보기 체크에만 쓴 학생 多(개방형 첫 질문을 건너뜀). 둘째 쌍(Try this ↔ I'll tell you)은 구두 처리 多. <b>*2반은 OCR 일부만 판독</b>. 출처: 3차시 스캔 · 정리 2026-06-21</div>
+      </section>
+      <section class="panel">
+        <div class="p-h"><span class="n manual">3-B · 도구</span><h2>★ 내 문장 만들기 (ask/want/tell)</h2></div>
+        <div class="read">읽는 법 — 학습지 ③ 마지막 ★ 「내 문장 만들기」 ask·want·tell + 목적어 + to부정사 산출. 4·5차시 영어 표현의 <b>도구</b>.</div>
+        <div class="clsrow"><span class="cll">8반</span><div class="dist"><span class="s" style="width:64%">상 16</span><span class="m" style="width:28%">중 7</span><span class="h" style="width:8%">하 2</span></div></div>
+        <div class="clsrow"><span class="cll">4반</span><div class="dist"><span class="s" style="width:48%">상 13</span><span class="m" style="width:37%">중 10</span><span class="h" style="width:15%">하 4</span></div></div>
+        <div class="clsrow"><span class="cll">3반</span><div class="dist"><span class="s" style="width:48%">상 12</span><span class="m" style="width:32%">중 8</span><span class="h" style="width:20%">하 5</span></div></div>
+        <div class="clsrow"><span class="cll">1반</span><div class="dist"><span class="s" style="width:80%">상 20</span><span class="m" style="width:12%">중 3</span><span class="h" style="width:8%">하 2</span></div></div>
+        <div class="clsrow"><span class="cll">5반</span><div class="dist"><span class="s" style="width:71%">상 17</span><span class="m" style="width:17%">중 4</span><span class="h" style="width:12%">하 3</span></div></div>
+        <div class="clsrow"><span class="cll">2반*</span><div class="dist"><span class="s" style="width:53%">상 8</span><span class="m" style="width:40%">중 6</span><span class="h" style="width:7%">하 1</span></div></div>
+        <div class="stage-meta">도달(상): <b>1반 80%</b> · 5반 <b>71%</b> · 8반 <b>64%</b> · 4반 <b>48%</b> · 3반 <b>48%</b> · 2반* 상8/중6/하1(15명 중). 1·5반은 5형식 문장 만들기 도달이 높은 편 — 종이 정리가 충실한 반. <b>*2반은 OCR로 ~15명만 판독</b> — 전수 아님(비교 주의). 대표 오류: ask 목적어 누락("ask to ~")·tell 주어/to 혼동("I told me", "tell me be quiet")·to 누락("want me try").</div>
+      </section>
+    </div>
+    <section class="panel full">
+      <div class="p-h"><span class="n manual">3-도구 · 언어 형식</span><h2>내 문장 만들기 — 모델 &amp; 같이 고칠 문장</h2></div>
+      <div class="read">읽는 법 — 5형식(ask/want/tell + 목적어 + to부정사) <b>도달 여부</b>를 실제 문장으로 본다. 왼쪽은 그대로 써먹을 <b>모델</b>, 오른쪽은 <b>틀린 문장만</b> 모았다(정답은 일부러 미표기 — 학생이 직접 고쳐 보게). (4·3·8·1·5반 + 2반 일부)</div>
+      <div style="display:flex;flex-wrap:wrap;gap:14px">
+        <div class="box" style="flex:1;min-width:280px;background:#eef6f1;border-color:#cfe5d8">
+          <b style="color:#2f7a55">✓ 모델 문장 (정확)</b>
+          <div class="frame" style="margin-top:6px;line-height:1.95">I <b>asked</b> my friend <b>to</b> turn off the TV. <span class="hint">4반</span><br>She <b>told</b> me <b>to</b> do my homework. <span class="hint">4반</span><br>I <b>want</b> my parents <b>to</b> be healthy. <span class="hint">4반</span><br>I <b>asked</b> my friend <b>to</b> borrow a textbook. <span class="hint">3반</span><br>I <b>want</b> my parents <b>to</b> do exercise. <span class="hint">3반</span><br>I <b>told</b> my friend <b>to</b> answer it. <span class="hint">3반</span><br>I <b>asked</b> my friend <b>to</b> lend me a textbook. <span class="hint">8반</span><br>I <b>want</b> my parents <b>to</b> take a rest. <span class="hint">8반</span><br>My teacher <b>told</b> me <b>to</b> prepare for the interview test. <span class="hint">8반</span><br>I <b>asked</b> him <b>to</b> close the window. <span class="hint">2반</span><br>My teacher <b>told</b> me <b>to</b> solve a problem. <span class="hint">2반</span><br>I <b>ask</b> my friend <b>to</b> bring my textbook. <span class="hint">1반</span><br>My teacher <b>told</b> me <b>to</b> finish the work quickly. <span class="hint">1반</span><br>I <b>ask</b> my friend not <b>to</b> go away alone. <span class="hint">5반</span><br>My teacher <b>tells</b> me <b>to</b> submit a worksheet. <span class="hint">5반</span></div>
+        </div>
+        <div class="box" style="flex:1;min-width:280px;background:#fcf0ec;border-color:#e7c3b6">
+          <b style="color:#c0392b">✗ 같이 고칠 문장 (오류 — 정답은 수업에서 함께)</b>
+          <div class="frame" style="margin-top:6px;line-height:1.85">
+          <div style="font-weight:700;color:#c0392b">오류 유형 1 — 4건 <span class="hint">최다</span></div>
+          ✗ Dad told me study.<br>
+          ✗ I want my friend give me money.<br>
+          ✗ I ask my friend try the dumplings.<br>
+          ✗ My parents want me try.
+          <div style="font-weight:700;color:#c0392b;margin-top:9px">오류 유형 2 — 3건</div>
+          ✗ My teacher told me to quiet.<br>
+          ✗ My parents want me to high exam score.<br>
+          ✗ I want my parents to hard studying.
+          <div style="font-weight:700;color:#c0392b;margin-top:9px">오류 유형 3 — 2건</div>
+          ✗ I ask my friend "I love you."<br>
+          ✗ I want your money.
+          <div style="font-weight:700;color:#c0392b;margin-top:9px">오류 유형 4 — 2건</div>
+          ✗ My friend tell me to help.<br>
+          ✗ My parents wants me to study math.
+          <div style="font-weight:700;color:#c0392b;margin-top:9px">오류 유형 5 — 2건</div>
+          ✗ I told me to be calm.<br>
+          ✗ ask my friend to colse the door.
+          <div style="font-weight:700;color:#c0392b;margin-top:9px">오류 유형 6 — 각 1건</div>
+          ✗ I ask my friend to love he.<br>
+          ✗ I want my parents to give more game time.<br>
+          ✗ She was told me to close the window. <span class="hint">수동태 혼동</span>
+          </div>
+        </div>
+      </div>
+      <div class="stage-meta">오류 유형 빈도 — <b>유형 1: 4건(최다)</b> &gt; 유형 2: 3건 &gt; 유형 3·4·5: 각 2건 &gt; 유형 6: 각 1건. (유형 정답은 미표기 — 학생이 직접 발견하게) → <b>수업 활용</b>: 가장 많은 유형 1·2 문장부터 띄우고 "어디가 어색해? 어떻게 고칠까? 공통점은?"으로 학생이 직접 유형을 찾아내게. 출처: 3차시 스캔.</div>
+    </section>
+    <div class="reflect"><div class="rh">선생님 성찰 — 3반 3차시</div>편한 짝 배치로 정말 도란도란 말이 많다. 한 학생이 "과거·현재·현재완료가 뭐가 달라요?"라고 포문을 연다 — 오늘의 학습목표인데, 이렇게 반가울 수가. 명령문과 5형식 느낌 차이를 <b>짝과 느낌 살려 말해보기</b>까지 시켰다(다른 반에선 감히 시도조차 못한 부분). 시간은 촉박했지만 아이들이 왜 이렇게 신났냐고 묻는다. <span class="stage-meta" style="display:block;margin-top:6px">→ 어조 첫 질문이 종이에 없는 건 '미도달'이 아니라 <b>구두로 충분히 했기 때문</b>.</span></div>
+    <div class="reflect"><div class="rh">선생님 성찰 — 4반 3차시</div>체육 후 2교시가 문제였다. 이렇게 지루하고 힘 빠지는 수업일 수가. 학습지는 쓰긴 썼는데 탐구의 모습이나 새로 알게 되는 즐거움이 전혀 느껴지지 않는다. 잠에 취해 엎드리는 아이들… 내가 이렇게 만들었나. <span class="stage-meta" style="display:block;margin-top:6px">→ 4반은 평소 상호작용이 좋은 반이나 이날은 컨디션 영향. 수치만으로 단정 금물.</span></div>
+    <div class="stage-meta">※ 8반 3·4차시 성찰은 노션에 아직 미기록. 8반은 협력 학습이 어려워 강의식+학습지 정리가 주 방식이라 종이 데이터가 충실한 편(교사 메모).</div>
+  </div>
+
+  <div id="sec4" style="display:none">
+    <div class="sec-h gold">4차시 · 메타 인식<span class="s">외부(브루나이) 시선으로 내 선택 보기 — 1·2·3·4·8반 스캔 · 4단계</span></div>
+    <div class="stage-meta" style="margin:0 0 8px;background:#eef6f1;border:1px solid #cfe5d8;border-radius:8px;padding:9px 12px">✓ <b>1·2·3·8반 4차시 추가 판독 완료</b>(비전 전수). <b>중요 — 반마다 가르친 섹션이 다릅니다</b>(진도·시간 배분 차이). 전원 빈칸인 섹션은 '미실시'로 보고 분석에서 제외했어요.<br><span style="display:inline-block;margin-top:5px">· <b>① 조사</b>: 3반(전원)·2반(부분)·4반만 실시 — <b>1·8반은 미실시</b>(전원 빈칸).　· <b>③ 초대카드(영어)</b>: <b>전 반 공통 핵심활동</b> — 비교 가능.　· <b>★ 메타(Exit)</b>: <b>3반만 거의 전원 작성</b> — 1·2·4·8반은 생략(측정 보류).</span></div>
+    <section class="panel full">
+      <div class="p-h"><span class="n manual">질문 사다리 · 종단</span><h2>4반은 사다리를 어디까지 올랐나</h2></div>
+      <div class="read">읽는 법 — 한 반(4반)이 차시를 거치며 1→5단계 도달률(상%)을 어떻게 밟아왔나. <b>떨어지는 칸이 다음 보강 지점</b>.</div>
+      <div class="ladder">
+        <div class="rung"><div class="rl">1단계 요소 인식<small>1차시 · 정보 요소 뽑기</small></div><div class="rbar"><div class="rfill" style="width:95%;background:#2f8a55">95%</div></div></div>
+        <div class="rung"><div class="rl">2단계 의도 추론<small>2차시 · 왜 현재완료를 골랐나</small></div><div class="rbar"><div class="rfill" style="width:64%;background:#5f9a4e">64%</div></div></div>
+        <div class="rung"><div class="rl">3단계 선택 효과 체감<small>3차시 · 어조 비교(첫 질문)</small></div><div class="rbar"><div class="rfill" style="width:59%;background:#cf9626">59%</div></div></div>
+        <div class="rung"><div class="rl">4단계 메타 인식<small>4차시 · Exit「무엇을 드러내나」</small></div><div class="rbar"><div class="rfill" style="width:100%;background:repeating-linear-gradient(45deg,#eaeef2,#eaeef2 7px,#dbe2e8 7px,#dbe2e8 14px);color:#69727d;justify-content:flex-start;padding-left:8px">측정 보류 · 종이 4%는 신뢰 낮음(구두·시간)</div></div></div>
+        <div class="rung"><div class="rl">5단계 자기 책임<small>5차시 · Welcome to My Town</small></div><div class="rbar"><div class="rfill" style="width:100%;background:#e6ebf0;color:#69727d;justify-content:flex-start;padding-left:8px">예정(미실시)</div></div></div>
+      </div>
+      <div class="insight"><b>주의 — 학습지 도달률은 '종이에 남긴 양'이지 학습량이 아님.</b> 4반은 학생 간 상호작용으로 배우는 반이라 메타를 <b>구두로 다뤘을 가능성</b>이 크다(성찰: "브루나이 조사로 살아난 아이들"). 그래서 <b>종이 메타 4%는 신뢰할 수 없어 '측정 보류'</b>로 둠. 1~3단계 값도 같은 한계 위에서, <b>반드시 성찰과 함께</b> 읽어야 함.<br><b>★ 단, 3반은 예외</b> — 4차시 Exit Ticket(메타)을 <b>거의 전원(25/26) 종이에 작성</b>. "PC방은 또래 놀이문화를 보여준다", "한국만의 특별한 식문화" 등 <b>외부 시선으로 자기 선택을 되짚는 메타 진술</b>이 또렷. 4단계가 종이로 확인된 유일한 반 — 같은 발문도 반 운영에 따라 종이에 남는 정도가 이렇게 다르다.</div>
+    </section>
+    <section class="panel full">
+      <div class="p-h"><span class="n manual">4-A · ① 조사</span><h2>브루나이를 알아보니 — 무엇을 조사했나</h2></div>
+      <div class="read">읽는 법 — ① 「브루나이 친구를 알아보기」에서 학생들이 적은 '다름'의 키워드. 글자 클수록 많이 조사한 주제. <b>조사 섹션을 실제로 한 반은 3반(전원)·2반(부분)·4반</b> — 아래 구름은 세 반 종합. <b>1·8반은 미실시</b>(전원 빈칸 → 제외).</div>
+      <div class="wcloud">
+        <span style="font-size:31px;color:#2f5d8a">이슬람·종교</span>
+        <span style="font-size:27px;color:#8a6d2f">언어(말레이어·영어)</span>
+        <span style="font-size:21px;color:#2f7a55">인구·면적</span>
+        <span style="font-size:19px">교복</span>
+        <span style="font-size:19px">기숙사</span>
+        <span style="font-size:19px">5년제 학제</span>
+        <span style="font-size:18px;color:#8a6d2f">산유국·무상교육</span>
+        <span style="font-size:16px">기도시간·라마단</span>
+        <span style="font-size:16px">치과</span>
+        <span style="font-size:15px;color:#2f7a55">돼지고기 X·할랄</span>
+        <span style="font-size:15px">술탄</span>
+        <span style="font-size:14px">날씨·비</span>
+        <span style="font-size:14px">등교 시간</span>
+        <span style="font-size:13px;color:#69727d">술 판매</span>
+        <span style="font-size:13px;color:#69727d">지하철 없음</span>
+        <span style="font-size:13px;color:#69727d">내신 없음</span>
+        <span style="font-size:13px;color:#69727d">친환경 수업</span>
+        <span style="font-size:15px;color:#8a6d2f">O-level·영국식 시험</span>
+        <span style="font-size:14px">영국 식민지였음</span>
+        <span style="font-size:13px;color:#69727d">개교연도·교직원 수</span>
+      </div>
+      <div class="stage-meta">종교(이슬람·돼지고기X·라마단·기도)와 언어·학제(5년제·O-level·영국식 교육)가 두드러짐 — 학생들이 '문화·제도의 다름'에 집중. <b>3반은 개교연도·교직원 수·교육제도까지 깊게 조사</b>(정보왕 후보 일부 학생). 출처: 4차시 스캔(3·2·4반) · 정리 2026-06-21</div>
+    </section>
+    <div class="grid">
+      <section class="panel">
+        <div class="p-h"><span class="n manual">4-B · ② 선택</span><h2>나의 선택 — 무엇을, 왜</h2></div>
+        <div class="read">읽는 법 — 브루나이 친구에게 보여줄 한 곳(장소·음식·발견)과 그 이유. 막대는 4반 분포, 칩은 전 반에서 자주 나온 선택.</div>
+        <div class="dist"><span class="s" style="width:54%">장소 14</span><span class="m" style="width:42%">음식 11</span><span class="h" style="width:4%">발견 1</span></div>
+        <div class="picks"><span class="pk">올리브영 <b>7</b></span><span class="pk">PC방 <b>10</b></span><span class="pk">현대아울렛 <b>6</b></span><span class="pk">떡볶이·분식 <b>8</b></span><span class="pk">편의점 <b>5</b></span><span class="pk">포토부스 <b>3</b></span><span class="pk">노래방 <b>3</b></span><span class="pk">학교급식 <b>3</b></span></div>
+        <div class="stage-meta"><b>핵심 변화 — 새 반들은 이유에 '외부 시선'이 압도적.</b> 1·2·3·8반에서 ②선택을 쓴 학생 다수가 「브루나이 친구 눈엔 새롭다·생소하다」를 명시(예: PC방 「브루나이엔 PC방을 함께 즐기는 문화가 드물 것」, 올리브영 「한국 화장품이 새로울 것」, 학교급식 「한국만의 식문화」). 4반(50%)보다 2·4단계 신호 안착이 뚜렷 — 단원 프레이밍이 선택 이유로 자리잡음.</div>
+      </section>
+      <section class="panel">
+        <div class="p-h"><span class="n manual">4-C · ③ 영어</span><h2>초대 카드 영어 정확도 (전 반 비교)</h2></div>
+        <div class="read">읽는 법 — 초대 카드 영어 칸의 <b>형태 정확도</b>. <span class="s" style="background:#cfe5d8;padding:0 4px;border-radius:3px">정확</span>=현재완료(have+p.p.)와 tell+목적어+to부정사 <b>둘 다</b> 정확 · <span style="background:#f0e2c0;padding:0 4px;border-radius:3px">오류</span>=시도했으나 형태 오류 · <span style="background:#e8c7bb;padding:0 4px;border-radius:3px">미시도</span>=한국어만/공란. 미참여 제외.</div>
+        <div class="clsrow"><span class="cll">8반</span><div class="dist"><span class="s" style="width:62%">정확 16</span><span class="m" style="width:31%">오류 8</span><span class="h" style="width:7%">–2</span></div></div>
+        <div class="clsrow"><span class="cll">3반</span><div class="dist"><span class="s" style="width:60%">정확 15</span><span class="m" style="width:36%">오류 9</span><span class="h" style="width:4%">–1</span></div></div>
+        <div class="clsrow"><span class="cll">1반</span><div class="dist"><span class="s" style="width:59%">정확 16</span><span class="m" style="width:33%">오류 9</span><span class="h" style="width:8%">–2</span></div></div>
+        <div class="clsrow"><span class="cll">2반</span><div class="dist"><span class="s" style="width:42%">정확 10</span><span class="m" style="width:54%">오류 13</span><span class="h" style="width:4%">–1</span></div></div>
+        <div class="clsrow"><span class="cll">4반</span><div class="dist"><span class="s" style="width:31%">정확 8</span><span class="m" style="width:35%">오류 9</span><span class="h" style="width:34%">한국어 9</span></div></div>
+        <div class="stage-meta">정확율: 8반 <b>62%</b> · 3반 <b>60%</b> · 1반 <b>59%</b> · 2반 <b>42%</b> · 4반 <b>31%</b>. <b>4반이 낮은 건 못해서가 아니라</b> 그날 ①조사(제미나이·구글 검색)에 시간을 많이 써 영어 카드를 덜 채운 것 — 1·8반은 반대로 카드에 집중. 흔한 오류: have+동사원형/과거형("have eat·have went"), since/for 혼용("since for 8"), tell 뒤 동사 누락("tell you to my foods"). ※ 4차시는 구·키워드 단계라 영어 미완성이 정상 — <b>문장 완성은 5차시</b>. 출처: 4차시 스캔(1·2·3·4·8반) · 정리 2026-06-21</div>
+      </section>
+    </div>
+    <section class="panel full">
+      <div class="p-h"><span class="n manual">4-D · 핵심</span><h2>선택의 이유 — 1·2·3차시가 녹아 있나</h2></div>
+      <div class="read">읽는 법 — 4차시의 핵심은 '왜 그걸 골랐나'. 그 <b>이유</b>에 앞 차시 학습이 신호로 남았는지 코딩(아래 막대는 4반 26명). 신호가 많을수록 단원 학습이 선택으로 수렴한 것. <b>1·2·3·8반은 외부시선 신호가 더 높게 나타남</b>(4-B 참고).</div>
+      <div class="stage-meta" style="margin:2px 0 4px">신호별 출현 — 이유에 어느 차시 학습이 나타났나</div>
+      <div class="ladder">
+        <div class="rung"><div class="rl">외부 시선<small>2·4차시 · '브루나이엔 새롭다·다르다'</small></div><div class="rbar"><div class="rfill" style="width:50%;background:#2f7a55">13명</div></div></div>
+        <div class="rung"><div class="rl">전달 의도<small>2차시 · '~을 알려주려고'</small></div><div class="rbar"><div class="rfill" style="width:31%;background:#5f9a4e">8명</div></div></div>
+        <div class="rung"><div class="rl">요소 자각<small>1차시 · '여럿 중 하나를 골랐다'</small></div><div class="rbar"><div class="rfill" style="width:8%;background:#cf9626;min-width:30px">2명</div></div></div>
+        <div class="rung"><div class="rl">선택 효과<small>3차시 · '이렇게 보여주면 ~효과'</small></div><div class="rbar"><div class="rfill" style="width:4%;background:#cf5b3f;min-width:30px">1명</div></div></div>
+      </div>
+      <div class="stage-meta" style="margin:10px 0 4px">사전 학습 반영도(종합)</div>
+      <div class="dist"><span class="s" style="width:23%">또렷 6</span><span class="m" style="width:38%">신호 1개 10</span><span class="h" style="width:39%">일반·빈칸 10</span></div>
+      <div class="insight">외부 시선(2·4단계)은 이유에 잘 녹았지만 <b>1차시(요소 자각)·3차시(선택 효과)는 글에 거의 안 드러남</b>. <b>모범</b> — 한 학생 「이슬람이라 돼지고기 못 먹어 닭으로」(<b>조사→선택을 직접 연결</b>!), 다른 학생 「K-POP은 유행해도 노래방은 브루나이엔 생소」, 또 다른 학생 「즉석사진 찍는 문화를 알려주고 싶어서」, 떡볶이류 「한국 또래가 즐겨 먹는 음식」. <b>일반</b> — 「볼거리 많다·다양해서」(신호 0). <br><b>다음 설계</b> — 이유 쓰기 발문에 "여러 정보 중 <u>왜 이걸</u>?"(1차시)·"이렇게 보여주면 <u>어떤 효과</u>?"(3차시)를 넣으면 1·3단계도 이유로 끌어올 수 있음. ※ 4·3반은 이유를 구두로 더 풍부히 했을 수 있어 종이 과소 — 성찰 병행.</div>
+    </section>
+    <section class="panel full">
+      <div class="p-h"><span class="n manual">다음 수업 연계</span><h2>5차시 「Welcome to My Town」 준비도</h2></div>
+      <div class="read">흐름 — 2차시 흥미(무엇) → 3차시 도구(어떻게 말하나) → 4차시 선택+카드(무엇을 왜) → 5차시 문장.</div>
+      <div class="insight">초대 카드 영어 <b>형태 정확율이 반별 31~62%</b>(8·3·1반 약 60% / 2·4반 낮음) + 3차시 <b>5형식 도구 1반 80%·5반 71%·8반 64%</b> → <b>문장화 재료는 충분하되 형태 정확도</b>(have+p.p., since/for, tell+to)는 반별 편차가 큼. <b>5차시: ① 공통 오류(have eat·have went·since for·tell you to 김치) 미니 교정 → ② 3반의 메타 진술을 모델로 「내 선택이 우리 동네에 대해 무엇을 드러내나」 발문 → ③ 카드의 구·키워드를 영어 문장으로 완성해 「Welcome to My Town」</b>. 2·4반은 카드 완성에 시간을 더 배분 권장.</div>
+    </section>
+    <div class="reflect"><div class="rh">선생님 성찰 — 4반 4차시</div>2교시 수업하고 극우울했는데 4차시 하면서 다시 업됐다. <b>브루나이 실제 학교 조사</b>를 하면서 살아난 아이들 — 제미나이·구글·홈페이지·로드뷰까지 정말 다양하게 찾더라. 학습지에 정보를 쓰게 하며 진행하니 주의가 그래도 학습으로 모이는 듯. 막연하지 않게 앞서 배운 내용으로 깊어지길 바랐는데, 잘 됐는지는 모르겠다. <span class="stage-meta" style="display:block;margin-top:6px">→ 수업은 생기 넘쳤는데 종이 메타는 비었다 = <b>4% 메타는 '학습 안 됨'이 아니라 '측정이 안 잡힘'</b>. 위 사다리 4단계를 '측정 보류'로 둔 이유.</span></div>
+  </div>
+
+  <div class="foot">1차시 인식은 Notion 댓글 기반 · 2차시 선택은 드라이브 스캔 기반 수동 · 3·4차시는 4반 스캔 집계 · 반별 성찰·회차는 Notion Reflection 순서 기준 · 출처: Notion 4-1~4-5 + 유니플랜 + 스캔</div>
+</div>
+
+<script>
+const PAGES={'1':'36c76197bbb080ce92a7e82aef10e9dc','2':'36c76197bbb08034967cf7ccec8afa02','3':'36c76197bbb080028916cc1b26a7f3b4','4':'36d76197bbb080609067df832f5db189','5':'37176197bbb08061b5e2d3b2d113b301'};
+const TOOL='mcp__dbe48804-9253-49ad-855c-8e8e4a87b4d9__notion-fetch';
+const RKEY='l4_echo_class2_rosters';
+const KW=[
+ {k:'시간/소요',re:/시간|걸린|비행시간|소요/},
+ {k:'교통수단',re:/교통|버스|지하철|튜브|비행기|이층|기차|이동\s*수단/},
+ {k:'음식',re:/음식|피쉬|칩스|칩|감자|프라이|fish|chips|먹/i},
+ {k:'장소/관광',re:/궁전|버킹|마켓|시장|역|승강장|장소|관광|촬영|부스/},
+ {k:'사람/동행',re:/친구|amelia|애밀|에밀|동행|만난|만나|동행자/i},
+ {k:'날씨',re:/날씨|비|우산|폭우/},
+ {k:'근위병',re:/근위|경비|경호|보초/},
+ {k:'색깔',re:/색|빨간|레드|red/i},
+ {k:'감정',re:/기대|설렘|신남|재밌|기뻐|기뻤|놀라|감정|기분/}
+];
+const COLS=['#9cc0dd','#7aa8d0','#5cbfa6','#f0c659','#ec8b43','#d1493a'];
+
+const REFLECT1={
+ '1':{seq:6,text:'소변검사 일정이 있어 아쉬웠지만 중간에 끊긴 것 치고는 운영이 잘 됐다. 종 친 뒤에도 댓글 3분이라도 진행. 한 학생은 활동엔 집중하는데 안내(주관식·대문자·댓글에 정보 쓰기)를 많이 놓친다 — 연습이 필요.'},
+ '2':{seq:1,text:'단어는 블루킷으로 이해도 측정이 되는데, 짝 읽기는 어디까지 해석됐는지 어떻게 측정하지? 클래스룸 댓글로 알 수 있나? 그러기엔 댓글 쓰는 시간이 좀 짧았다(5분 정도).'},
+ '3':{seq:7,text:'역시 반응이 좋은 3반 아이들. 반응이 달콤해서 놓치는 아이들이 있다. 댓글을 보면 늘 미작성 아이들이 있다. 이 아이들을 다음 시간에는 직접 옆에 가서 넛지를 해야겠다.'},
+ '4':{seq:2,text:'발문을 더 체계적으로 했고 시간 배분도 효율적이라 마지막 댓글도 콤팩트하게 운영됐다. 마지막 질문 정교화와 예시 문장이 효과적이었던 듯. 「해석」이 아니라 「정보」를 요구하는 게 쉽진 않은 개념화지만 적당한 challenge가 됐다.'},
+ '5':{seq:5,text:'몇몇 학생이 자제가 안 돼 한 명을 맨 뒤로 앉혔다. 그런데 짝 읽기는 의외로 그 학생과 짝이 제대로 참여한다. 아이마다 학습·관계의 결이 다름을 다시 느낌.'},
+ '6':{seq:8,text:'마지막 반. 운영의 노하우가 쌓여서 그런가 수월하게 진행이 되었다. 8반에서 편한 친구와 앉혔다가 망한 기억이 있어서 짝꿍·앞뒤·작게 이동까지만 허용했다. 짝읽기도 두런두런, 정보왕 미션에도 적극! 한 학생의 재발견 — 상위 개념으로 대답을 너무 잘해서 끝나고 따로 칭찬했다(겸손하진 않은 반응). 이 학생의 존재감도 대답도 처음 본 거라 의미있다.'},
+ '7':{seq:4,text:'1교시이고 말수가 적은 편이라 짝 읽기 때 편한 친구와 하도록 약간 허용(앞뒤·양옆 정도). 차분하게 잘 진행됐고, 단어시험·오답을 함께 보고 댓글 양을 보면 충분히 전달된 듯.'},
+ '8':{seq:3,text:'두 학생이 늦게 들어와 분위기가 싸했지만, 칠판에 1·2·3·4 넘버링하고 하나 할 때마다 줄긋기로 진행하니 좋았다. 마지막 4번을 핵심질문으로 써 두고 그쪽으로 향해 감 — 교사 스스로도 정리가 되고 시간 조절도 수월.'}
+};
+const REFLECT2={'2':{text:'종이 학습지로 차분히 진행했다. 1교시이기도 했고 학생 구성도 달라서, 8반(패들렛) 수업과는 아예 다른 수업처럼 느껴질 만큼 달랐다. 학생들의 이해·도달 정도가 궁금하다.'}};
+
+const STAGES={
+ '1':{
+  chasi:'1', short:'1단계', stage:'1단계 · 요소 인식 「무엇을 쓰는가」', date:'2026-06-12', source:'Notion 1차시 클래스룸 댓글',
+  note:'반별 도달률 차이는 발문 설계·수업 시간과 연결(반별 성찰 참고).',
+  rubric:[
+   {lab:'상',cls:'s',tag:'도달',txt:'경험을 정보 <b>요소(범주)</b>로 추상화해 3개 이상 나열.'},
+   {lab:'중',cls:'m',tag:'부분',txt:'정보를 적었으나 <b>사실·서사 나열</b>에 그치거나 요소가 1~2개로 빈약.'},
+   {lab:'하',cls:'h',tag:'미도달',txt:'<b>단편 응답</b>(1~2개) 또는 본문 단순 복사.'}
+  ],
+  byBan:{
+   '1':[
+    {n:'',name:'학생 A',lv:'중',why:'런던·궁전·병사·생선·해리포터·사진 — 단어·사실 나열'},
+    {n:'',name:'학생 B',lv:'하',why:'「런던에서 무엇을 했는지」 1개'},
+    {n:'',name:'학생 C',lv:'상',why:'빠진 정보(위치·사진 수·나이·식사 시간·이유) 5개를 비판적으로 추출'},
+    {n:'',name:'학생 D',lv:'중',why:'「런던 정보·등등」 등 모호·빈약'},
+    {n:'',name:'학생 E',lv:'상',why:'시간·동행·나이·복장·음식 5요소'},
+    {n:'',name:'학생 F',lv:'상',why:'화자·출발지·시간·교통·이름·음식·복장 9요소'},
+    {n:'',name:'학생 G',lv:'상',why:'비행시간·출발지·색·나이·역에서 한것 등 11요소'},
+    {n:'',name:'학생 H',lv:'상',why:'화자·도시·기간·명소·이유·색 등 14요소'},
+    {n:'',name:'학생 I',lv:'상',why:'교통·시간·이름·기분·생각 등 다수'},
+    {n:'',name:'학생 J',lv:'상',why:'운송수단·출발지·걸린시간 3요소'},
+    {n:'',name:'학생 K',lv:'상',why:'시간·출발지·이름·기간·복장·음식 등 10요소'},
+    {n:'',name:'학생 L',lv:'상',why:'나라·교통·시간·나이·복장·표정·행동 10요소'},
+    {n:'',name:'학생 M',lv:'상',why:'걸린시간·이름·출발지·날씨·빨간색 물건 5요소'},
+    {n:'',name:'학생 N',lv:'중',why:'13개 사실을 번호로 나열(요소화 아님)'},
+    {n:'',name:'학생 O',lv:'상',why:'출발지·도착지·감정·교통·문화·음식 10요소'},
+    {n:'',name:'학생 P',lv:'중',why:'영어 본문 복사(미완성)'},
+    {n:'',name:'학생 Q',lv:'상',why:'기분·생각·날씨·우산 등 17요소(질문형)'},
+    {n:'',name:'학생 R',lv:'상',why:'이름·출발지·시간·생각·행동·복장 8요소'},
+    {n:'',name:'학생 S',lv:'상',why:'교통·기분·기간·우산문화·이유 등 14요소'},
+    {n:'',name:'학생 T',lv:'상',why:'화자·시간·교통·복장·영화 등 16항목'}
+   ],
+   '2':[
+    {n:'',name:'학생 A',lv:'상',why:'친구·장소·음식·교통·날씨 등 6개를 질문형 요소로 추출'},
+    {n:'',name:'학생 B',lv:'하',why:'「먹은 음식」 1개 단편'},
+    {n:'',name:'학생 C',lv:'하',why:'「15시간 걸린다」 사실 1개'},
+    {n:'',name:'학생 D',lv:'중',why:'비행시간·만남·소감을 사실 문장으로 나열'},
+    {n:'',name:'학생 E',lv:'상',why:'버킹엄·경비복장·음식·승강장 사진 등 4요소'},
+    {n:'',name:'학생 F',lv:'중',why:'버스·근위병·튜브 등 본문 사실 나열'},
+    {n:'',name:'학생 G',lv:'확인',why:'「비행기를 타 왕」 문장 미완성'},
+    {n:'',name:'학생 H',lv:'중',why:'버킹엄·해리포터 촬영 등 본문 사실 2문장'},
+    {n:'',name:'학생 I',lv:'중',why:'도착~마켓 경험을 서사로 요약'},
+    {n:'',name:'학생 J',lv:'상',why:'걸린시간·동행·먹은것·귀국 등 5요소(질문형)'},
+    {n:'',name:'학생 K',lv:'상',why:'비행시간·동행·교통·음식·날씨 등 9요소'},
+    {n:'',name:'학생 L',lv:'상',why:'기본 요소 + 감정·문화·새 정보까지 추상화(2단계 단초)'},
+    {n:'',name:'학생 M',lv:'상',why:'9개 요소 범주 나열'},
+    {n:'',name:'학생 N',lv:'중',why:'경비원 1개 주제만 협소하게 요소화'},
+    {n:'',name:'학생 O',lv:'중',why:'경비원·우산문화·튜브 등 경험 서술형 3개'},
+    {n:'',name:'학생 P',lv:'상',why:'시간·장소·동행·먹은것 4요소'},
+    {n:'',name:'학생 Q',lv:'중',why:'비행·친구·만남 등 서사 나열'},
+    {n:'',name:'학생 R',lv:'중',why:'「여행시간·만난친구」 2개 라벨(빈약)'},
+    {n:'',name:'학생 S',lv:'상',why:'비행시간·친구·장소·시점을 라벨:값으로 구조화'},
+    {n:'',name:'학생 T',lv:'하',why:'「먹은 음식을 소개했다」 1문장'},
+    {n:'',name:'학생 U',lv:'상',why:'동행·장소·음식·명칭·산 것 등 7요소(질문형)'},
+    {n:'',name:'학생 V',lv:'하',why:'「15시간 걸렸다고 함」 1개 단편'}
+   ],
+   '3':[
+    {n:'',name:'학생 A',lv:'상',why:'비행시간·교통·간곳·음식·산것·날씨·튜브 의미 7요소'},
+    {n:'',name:'학생 B',lv:'중',why:'「군인은 무뚝뚝/비가 자주 옴」 등 사실 4문장 나열'},
+    {n:'',name:'학생 C',lv:'상',why:'동행·비행시간·특별한 색·간곳·날씨·교통 6요소'},
+    {n:'',name:'학생 D',lv:'상',why:'걸린시간·교통·공항·입맛·영화·색·선물 등 다수'},
+    {n:'',name:'학생 E',lv:'상',why:'교통·비행시간·이름·만난곳·근위병 등 질문형 다수'},
+    {n:'',name:'학생 F',lv:'상',why:'출발지·장소·교통·나이·버스색·근위병 옷·모자색 등 11요소'},
+    {n:'',name:'학생 G',lv:'상',why:'교통·시간·나이·버스색·거주자·근위병 행동·소감 8요소'},
+    {n:'',name:'학생 H',lv:'상',why:'교통·시간·복장·태도·명칭·유래 등 매우 다수'},
+    {n:'',name:'학생 I',lv:'상',why:'출발지·도착지·감정·이름·관광지·이유 등 다수'},
+    {n:'',name:'학생 J',lv:'중',why:'출발~사진찍기를 행동 30+개로 나열(요소화보다 서사)'},
+    {n:'',name:'학생 K',lv:'중',why:'문장+키워드 혼합 나열(요소화 미흡)'},
+    {n:'',name:'학생 L',lv:'상',why:'간곳·시간·이름·이유 등 30+ 질문형 요소(최다급)'},
+    {n:'',name:'학생 M',lv:'상',why:'동행·감정·궁전·근위병·착각/깨달음 이유 등 매우 다수'},
+    {n:'',name:'학생 N',lv:'상',why:'출발지·교통·표정·움직임·먹은것·한것 등 다수'},
+    {n:'',name:'학생 O',lv:'상',why:'날씨·출발지·교통·색·유래 등 다수'},
+    {n:'',name:'학생 P',lv:'상',why:'출발지·복장·교통·날씨·나이·감정·시장 11요소'},
+    {n:'',name:'학생 Q',lv:'상',why:'출발지·시간·기분·나이·복장·행동·이유 등 다수'},
+    {n:'',name:'학생 R',lv:'중',why:'15시간·빨간버스·근위병 등 키워드·사실 나열'}
+   ],
+   '4':[
+    {n:'',name:'학생 A',lv:'상',why:'출발~French fries 명칭까지 매우 상세한 요소 다수'},
+    {n:'',name:'학생 B',lv:'상',why:'출발지·시간·사람·음식·문화·정류장 등 12요소'},
+    {n:'',name:'학생 C',lv:'상',why:'라벨:값 + 기분(기대·신남·설렘)까지 요소화'},
+    {n:'',name:'학생 D',lv:'상',why:'교통·색·기능·문화 등 20+ 세밀 요소'},
+    {n:'',name:'학생 E',lv:'상',why:'장소·시간·교통·음식·색·이유 등 다수'},
+    {n:'',name:'학생 F',lv:'상',why:'도착지·시간·사람·음식·문화 5요소'},
+    {n:'',name:'학생 G',lv:'상',why:'출발지·시간·교통·날씨 등 18항목 나열'},
+    {n:'',name:'학생 H',lv:'상',why:'장소·시간·사람·교통·음식·색 8요소'},
+    {n:'',name:'학생 I',lv:'상',why:'교통·동행·시간·옷특징·표정·색 등 12요소'},
+    {n:'',name:'학생 J',lv:'상',why:'출발지·시간·사람·나이·교통·복장 등 다수'},
+    {n:'',name:'학생 K',lv:'상',why:'장소·사람·시간·복장·색·촬영지 등 다수'},
+    {n:'',name:'학생 L',lv:'상',why:'촬영지·시간·문화·음식·교통 등 항목 나열'},
+    {n:'',name:'학생 M',lv:'상',why:'장소·사람·음식·날씨·영화·시간·궁전 8요소'},
+    {n:'',name:'학생 N',lv:'상',why:'사람·날씨·장소·교통·음식 5요소'},
+    {n:'',name:'학생 O',lv:'상',why:'여행·친구·공항·교통·시간·여행지 6요소'},
+    {n:'',name:'학생 P',lv:'중',why:'출발~깨달음을 서사 문장으로 나열'},
+    {n:'',name:'학생 Q',lv:'상',why:'교통·장소·시간·사람·먹은것·산것·날씨 다수'},
+    {n:'',name:'학생 R',lv:'상',why:'장소·시간·사람·경비원·촬영지·교통 등 나열'},
+    {n:'',name:'학생 S',lv:'상',why:'라벨:값으로 출발지·사람·교통·장소·음식 구조화'},
+    {n:'',name:'학생 T',lv:'상',why:'교통·출발지·시간·명칭·색 등 매우 상세'},
+    {n:'',name:'학생 U',lv:'상',why:'출발지·시간·교통·궁전이름·색 등 14요소'}
+   ],
+   '5':[
+    {n:'',name:'학생 A',lv:'중',why:'궁전~마켓 경험을 서사로 서술'},
+    {n:'',name:'학생 B',lv:'상',why:'장소·나이·시간·출발지·날씨 등 요소'},
+    {n:'',name:'학생 C',lv:'중',why:'친구 만남·버스·궁전·식사를 사실 문장 나열'},
+    {n:'',name:'학생 D',lv:'상',why:'출발지·시간·날씨 요소 + 승강장·튜브'},
+    {n:'',name:'학생 E',lv:'상',why:'교통·시간·이름·태도·이유·날씨 다수'},
+    {n:'',name:'학생 F',lv:'상',why:'출발지·시간·표정·생각·산물건 5요소'},
+    {n:'',name:'학생 G',lv:'상',why:'장소·시간·이름·음식·모양·날씨 등 다수'},
+    {n:'',name:'학생 H',lv:'상',why:'관계·모습·생각·의미까지 추상화(2단계 단초)'},
+    {n:'',name:'학생 I',lv:'중',why:'비행기·버스·궁전 사실 4문장'},
+    {n:'',name:'학생 J',lv:'상',why:'날씨·교통·선물·색·음식·옷색·장소 7요소'},
+    {n:'',name:'학생 K',lv:'중',why:'영어 본문 문장 복사·사실 나열'},
+    {n:'',name:'학생 L',lv:'상',why:'화자·도착지·감정 등 30+ 요소(최다)'},
+    {n:'',name:'학생 M',lv:'상',why:'요소 + 해석 혼합 매우 풍부(2단계 단초)'},
+    {n:'',name:'학생 N',lv:'중',why:'10살부터~사진을 사실 나열'},
+    {n:'',name:'학생 O',lv:'중',why:'버스·시장·승강장 등 키워드 위주(요소 일부)'},
+    {n:'',name:'학생 P',lv:'상',why:'친구·근위병·궁전·시장·이유 9요소'},
+    {n:'',name:'학생 Q',lv:'상',why:'장소·먹은것·활동·본것·시간·색 6요소'},
+    {n:'',name:'학생 R',lv:'상',why:'여행지·교통·시간·이름·기분 등 다수'},
+    {n:'',name:'학생 S',lv:'상',why:'장소·시간·출발지·명칭·먹은것 7요소(질문형)'},
+    {n:'',name:'학생 T',lv:'중',why:'20개 사실을 번호로 나열(풍부하나 요소화 아님)'},
+    {n:'',name:'학생 U',lv:'상',why:'누가사는지·옷·우산·승강장 등 질문형 6요소'},
+    {n:'',name:'학생 V',lv:'상',why:'비행시간·출발지·날씨 요소 + 키워드 다수'},
+    {n:'',name:'학생 W',lv:'상',why:'목적지·교통·튜브의미·이유 등 다수(질문형)'}
+   ],
+   '6':[
+    {n:'',name:'학생 A',lv:'상',why:'교통·시간·만난곳·나이·태도·생각·튜브 등 다수'},
+    {n:'',name:'학생 B',lv:'상',why:'출발지·도착지·시간·음식·날씨·영화·지하철 7요소'},
+    {n:'',name:'학생 C',lv:'상',why:'목적지·비행시간·평가·감정·플랫폼·이유 등 다수'},
+    {n:'',name:'학생 D',lv:'상',why:'교통·시간·나이·근위병·이유 등 매우 다수'},
+    {n:'',name:'학생 E',lv:'상',why:'탄것·만난사람·간곳·본것·먹은것·명칭 등 질문형 다수'},
+    {n:'',name:'학생 F',lv:'상',why:'출발지·비행시간·음식·친구·날씨·버스색·교통 7요소'},
+    {n:'',name:'학생 G',lv:'상',why:'여행지·거주지·음식 이름·먹은것 5요소'},
+    {n:'',name:'학생 H',lv:'중',why:'만남·신남·버스·가드 복장을 사실 문장으로 나열'},
+    {n:'',name:'학생 I',lv:'상',why:'장소·음식·교통·경험·시간·색·나라·모양 9요소'},
+    {n:'',name:'학생 J',lv:'상',why:'마음·교통·시간·기분·버스·근위병·생각 등 다수'},
+    {n:'',name:'학생 K',lv:'상',why:'걸린시간·간곳·만난사람·먹은것·교통·본것·날씨 7요소'},
+    {n:'',name:'학생 L',lv:'상',why:'여행지·출발지·버스색·기분·복장·튜브·이유 등 다수'},
+    {n:'',name:'학생 M',lv:'상',why:'장소·교통·감정·복장·이유 등 매우 다수'},
+    {n:'',name:'학생 N',lv:'상',why:'장소·시간·기분·영화·색 등 질문형 다수'},
+    {n:'',name:'학생 O',lv:'상',why:'여행지·친구유무·운송수단·우산·영화·버스색 6요소'},
+    {n:'',name:'학생 P',lv:'중',why:'한 사실(비행 15시간)을 50여 문장으로 반복 — 실질 요소 3개'},
+    {n:'',name:'학생 Q',lv:'상',why:'간곳·시간·동행·기분·교통·마트·산것·색 등 다수'},
+    {n:'',name:'학생 R',lv:'상',why:'마음·시간·교통·만남·한것·먹은것 등 질문형 다수'},
+    {n:'',name:'학생 S',lv:'상',why:'운송시간·간곳·비행시간·음식·날씨·이유 9요소'},
+    {n:'',name:'학생 T',lv:'중',why:'출발~피쉬앤칩스를 사실 문장으로 나열(서사)'},
+    {n:'',name:'학생 U',lv:'상',why:'화자·목적지·교통·음식·명칭·날씨·색 등 다수'},
+    {n:'',name:'학생 V',lv:'상',why:'화자·목적지·시간·교통·근위병·시장 등 매우 다수'}
+   ],
+   '7':[
+    {n:'',name:'학생 A',lv:'중',why:'걸린시간·출발지 2개만 빈약'},
+    {n:'',name:'학생 B',lv:'중',why:'본문 키워드 대량 나열(요소화 아님)'},
+    {n:'',name:'학생 C',lv:'상',why:'출발지·교통·시간·이름·색깔 등 다수'},
+    {n:'',name:'학생 D',lv:'상',why:'출발지·도착지·비행시간·이름·탄것 5요소'},
+    {n:'',name:'학생 E',lv:'상',why:'이름·나이·표현 이유 등 추상화(2단계 단초)'},
+    {n:'',name:'학생 F',lv:'상',why:'출발지·교통·감정·나이·산물건 등 매우 다수'},
+    {n:'',name:'학생 G',lv:'상',why:'출발지·교통·감정·깨달음 등 매우 다수'},
+    {n:'',name:'학생 H',lv:'중',why:'런던감·버스탐 등 동사형 사실 5개'},
+    {n:'',name:'학생 I',lv:'상',why:'비행시간·여행지·교통·나이·날씨 다수'},
+    {n:'',name:'학생 J',lv:'상',why:'출발지·이름·장소·나이·정류장 7요소(번호형)'},
+    {n:'',name:'학생 K',lv:'상',why:'여행·시간·궁전·근위병·역 등 요소+질문'},
+    {n:'',name:'학생 L',lv:'상',why:'거리·복장·시간·날씨·명칭·색 6요소'},
+    {n:'',name:'학생 M',lv:'상',why:'걸린시간·교통·출발지·음식 요소+키워드'},
+    {n:'',name:'학생 N',lv:'상',why:'운송수단·옷차림·산 물건 등 질문형 다수'},
+    {n:'',name:'학생 O',lv:'상',why:'이름·출발지·교통·나이·색·뜻 등 다수'},
+    {n:'',name:'학생 P',lv:'상',why:'교통·시간·기분·이름·날씨 등 다수'},
+    {n:'',name:'학생 Q',lv:'상',why:'나이·버스·옷·음식·이름 등 질문형 다수'},
+    {n:'',name:'학생 R',lv:'상',why:'출발지·시간·날씨 요소 + 승강장'},
+    {n:'',name:'학생 S',lv:'상',why:'날씨·강수량·색·이유 등 30+ 요소(최다)'},
+    {n:'',name:'학생 T',lv:'상',why:'출발점·시간·나이·옷·선물 등 다수'},
+    {n:'',name:'학생 U',lv:'상',why:'비행시간·장소·나이·교통 요소+키워드'},
+    {n:'',name:'학생 V',lv:'상',why:'교통시간·위치·만난곳·이유 등 질문형 다수'},
+    {n:'',name:'학생 W',lv:'하',why:'영어 본문 1문장만 복사'},
+    {n:'',name:'학생 X',lv:'중',why:'본문+해석 문장 나열(사실형)'}
+   ],
+   '8':[
+    {n:'',name:'학생 A',lv:'중',why:'지하철·근위병·피쉬앤칩스 3 키워드(요소화 약함)'},
+    {n:'',name:'학생 B',lv:'상',why:'출발지·교통·시간·해리포터촬영지·선물·명칭·색 9요소'},
+    {n:'',name:'학생 C',lv:'중',why:'비행·만남·사진을 사실 4문장 나열'},
+    {n:'',name:'학생 D',lv:'상',why:'시간·장소·이름·나이·버스색·복장·날씨 등 13요소'},
+    {n:'',name:'학생 E',lv:'상',why:'출발지·교통·도착·동행·시간·음식·촬영지·근위병·날씨 9요소'},
+    {n:'',name:'학생 F',lv:'상',why:'출발지·시간·교통·동행·장소·음식·날씨·기분 등 11요소'},
+    {n:'',name:'학생 G',lv:'상',why:'출발지·교통·도착·동행·궁전·복장·시장·명칭·색·식사 12요소'},
+    {n:'',name:'학생 H',lv:'상',why:'만난 장소·기간·정류장·근위대 차림새 4요소'},
+    {n:'',name:'학생 I',lv:'상',why:'색·촬영지·궁전·버스·시장·튜브·우산·승강장 등 18항목'},
+    {n:'',name:'학생 J',lv:'상',why:'출발지·교통·시간·동행·음식·장소·날씨 7요소'},
+    {n:'',name:'학생 K',lv:'상',why:'출발지·교통·감정·나이·정류장·복장·음식점 등 13요소'},
+    {n:'',name:'학생 L',lv:'중',why:'교통수단·먹는 음식 2개(빈약)'},
+    {n:'',name:'학생 M',lv:'상',why:'출발지·시간·색·날씨·나이·복장·선물·명칭·이유 11요소'},
+    {n:'',name:'학생 N',lv:'상',why:'출발지·교통·근위병·날씨·우산시기·튜브 설명·색 등 17요소'},
+    {n:'',name:'학생 O',lv:'상',why:'여행지·교통·시간·친구·정류장·복장·시장·산것 14요소'},
+    {n:'',name:'학생 P',lv:'상',why:'만난시점·버스색·날씨·우산문화·부탁한것·근위병 생각 8요소'},
+    {n:'',name:'학생 Q',lv:'상',why:'출발지·시간·교통·나이·날씨·음식 6요소'},
+    {n:'',name:'학생 R',lv:'상',why:'출발지·도착지·복장·표정·맛·날씨특징·지하철 모양 17요소'},
+    {n:'',name:'학생 S',lv:'상',why:'출발지·여행지·교통·시간·버스색·선물·날씨 7요소'},
+    {n:'',name:'학생 T',lv:'상',why:'대표색·근위병 행동·산것·나이·음식·명칭·날씨·우산시기 9요소'},
+    {n:'',name:'학생 U',lv:'중',why:'영어 본문 3문장 복사(사실)'}
+   ]
+  }
+ },
+ '2':{
+  chasi:'2', short:'2단계', stage:'2단계 · 의도 추론 「왜 그걸 골랐나」', date:'2026-06-12', source:'드라이브 2차시 스캔 학습지(Exit Ticket 중심)',
+  note:'연속성(과거~현재로 이어짐)을 짚으면 상, 막연하면 중 — 1·2반 동일 기준. 과거형과 대조하는 발문이 3차시 연결점.',
+  rubric:[
+   {lab:'상',cls:'s',tag:'도달',txt:'현재완료를 고른 이유로 <b>「과거~현재로 이어짐 · 지금까지·아직도 ~한 상태 · 현재에 영향」 연속성</b>을 짚음(「지금도 친구다」·과거형 대조 포함).'},
+   {lab:'중',cls:'m',tag:'부분',txt:'시제 목적을 <b>막연하게만</b>(「강조하려고·잘 전달하려고·자세히 쓸 수 있어서」) 적거나, 연속성이 흐릿·불확실.'},
+   {lab:'하',cls:'h',tag:'미도달',txt:'빈칸·질문 오독·시제와 무관.'}
+  ],
+  byBan:{
+   '1':[
+    {n:'',name:'학생 A',lv:'하',why:'Exit「선택하고 싶어서」 — 내용 없음'},
+    {n:'',name:'학생 B',lv:'상',why:'Exit「과거부터 지금까지 알고 있던 친구여서」 — 연속성'},
+    {n:'',name:'학생 C',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 D',lv:'상',why:'Exit「과거에 알았지만 지금도 알고 있어서」 — 과거~현재 연속'},
+    {n:'',name:'학생 E',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 F',lv:'상',why:'Exit「현재까지 친하다는 걸 알리기 위해서」 — 연속성+전달'},
+    {n:'',name:'학생 G',lv:'중',why:'Exit「문장 내용을 강조하기 위해」 — 연속성 없이 막연'},
+    {n:'',name:'학생 H',lv:'상',why:'Exit「과거부터 현재까지 쭉 알고 있어서」 — 연속성'},
+    {n:'',name:'학생 I',lv:'상',why:'Exit「과거부터 현재까지 알던 것을 나타내려고」 — 연속성'},
+    {n:'',name:'학생 J',lv:'상',why:'Exit「현재까지도 알고 있어 현재에 영향」 — 연속성·현재 영향 명시'},
+    {n:'',name:'학생 K',lv:'상',why:'Exit「지금도 친한 걸 알려주려고」 — 현재까지 이어짐'},
+    {n:'',name:'학생 L',lv:'상',why:'Exit「지금까지도 친구라는 걸 알려주기 위해」 — 연속성'},
+    {n:'',name:'학생 M',lv:'상',why:'Exit「과거에 알고 지금까지 알고 있어서」 — 연속성'},
+    {n:'',name:'학생 N',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 O',lv:'상',why:'Exit「지금까지 계속 알고 지내기 때문」 — 연속성'},
+    {n:'',name:'학생 P',lv:'상',why:'Exit「옛날부터 지금까지 알고 있어 친했음을 알려주려고」 — 연속성'},
+    {n:'',name:'학생 Q',lv:'하',why:'Exit「영국」 — 질문 오독'},
+    {n:'',name:'학생 R',lv:'상',why:'Exit「지금까지 알고 지내고 있기 때문」 — 연속성'},
+    {n:'',name:'학생 S',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 T',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 U',lv:'상',why:'Exit「10살부터 지금까지 알고 있음을 강조하려고」 — 연속성+강조'},
+    {n:'',name:'학생 V',lv:'중',why:'Exit「처음 만났을 때와 비교한 듯」 — 불확실·막연'},
+    {n:'',name:'학생 W',lv:'상',why:'Exit「아직도 친함을 알려주려, 과거형은 소멸」 — 연속성+과거형 대조'},
+    {n:'',name:'학생 X',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 Y',lv:'중',why:'Exit「현재도 그러한 상황이기 때문」 — 막연, 연속성 흐릿'},
+    {n:'',name:'학생 Z',lv:'상',why:'Exit「지금도 친구임을 강조」 — 현재까지 이어짐'},
+    {n:'',name:'학생 AA',lv:'상',why:'Exit「지금까지 알고 지낸 걸 알려주려고」 — 연속성'},
+    {n:'',name:'학생 AB',lv:'하',why:'Exit 빈칸'}
+   ],
+   '2':[
+    {n:'',name:'학생 A',lv:'상',why:'Exit「과거의 일을 현재까지 설명하고 싶어서」 — 과거~현재 연속'},
+    {n:'',name:'학생 B',lv:'하',why:'Exit「모르겠다」'},
+    {n:'',name:'학생 C',lv:'상',why:'Exit「옛날에 알게돼 지금까지 친구라 현재완료를 썼다」 — 연속성'},
+    {n:'',name:'학생 D',lv:'상',why:'Exit「현재도 친구라는 것을 알려주기 위해서」 — 연속성+전달'},
+    {n:'',name:'학생 E',lv:'하',why:'Exit「사실 기억이 가물가물해서」 — 질문 오독'},
+    {n:'',name:'학생 F',lv:'상',why:'Exit「지금도 알고 지내는 사이라서」 — 현재까지 이어짐'},
+    {n:'',name:'학생 G',lv:'상',why:'Exit「10살부터 계속 알고 지내왔기 때문」 — 연속성'},
+    {n:'',name:'학생 H',lv:'하',why:'Exit「몰입감을 높이려고?」 — 시제와 무관'},
+    {n:'',name:'학생 I',lv:'중',why:'Exit「과거부터 현재까지 자세하게 쓸 수 있어서」 — 이유가 막연'},
+    {n:'',name:'학생 J',lv:'상',why:'Exit「10살부터 지금까지 쭉 아는 상태임을 강조하려고」 — 연속성+강조'},
+    {n:'',name:'학생 K',lv:'상',why:'Exit「과거부터 지금까지 알고 있었기 때문」 — 연속성'},
+    {n:'',name:'학생 L',lv:'상',why:'Exit「어릴 때부터 지금까지 알고 지냈기 때문」 — 연속성'},
+    {n:'',name:'학생 M',lv:'상',why:'Exit「10년 전부터 현재까지 알아오고 있다고 표현하려고」 — 연속성'},
+    {n:'',name:'학생 N',lv:'상',why:'Exit「예전부터 지금까지 아는 상태임을 알려주려고」 — 연속성+전달'},
+    {n:'',name:'학생 O',lv:'상',why:'Exit「과거부터 지금까지 쭉 알아왔기에」 — 연속성'},
+    {n:'',name:'학생 P',lv:'중',why:'Exit「뜻을 잘 전달할 수 있다」 — 막연, 연속성 없음'},
+    {n:'',name:'학생 Q',lv:'상',why:'Exit「관계가 지금까지 이어지고 있음을 말하고 싶어서」 — 연속성'},
+    {n:'',name:'학생 R',lv:'상',why:'Exit「과거형이면 현재는 알지 모를지 모르는데, 현재완료면 현재도 안다는 것을 나타내려고」 — 과거형 대조, 모범'},
+    {n:'',name:'학생 S',lv:'상',why:'Exit「지금까지도 알고 있다는 것을 표현하려고」 — 연속성'},
+    {n:'',name:'학생 T',lv:'상',why:'Exit「과거부터 지금까지 알고 있어서」 — 연속성'},
+    {n:'',name:'학생 U',lv:'확인',why:'Exit 빈칸·미완성 — 확인 필요'},
+    {n:'',name:'학생 V',lv:'확인',why:'Exit 빈칸·미완성 — 확인 필요'},
+    {n:'',name:'학생 W',lv:'확인',why:'스캔에서 번호·이름 식별 불가 3장'}
+   ],
+   '3':[
+    {n:'',name:'학생 A',lv:'상',why:'Exit「과거부터 지금까지 안 잊고 있단 걸 강조」 — 연속성'},
+    {n:'',name:'학생 B',lv:'중',why:'Exit「죽 해왔다는 걸 연관 짓기 때문」 — 흐릿'},
+    {n:'',name:'학생 C',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 D',lv:'상',why:'Exit「과거 사건이 끝이 아니라 현재완료로 계속 이어지게」 — 연속성'},
+    {n:'',name:'학생 E',lv:'상',why:'Exit「Amelia랑 아직도 친한 사이라는 걸 알려주려고」 — 연속성'},
+    {n:'',name:'학생 F',lv:'상',why:'Exit「10살때부터 현재까지 알고 있어 계속용법」 — 연속성'},
+    {n:'',name:'학생 G',lv:'상',why:'Exit「과거형은 과거에만, 현재완료는 과거~현재 영향」 — 과거형 대조'},
+    {n:'',name:'학생 H',lv:'상',why:'Exit「10살때만이 아니라 10살부터 지금까지 만나고 있어서」 — 연속성'},
+    {n:'',name:'학생 I',lv:'하',why:'Exit「과거에 있었던 일이기 때문」 — 연속성 없음·오개념'},
+    {n:'',name:'학생 J',lv:'상',why:'Exit「지금까지도 Amelia와 잘 지내고 있다는 것을 강조」 — 연속성+강조'},
+    {n:'',name:'학생 K',lv:'상',why:'Exit「10년전부터 현재까지 만나고 있다, 과거시제면 지금 안 만난다고 생각」 — 과거형 대조'},
+    {n:'',name:'학생 L',lv:'상',why:'Exit「10살때 만난 것이 현재까지 이어지고 있어서」 — 연속성'},
+    {n:'',name:'학생 M',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 N',lv:'하',why:'Exit 무의미·질문 오독'},
+    {n:'',name:'학생 O',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 P',lv:'중',why:'Exit「언제부터 만났는지 제시해 나이 차이를 보도록」 — 초점 빗나감'},
+    {n:'',name:'학생 Q',lv:'상',why:'Exit「10살부터 현재까지 이어져 알고 지냈음을 강조」 — 연속성'},
+    {n:'',name:'학생 R',lv:'상',why:'Exit「아직까지 알고 있다는 점 강조, 과거였으면…」 — 연속성+과거형 대조'},
+    {n:'',name:'학생 S',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 T',lv:'중',why:'Exit「그 문장을 특별히 강조하기 위해」 — 막연'},
+    {n:'',name:'학생 U',lv:'상',why:'Exit「10살때 알게돼 지금까지 친하고 앞으로도」 — 연속성'},
+    {n:'',name:'학생 V',lv:'상',why:'Exit「지금도 알고 안 까먹고 있다는 정보를 줄 수 있어서」 — 연속성'},
+    {n:'',name:'학생 W',lv:'중',why:'Exit「시제로 강조하기 위해」 — 막연'},
+    {n:'',name:'학생 X',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 Y',lv:'상',why:'Exit「그녀를 오랫동안 본 사이라는 것을 전달하려고」 — 연속성'}
+   ],
+   '4':[
+    {n:'',name:'학생 A',lv:'상',why:'Exit「몇 살부터 친해졌는지(과거~현재)를 알리려고」 — 연속성'},
+    {n:'',name:'학생 B',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 C',lv:'중',why:'Exit「현재까지 알고 있어서」 — 다소 막연'},
+    {n:'',name:'학생 D',lv:'중',why:'Exit「그때부터 지금까지」 — 흐릿·불확실'},
+    {n:'',name:'학생 E',lv:'상',why:'Exit「아직도 Amelia를 알고 있어서(I have known her)」 — 연속성'},
+    {n:'',name:'학생 F',lv:'중',why:'Exit「강조하기 위해」 — 막연, 연속성 없음'},
+    {n:'',name:'학생 G',lv:'상',why:'Exit「10살때부터 지금까지 이어지기에」 — 연속성'},
+    {n:'',name:'학생 H',lv:'상',why:'Exit「아밀리아와 친한 사이임을 더 알려주려고」 — 관계 지속 전달'},
+    {n:'',name:'학생 I',lv:'상',why:'Exit「과거부터 현재까지 알아와서」 — 연속성'},
+    {n:'',name:'학생 J',lv:'상',why:'Exit「과거에만이 아니라 지금까지 알고 지내고 있어서」 — 연속성'},
+    {n:'',name:'학생 K',lv:'상',why:'Exit「아직까지 알고 있다는 걸 말하려고」 — 연속성'},
+    {n:'',name:'학생 L',lv:'상',why:'Exit「아직까지도 친구로 남아서」 — 연속성'},
+    {n:'',name:'학생 M',lv:'상',why:'Exit「아직까지도 친구로 남아서」 — 연속성'},
+    {n:'',name:'학생 N',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 O',lv:'중',why:'Exit「더 생생하게 느끼게 하려고」 — 막연, 연속성 없음'},
+    {n:'',name:'학생 P',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 Q',lv:'상',why:'Exit「계속 그 상태여서」 — 지속'},
+    {n:'',name:'학생 R',lv:'상',why:'Exit「현재까지 친구 사이여서」 — 연속성'},
+    {n:'',name:'학생 S',lv:'하',why:'Exit 낙서·무응답'},
+    {n:'',name:'학생 T',lv:'상',why:'Exit「아직 애밀리아를 알고 있어서(I have known her)」 — 연속성'},
+    {n:'',name:'학생 U',lv:'상',why:'Exit「10살때 만나 지금까지 좋은 관계 유지를 강조」 — 연속성+강조'},
+    {n:'',name:'학생 V',lv:'상',why:'Exit「친구 사이가 계속 이어져 있어서」 — 연속성'},
+    {n:'',name:'학생 W',lv:'상',why:'Exit「현재완료로 계속 알아온 사이임을, 과거형이면 오랜만에 본 듯」 — 과거형 대조, 모범'},
+    {n:'',name:'학생 X',lv:'상',why:'Exit「과거시제면 지금도 아는지 모르지만 현재완료면 처음부터 알고 있음을 알 수 있다」 — 과거형 대조, 모범'},
+    {n:'',name:'학생 Y',lv:'하',why:'Exit「선택이 가능」 — 무응답·내용 없음'}
+   ],
+   '6':[
+    {n:'',name:'학생 A',lv:'상',why:'Exit「10살때부터 지금까지 알고 있는 사이라는 걸 강조」 — 연속성'},
+    {n:'',name:'학생 B',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 C',lv:'상',why:'Exit「과거에 진행돼 현재까지 이어지기 때문」 — 연속성'},
+    {n:'',name:'학생 D',lv:'상',why:'Exit「10살 이후 지금까지 친함을 알리려고, 과거형이면 현재 친한지 모름」 — 과거형 대조'},
+    {n:'',name:'학생 E',lv:'상',why:'Exit「과거시제는 한 번 만남, 현재완료는 10살부터 꾸준히」 — 과거형 대조'},
+    {n:'',name:'학생 F',lv:'중',why:'Exit「10살때 알게 되었다는 것?」 — 불확실'},
+    {n:'',name:'학생 G',lv:'상',why:'Exit「과거에 진행돼 현재까지 이어짐」 — 연속성'},
+    {n:'',name:'학생 H',lv:'상',why:'Exit「예전부터 지금까지 알고 있다는 것을 말하려고」 — 연속성'},
+    {n:'',name:'학생 I',lv:'상',why:'Exit「과거부터 지금까지 연속적인 관계 강조」 — 연속성'},
+    {n:'',name:'학생 J',lv:'상',why:'Exit「Amelia와 오래전부터 친함」 — 연속성'},
+    {n:'',name:'학생 K',lv:'상',why:'Exit「과거시제는 지금과 무관, 현재완료는 과거부터 지금까지 알고 있다고 표현」 — 과거형 대조'},
+    {n:'',name:'학생 L',lv:'상',why:'Exit「에밀리아와 오래전부터 친했다는 걸 알리려고」 — 연속성'},
+    {n:'',name:'학생 M',lv:'하',why:'Exit「과거시제 사용」 — 시제 무관'},
+    {n:'',name:'학생 N',lv:'상',why:'Exit「10살부터 현재까지 안다는 것, 과거형이면 과거에만 안 걸로 전달됨」 — 과거형 대조'},
+    {n:'',name:'학생 O',lv:'상',why:'Exit「10살때부터 지금 이 순간까지 알고 지냄을 알리려고」 — 연속성'},
+    {n:'',name:'학생 P',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 Q',lv:'상',why:'Exit「어렸을 때부터 친했다는 것을 강조」 — 연속성+강조'},
+    {n:'',name:'학생 R',lv:'중',why:'Exit「지금 그렇다는 것을 강조하고 싶어서」 — 다소 막연'},
+    {n:'',name:'학생 S',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 T',lv:'하',why:'Exit「과거시제를 사용해서」 — 시제 무관'},
+    {n:'',name:'학생 U',lv:'상',why:'Exit「현재까지 친구사이임을 알려주려고, 과거시제는 현재 친구 아님」 — 과거형 대조'},
+    {n:'',name:'학생 V',lv:'중',why:'Exit「관계를 적절히 설명하려고」 — 막연(판독 불확)'},
+    {n:'',name:'학생 W',lv:'상',why:'Exit「과거시제는 알게 된 과거 시점, 현재완료는 10살부터 지금까지 더 오래 만난 느낌」 — 과거형 대조'},
+    {n:'',name:'학생 X',lv:'상',why:'Exit「과거시제면 지금은 모르지만 현재완료는 지금 어떤지 확실히」 — 과거형 대조'},
+    {n:'',name:'학생 Y',lv:'상',why:'Exit「10살부터 지금까지 알고 있다는 것을 표현하려고」 — 연속성'},
+    {n:'',name:'학생 Z',lv:'상',why:'Exit「Amelia와 10살때부터 계속된 친한 관계를 나타내려고」 — 연속성'}
+   ],
+   '5':[
+    {n:'',name:'학생 A',lv:'상',why:'Exit「과거에 일어난 게 현재까지 이어짐을 말하려고」 — 연속성'},
+    {n:'',name:'학생 B',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 C',lv:'상',why:'Exit「지금도 친구를 알고 있어서」 — 연속성'},
+    {n:'',name:'학생 D',lv:'상',why:'Exit「옛날부터 지금까지 안다는 뜻을 전달」 — 연속성'},
+    {n:'',name:'학생 E',lv:'상',why:'Exit「과거시제는 특정시점만, 현재완료는 과거~현재 과정도」 — 과거형 대조'},
+    {n:'',name:'학생 F',lv:'상',why:'Exit「아직까지 계속 친구였음을 알려주려고」 — 연속성'},
+    {n:'',name:'학생 G',lv:'중',why:'Exit 모호·질문 오독'},
+    {n:'',name:'학생 H',lv:'중',why:'Exit「이미 결정/과거 전달」 흐림'},
+    {n:'',name:'학생 I',lv:'상',why:'Exit「과거부터 현재까지 계속 알고 있어서」 — 연속성'},
+    {n:'',name:'학생 J',lv:'상',why:'Exit「지금도 친구여서」 — 연속성'},
+    {n:'',name:'학생 K',lv:'상',why:'Exit「과거형이면 현재 모름, 현재완료로 과거·현재 친구임을」 — 과거형 대조'},
+    {n:'',name:'학생 L',lv:'상',why:'Exit「과거부터 지금까지 쭉 알고 지냈음을 전달」 — 연속성'},
+    {n:'',name:'학생 M',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 N',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 O',lv:'상',why:'Exit「10살부터 계속 알고 지냈음을 알리려고」 — 연속성'},
+    {n:'',name:'학생 P',lv:'하',why:'Exit「대과거」 — 오개념'},
+    {n:'',name:'학생 Q',lv:'상',why:'Exit「10살부터 계속 알고 지냈음을 알리려고」 — 연속성'},
+    {n:'',name:'학생 R',lv:'상',why:'Exit「10살부터 지금까지·앞으로도 이어질 것」 — 연속성'},
+    {n:'',name:'학생 S',lv:'상',why:'Exit「10살 때부터 친구로 남음」 — 연속성'},
+    {n:'',name:'학생 T',lv:'중',why:'Exit「지금까지 아는 것을 알려주려고」 다소 막연'},
+    {n:'',name:'학생 U',lv:'상',why:'Exit「계속 알아왔음을 강조」 — 연속성'},
+    {n:'',name:'학생 V',lv:'상',why:'Exit「10살부터 지금까지 알아온 오랜 친구임을」 — 연속성'},
+    {n:'',name:'학생 W',lv:'하',why:'Exit 빈칸'}
+   ],
+   '7':[
+    {n:'',name:'학생 A',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 B',lv:'중',why:'Exit 예문 인용, 연속성 흐릿'},
+    {n:'',name:'학생 C',lv:'상',why:'Exit「10살부터 지금까지 관계 유지를 강조·전달」 — 연속성'},
+    {n:'',name:'학생 D',lv:'상',why:'Exit「현재까지도 그 상태임을 강조」 — 연속성'},
+    {n:'',name:'학생 E',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 F',lv:'하',why:'Exit 거의 빈칸·흐림'},
+    {n:'',name:'학생 G',lv:'상',why:'Exit「10살때부터 알아왔음을 강조」 — 연속성'},
+    {n:'',name:'학생 H',lv:'상',why:'Exit「10살부터 지금까지 친구임을 말하려」 — 연속성'},
+    {n:'',name:'학생 I',lv:'상',why:'Exit「그때부터 지금까지 영향을 강조」 — 연속성'},
+    {n:'',name:'학생 J',lv:'중',why:'Exit「오랫동안 친구」 연속성 일부'},
+    {n:'',name:'학생 K',lv:'중',why:'Exit「강조하기 위해?」 막연'},
+    {n:'',name:'학생 L',lv:'상',why:'Exit「몇 살 때부터 알고 지냈는지 강조」 — 연속성'},
+    {n:'',name:'학생 M',lv:'상',why:'Exit「과거부터 지금까지 안 잃었음을 강조」 — 연속성'},
+    {n:'',name:'학생 N',lv:'중',why:'Exit「10살 이후 알고 있었음 강조」 다소 막연'},
+    {n:'',name:'학생 O',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 P',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 Q',lv:'상',why:'Exit「예전부터 오랜 친구였음 강조」 — 연속성'},
+    {n:'',name:'학생 R',lv:'상',why:'Exit「과거형은 그때만, 현재완료는 10살~지금」 — 과거형 대조'},
+    {n:'',name:'학생 S',lv:'중',why:'Exit「정보를 더 강조」 막연'},
+    {n:'',name:'학생 T',lv:'상',why:'Exit「과거부터 지금까지 알고 있음을 강조」 — 연속성'},
+    {n:'',name:'학생 U',lv:'상',why:'Exit「10살부터 알고 있었음을 알려주려」 — 연속성'},
+    {n:'',name:'학생 V',lv:'상',why:'Exit「현재도 잘 지내고 있어서」 — 연속성'},
+    {n:'',name:'학생 W',lv:'상',why:'Exit「10살부터 지냈고 현재 관계를 강조」 — 연속성'},
+    {n:'',name:'학생 X',lv:'중',why:'Exit「과거부터 계속 알아서」 간단'},
+    {n:'',name:'학생 Y',lv:'하',why:'Exit 빈칸'},
+    {n:'',name:'학생 Z',lv:'상',why:'Exit「지금까지 알아왔음」 — 연속성'}
+   ]
+  }
+ }
+};
+let stageBan1='1', stageBan2='1';
+
+const GRAMMAR={
+ chasi:'2', short:'현재완료 이해', stage:'현재완료 시제 — ③ 내가 이해한 대로 정리', date:'2026-06-12', source:'2차시 스캔 학습지 ③',
+ note:'문법 개념 이해와 선택 의도 추론(패널10)은 다른 능력 — 두 패널의 도달률을 비교해 보세요.',
+ rubric:[
+  {lab:'상',cls:'s',tag:'정확',txt:'현재완료=과거에 시작돼 현재까지 영향/지속으로 정의하고, <b>I lost / I have lost</b>의 의미 차이를 예로 설명.'},
+  {lab:'중',cls:'m',tag:'부분',txt:'정의나 예시 중 일부만, 또는 표현이 단편적.'},
+  {lab:'하',cls:'h',tag:'미흡',txt:'타임라인·용어만 적거나 비어 있음 / 과거시제와 혼동(오개념).'}
+ ],
+ byBan:{
+  '1':[
+   {n:'',name:'학생 A',lv:'중',why:'「과거~현재 영향」 단편적 정의만'},
+   {n:'',name:'학생 B',lv:'상',why:'「과거에 일어난 일이 현재까지 영향」 정의+have p.p.+도식'},
+   {n:'',name:'학생 C',lv:'하',why:'③ 빈칸'},
+   {n:'',name:'학생 D',lv:'상',why:'「과거에 잃어버려 지금도 없음」으로 의미 차이 설명+도식'},
+   {n:'',name:'학생 E',lv:'중',why:'「과거→현재→미래」 모호, 정의 불명확'},
+   {n:'',name:'학생 F',lv:'상',why:'「과거~현재 진행」+I lost / I have lost 비교'},
+   {n:'',name:'학생 G',lv:'상',why:'정의+「과거시제는 과거만, 현재완료는 현재까지」 대조'},
+   {n:'',name:'학생 H',lv:'상',why:'「과거시제 영향 없음 vs 현재완료 현재까지 영향」 대조'},
+   {n:'',name:'학생 I',lv:'상',why:'과거~현재 영향+I lost / I have lost 비교+도식'},
+   {n:'',name:'학생 J',lv:'상',why:'「과거~현재 진행」+두 예문 비교+도식'},
+   {n:'',name:'학생 K',lv:'상',why:'「현재까지 지속」 정의+도식'},
+   {n:'',name:'학생 L',lv:'하',why:'③ 빈칸'},
+   {n:'',name:'학생 M',lv:'하',why:'③ 빈칸'},
+   {n:'',name:'학생 N',lv:'하',why:'③ 빈칸'},
+   {n:'',name:'학생 O',lv:'상',why:'have p.p.+I have lost / I lost 비교+도식'},
+   {n:'',name:'학생 P',lv:'상',why:'「과거부터 지금까지」+I lost vs I have lost+도식'},
+   {n:'',name:'학생 Q',lv:'중',why:'have+p.p. 형태만 단편'},
+   {n:'',name:'학생 R',lv:'상',why:'정의+「과거시제는 과거, 현재완료는 이어짐」 대조'},
+   {n:'',name:'학생 S',lv:'하',why:'③ 빈칸'},
+   {n:'',name:'학생 T',lv:'상',why:'have p.p.+과거시제·현재완료 O/X 비교+도식'},
+   {n:'',name:'학생 U',lv:'중',why:'have+p.p. 형태만 단편'},
+   {n:'',name:'학생 V',lv:'중',why:'예문 위주, 정의 모호'},
+   {n:'',name:'학생 W',lv:'상',why:'have/has p.p.+오류문장 X 표시로 의미 구분+도식'},
+   {n:'',name:'학생 X',lv:'상',why:'「과거부터 현재까지 이어지는 것」+과거시제와 차이'},
+   {n:'',name:'학생 Y',lv:'상',why:'「과거 일이 현재에도 영향」+I have lost / I lost 비교+도식'},
+   {n:'',name:'학생 Z',lv:'상',why:'「과거=점, 현재완료=면」 비유+도식'},
+   {n:'',name:'학생 AA',lv:'상',why:'과거~현재 영향+I lost / I have lost 비교+도식'},
+   {n:'',name:'학생 AB',lv:'중',why:'「과거시제와 다르다」 정의는 있으나 예문이 한국어'}
+  ],
+  '2':[
+   {n:'',name:'학생 A',lv:'상',why:'「과거는 과거 일만, 현재완료는 과거~현재까지」 정의 명확'},
+   {n:'',name:'학생 B',lv:'하',why:'타임라인·용어만, 설명 없음'},
+   {n:'',name:'학생 C',lv:'상',why:'I lost/I have lost 두 문장의 의미 차이를 풀어 설명'},
+   {n:'',name:'학생 D',lv:'상',why:'과거~현재 영향 정의 + 「과거시제는 현재 상태 모름」 대비'},
+   {n:'',name:'학생 E',lv:'중',why:'예문은 있으나 설명이 단편'},
+   {n:'',name:'학생 F',lv:'상',why:'점/선 비유 + 두 예문 의미까지 정확'},
+   {n:'',name:'학생 G',lv:'상',why:'과거 vs 현재완료 대조, 과거는 단순 정보 전달로 구분'},
+   {n:'',name:'학생 H',lv:'중',why:'「과거부터 현재까지」 적었으나 단편적'},
+   {n:'',name:'학생 I',lv:'하',why:'과거시제를 과거~현재로 잘못 정리(오개념)'},
+   {n:'',name:'학생 J',lv:'상',why:'두 예문의 의미 차이(지금 모름/없음) 명확'},
+   {n:'',name:'학생 K',lv:'상',why:'정의+형태+두 예문 의미까지 완결'},
+   {n:'',name:'학생 L',lv:'하',why:'거의 비어 있음(용어만)'},
+   {n:'',name:'학생 M',lv:'상',why:'형태(have+pp)+정의+두 예문 의미까지 완결'},
+   {n:'',name:'학생 N',lv:'상',why:'과거시제는 현재상태 못 알림 vs 현재완료는 알림, 예문 정확'},
+   {n:'',name:'학생 O',lv:'상',why:'「키 가지고 있나?」 질문틀로 두 문장 대비'},
+   {n:'',name:'학생 P',lv:'상',why:'과거~현재 영향 정의 + 두 예문 의미 차이'},
+   {n:'',name:'학생 Q',lv:'중',why:'「지금까지 이어진다」 정도, 일부 부정확'},
+   {n:'',name:'학생 R',lv:'상',why:'have P.P. 정의 + 두 예문 의미 차이 정확'},
+   {n:'',name:'학생 S',lv:'상',why:'「과거는 그 순간만, 현재완료는 과거~현재로 표현」'},
+   {n:'',name:'학생 T',lv:'상',why:'「과거는 과거만, 현재완료는 과거~지금 상태」'},
+   {n:'',name:'학생 U',lv:'확인',why:'③ 빈칸 — 확인 필요'},
+   {n:'',name:'학생 V',lv:'확인',why:'③ 미완성 — 확인 필요'},
+   {n:'',name:'학생 W',lv:'확인',why:'스캔 식별 불가 2장(내용은 양호)'}
+  ],
+  '3':[
+   {n:'',name:'학생 A',lv:'상',why:'「과거시제는 과거에 끝, 현재완료는 계속」 정의+대비'},
+   {n:'',name:'학생 B',lv:'상',why:'I have lost / I lost 의미 차이로 정리'},
+   {n:'',name:'학생 C',lv:'하',why:'③ 공백(짝 페이지 미스캔)'},
+   {n:'',name:'학생 D',lv:'중',why:'「과거와 현재의 선」 단편'},
+   {n:'',name:'학생 E',lv:'상',why:'도식+I lost/I have lost 차이, yesterday X 명확'},
+   {n:'',name:'학생 F',lv:'상',why:'「과거에서 시작해 현재까지 영향」+I lost/I have lost 예'},
+   {n:'',name:'학생 G',lv:'하',why:'③ 정리 공백'},
+   {n:'',name:'학생 H',lv:'상',why:'have+pp 과거~현재 + 과거시제 대비 + 도식'},
+   {n:'',name:'학생 I',lv:'하',why:'③ 공백(그림만)'},
+   {n:'',name:'학생 J',lv:'상',why:'도식+I lost/I have lost+since/yesterday X 예문'},
+   {n:'',name:'학생 K',lv:'상',why:'「과거부터 현재까지 이르는 말」+과거와 차이'},
+   {n:'',name:'학생 L',lv:'중',why:'「현재완료=과거가 현재에 영향」 단편'},
+   {n:'',name:'학생 M',lv:'하',why:'③ 정리 공백'},
+   {n:'',name:'학생 N',lv:'중',why:'「이전 일이 현재에 영향」 그림+단편'},
+   {n:'',name:'학생 O',lv:'하',why:'③ 정리 공백'},
+   {n:'',name:'학생 P',lv:'중',why:'「과거가 현재에 영향」 단편'},
+   {n:'',name:'학생 Q',lv:'상',why:'have+pp 완료 의미 + I ate/I have eaten 예'},
+   {n:'',name:'학생 R',lv:'상',why:'과·현·미 도식 + have/has pp + yesterday X'},
+   {n:'',name:'학생 S',lv:'하',why:'③ 공백(본문 문장만)'},
+   {n:'',name:'학생 T',lv:'상',why:'I lost/I have lost 의미 차이(현재 영향) 명확'},
+   {n:'',name:'학생 U',lv:'상',why:'「과거=지점 / 현재완료=기간·현재 동시」'},
+   {n:'',name:'학생 V',lv:'하',why:'③ 공백(본문만)'},
+   {n:'',name:'학생 W',lv:'중',why:'과·현·미 그림 단편'},
+   {n:'',name:'학생 X',lv:'하',why:'③ 정리 공백'},
+   {n:'',name:'학생 Y',lv:'중',why:'have pp 형태만, 과거와 차이 단편'}
+  ],
+  '4':[
+   {n:'',name:'학생 A',lv:'상',why:'「과거부터 지금까지 일어난 일」+I lost/I have lost 의미 차이 설명'},
+   {n:'',name:'학생 B',lv:'하',why:'③ 빈칸'},
+   {n:'',name:'학생 C',lv:'중',why:'도식·약어(have+p.p)만, 오개념 예문'},
+   {n:'',name:'학생 D',lv:'하',why:'도식만, 정의 모호'},
+   {n:'',name:'학생 E',lv:'상',why:'「현재까지 상태가 이어짐」+타임라인'},
+   {n:'',name:'학생 F',lv:'상',why:'「과거 일이 현재까지 영향(have+p.p)」, 과거와 차이'},
+   {n:'',name:'학생 G',lv:'중',why:'「현재까지 이어짐」 적었으나 표현 혼란'},
+   {n:'',name:'학생 H',lv:'중',why:'「과거~지금까지」 적었으나 설명 모호'},
+   {n:'',name:'학생 I',lv:'상',why:'정의+과거시제 대비(영향 미침 vs 안 미침)'},
+   {n:'',name:'학생 J',lv:'상',why:'「과거 일이 현재까지 영향」+과거는 현재 영향 없음 대비'},
+   {n:'',name:'학생 K',lv:'중',why:'「현재상태 알 수 있음/과거는 못 함」 단편'},
+   {n:'',name:'학생 L',lv:'하',why:'③ 정리칸 공백'},
+   {n:'',name:'학생 M',lv:'상',why:'I have lost my key 도식+의미 설명(현재상태 유무)'},
+   {n:'',name:'학생 N',lv:'상',why:'「과거에서 지금까지 이어진 일」+타임라인'},
+   {n:'',name:'학생 O',lv:'하',why:'오개념(과거 혼동)+타임라인만'},
+   {n:'',name:'학생 P',lv:'하',why:'③ 빈칸'},
+   {n:'',name:'학생 Q',lv:'상',why:'「과거와 현재가 이어짐」+과거시제 대비'},
+   {n:'',name:'학생 R',lv:'상',why:'「과거와 현재가 이어져 옴, 과거는 과거의 일일 뿐」'},
+   {n:'',name:'학생 S',lv:'상',why:'「과거~현재 상태→have」+예문(현재도 부서짐)'},
+   {n:'',name:'학생 T',lv:'상',why:'「과거부터 현재까지 이어짐」+타임라인'},
+   {n:'',name:'학생 U',lv:'상',why:'「과거부터 지금까지」+과거시제는 현재 알 수 없음 대비'},
+   {n:'',name:'학생 V',lv:'상',why:'「과거부터 지금까지, 과거는 끝나고 현재완료는 이어짐」'},
+   {n:'',name:'학생 W',lv:'상',why:'「과거에 시작된 상황이 현재에 영향」 정의 명확'},
+   {n:'',name:'학생 X',lv:'상',why:'have+p.p+과거~현재+예문(현재까지 잃어버림)'},
+   {n:'',name:'학생 Y',lv:'하',why:'학번·이름 미기재, 낙서·무응답'}
+  ],
+  '6':[
+   {n:'',name:'학생 A',lv:'하',why:'③ 정리란 빈칸'},
+   {n:'',name:'학생 B',lv:'하',why:'③ 빈칸(타임라인·용어만)'},
+   {n:'',name:'학생 C',lv:'상',why:'정의·도식+I lost/I have lost 예시'},
+   {n:'',name:'학생 D',lv:'상',why:'정의+도식+I lost/I have lost 예시'},
+   {n:'',name:'학생 E',lv:'상',why:'정의+I lost/I have lost 현재상태 대비'},
+   {n:'',name:'학생 F',lv:'상',why:'도식+I lost/I have lost for 2 hours 예시'},
+   {n:'',name:'학생 G',lv:'상',why:'I lost/I have lost 의미 차이+도식'},
+   {n:'',name:'학생 H',lv:'상',why:'정의+I lost/I have lost 현재상태 대비'},
+   {n:'',name:'학생 I',lv:'상',why:'시제 표+I took/I have taken 예시'},
+   {n:'',name:'학생 J',lv:'상',why:'I lost/I have lost+도식'},
+   {n:'',name:'학생 K',lv:'중',why:'I lost/I have lost+have p.p. 단편'},
+   {n:'',name:'학생 L',lv:'상',why:'도식+I lost/I have lost 대비+since'},
+   {n:'',name:'학생 M',lv:'하',why:'「현재시제」 단편만'},
+   {n:'',name:'학생 N',lv:'상',why:'「과거부터 현재까지 지속」 정의+I lost/I have lost 대비'},
+   {n:'',name:'학생 O',lv:'상',why:'「과거 일이 현재까지 영향」+have+과거분사'},
+   {n:'',name:'학생 P',lv:'중',why:'「과거에 생긴 일이 현재까지 이어진 완료」+타임라인'},
+   {n:'',name:'학생 Q',lv:'상',why:'「과거에서 현재까지 이어진 것」+have/has 형태'},
+   {n:'',name:'학생 R',lv:'상',why:'「have+pp, ~부터 지금까지 지속」+I lost/I have lost 대비'},
+   {n:'',name:'학생 S',lv:'하',why:'③ 정리란 빈칸'},
+   {n:'',name:'학생 T',lv:'중',why:'「과거에서 현재까지 이어진 것」 단편(타임라인)'},
+   {n:'',name:'학생 U',lv:'상',why:'「과거부터 지금까지 쭉」+have lost yesterday 오류 표시'},
+   {n:'',name:'학생 V',lv:'상',why:'도식+현재완료에 과거 시점 불가 설명'},
+   {n:'',name:'학생 W',lv:'상',why:'도식+I lost/I have lost 과거~현재'},
+   {n:'',name:'학생 X',lv:'상',why:'도식+I have arrived yesterday(X)/since·for(O) 명확'},
+   {n:'',name:'학생 Y',lv:'상',why:'도식+I lost/I have lost 현재까지 영향'},
+   {n:'',name:'학생 Z',lv:'상',why:'도식+과거~현재 계속+I lost/I have lost yesterday(X)'}
+  ],
+  '5':[
+   {n:'',name:'학생 A',lv:'상',why:'「과거 일이 현재까지 영향」+예문'},
+   {n:'',name:'학생 B',lv:'하',why:'have+p.p. 형태만'},
+   {n:'',name:'학생 C',lv:'상',why:'도식+과거시제 대비+I lost/I have lost'},
+   {n:'',name:'학생 D',lv:'상',why:'도식+정의+I lost/I have lost my key'},
+   {n:'',name:'학생 E',lv:'상',why:'「과거~현재 영향」+I lost/I have lost'},
+   {n:'',name:'학생 F',lv:'상',why:'「과거~현재 계속 영향」 정의'},
+   {n:'',name:'학생 G',lv:'중',why:'현재완료=현재상태 정도, 모호'},
+   {n:'',name:'학생 H',lv:'상',why:'「과거에서 시작해 현재까지 영향」'},
+   {n:'',name:'학생 I',lv:'상',why:'「과거부터 현재까지 계속」'},
+   {n:'',name:'학생 J',lv:'상',why:'「지금과 과거 연결」 대비'},
+   {n:'',name:'학생 K',lv:'상',why:'도식+I lost/I have lost 대조'},
+   {n:'',name:'학생 L',lv:'상',why:'「현재·과거 상황 동시」+I lost/I have lost'},
+   {n:'',name:'학생 M',lv:'하',why:'용어만 기재'},
+   {n:'',name:'학생 N',lv:'하',why:'용어만 기재'},
+   {n:'',name:'학생 O',lv:'상',why:'「과거~현재 계속 영향」+I lost/I have lost'},
+   {n:'',name:'학생 P',lv:'상',why:'「과거~현재 계속」+have/has p.p.'},
+   {n:'',name:'학생 Q',lv:'상',why:'도식+I lost/I have lost 대조'},
+   {n:'',name:'학생 R',lv:'중',why:'도식만, 정의 부재'},
+   {n:'',name:'학생 S',lv:'상',why:'도식+과거형 대비 예문'},
+   {n:'',name:'학생 T',lv:'상',why:'I lost/I have lost 과정 강조'},
+   {n:'',name:'학생 U',lv:'상',why:'「과거 영향 모름 vs 현재완료 계속」'},
+   {n:'',name:'학생 V',lv:'상',why:'도식+I lost/I have lost 대조'},
+   {n:'',name:'학생 W',lv:'하',why:'전부 빈칸'}
+  ],
+  '7':[
+   {n:'',name:'학생 A',lv:'하',why:'have+p.p. 형태·표시만'},
+   {n:'',name:'학생 B',lv:'중',why:'「과거 일이 이어져 연결」 단편'},
+   {n:'',name:'학생 C',lv:'상',why:'도식+「과거~현재 과정」+과거시제 대조'},
+   {n:'',name:'학생 D',lv:'중',why:'「과거 일이 현재까지 영향」 정도'},
+   {n:'',name:'학생 E',lv:'중',why:'have P.P+도식만'},
+   {n:'',name:'학생 F',lv:'상',why:'I lost/I have lost 의미 차이 도식'},
+   {n:'',name:'학생 G',lv:'상',why:'「과거 이전 발생→현재까지 영향」 정의'},
+   {n:'',name:'학생 H',lv:'상',why:'도식+「과거 끝 vs 현재완료 현재까지」'},
+   {n:'',name:'학생 I',lv:'상',why:'since/yesterday 가부 도식+과거 대조'},
+   {n:'',name:'학생 J',lv:'중',why:'「현재·과거 사이 과정」 애매'},
+   {n:'',name:'학생 K',lv:'하',why:'현재진행과 혼동(오개념)'},
+   {n:'',name:'학생 L',lv:'상',why:'I lost/I have lost+since/yesterday 상세'},
+   {n:'',name:'학생 M',lv:'상',why:'도식+「과거 영향 X, 현재완료 현재까지」'},
+   {n:'',name:'학생 N',lv:'중',why:'have p.p+since 단편'},
+   {n:'',name:'학생 O',lv:'하',why:'뒷면 전부 빈칸'},
+   {n:'',name:'학생 P',lv:'하',why:'뒷면 전부 빈칸'},
+   {n:'',name:'학생 Q',lv:'하',why:'낙서·용어만'},
+   {n:'',name:'학생 R',lv:'상',why:'도식+「과거 영향 X, 현재완료 현재 영향」'},
+   {n:'',name:'학생 S',lv:'상',why:'「과거~현재 지속」+since 결합'},
+   {n:'',name:'학생 T',lv:'상',why:'「현재완료=과거·현재 이어짐」'},
+   {n:'',name:'학생 U',lv:'상',why:'「과거 일이 현재까지 영향」+since/for 상세'},
+   {n:'',name:'학생 V',lv:'상',why:'「과거 끝 vs 현재완료 과거→현재」'},
+   {n:'',name:'학생 W',lv:'상',why:'「과거~현재 상태 유지」 도식'},
+   {n:'',name:'학생 X',lv:'중',why:'「과거부터 지금까지」 간단'},
+   {n:'',name:'학생 Y',lv:'하',why:'「이해 못함」 명시, 빈칸'},
+   {n:'',name:'학생 Z',lv:'상',why:'도식+「현재 상태 알 수 있다」'}
+  ]
+ }
+};
+
+const INTEREST={
+ chasi:'2', source:'2차시 스캔 학습지 핵심질문',
+ byBan:{
+  '1':{ date:'2026-06-15', items:[
+   {n:'',name:'학생 A',cat:'걸린 시간',reason:'인천→런던 15시간이 신기'},
+   {n:'',name:'학생 B',cat:'가본 장소',reason:'캠든마켓 기념품·특가'},
+   {n:'',name:'학생 C',cat:'특별한 색',reason:'런던의 특별한 색이 빨강, 처음 알아서'},
+   {n:'',name:'학생 D',cat:'기타',reason:'책 가격이 가장 궁금'},
+   {n:'',name:'학생 E',cat:'촬영지·승강장',reason:'해리포터 촬영지 가보고 싶어서'},
+   {n:'',name:'학생 F',cat:'지하철 이름',reason:'지하철 이름을 처음 알아서'},
+   {n:'',name:'학생 G',cat:'지하철 이름',reason:'튜브 위치가 기억에 남아서'},
+   {n:'',name:'학생 H',cat:'촬영지·승강장',reason:'해리포터를 좋아해서'},
+   {n:'',name:'학생 I',cat:'기타',reason:'근위병에 대해 알고 싶어서'},
+   {n:'',name:'학생 J',cat:'음식',reason:'우리나라에서 못 먹는 음식이라'},
+   {n:'',name:'학생 K',cat:'우산·날씨',reason:'런던 우산 쓰는 시기가 달라 신기'},
+   {n:'',name:'학생 L',cat:'촬영지·승강장',reason:'9¾ 승강장에 가보고 싶어서'},
+   {n:'',name:'학생 M',cat:'촬영지·승강장',reason:'킹스크로스 9¾ 승강장, 해리포터 때문'},
+   {n:'',name:'학생 N',cat:'음식',reason:'다른 나라 음식이 궁금해서'},
+   {n:'',name:'학생 O',cat:'촬영지·승강장',reason:'킹스크로스역이 해리포터로 유명해서'},
+   {n:'',name:'학생 P',cat:'우산·날씨',reason:'예상과 다른 날씨여서'},
+   {n:'',name:'학생 Q',cat:'우산·날씨',reason:'우산 쓰는 나이가 충격적이어서'},
+   {n:'',name:'학생 R',cat:'친구·만남',reason:'과거-현재 친구 관계 변화에 흥미'}
+  ]},
+  '2':{ date:'2026-06-12', items:[
+   {n:'',name:'학생 A',cat:'음식',reason:'먹은 음식이 흥미로움'},
+   {n:'',name:'학생 B',cat:'지하철 이름',reason:'지하철을 튜브라 부르는 걸 처음 봐서'},
+   {n:'',name:'학생 C',cat:'우산·날씨',reason:'우산 쓰는 시기가 인상적'},
+   {n:'',name:'학생 D',cat:'우산·날씨',reason:'비가 많이 올 때만 우산 쓰는 게 신기'},
+   {n:'',name:'학생 E',cat:'지하철 이름',reason:'런던은 지하철을 튜브라 부른다'},
+   {n:'',name:'학생 F',cat:'촬영지·승강장',reason:'9¾ 승강장이 런던에 있는 것'},
+   {n:'',name:'학생 G',cat:'이동수단',reason:'물가 비싼데 뭘 타고 다니는지 궁금'},
+   {n:'',name:'학생 H',cat:'걸린 시간',reason:'생각보다 비행이 오래 걸려서'},
+   {n:'',name:'학생 I',cat:'특별한 색',reason:'런던에 대해 처음 안 정보라서'},
+   {n:'',name:'학생 J',cat:'지하철 이름',reason:'지하철 이름이 튜브인 게 신기'},
+   {n:'',name:'학생 K',cat:'촬영지·승강장',reason:'해리포터 영화를 인상깊게 봐서'},
+   {n:'',name:'학생 L',cat:'특별한 색',reason:'빨강이 영국에서 특별한 색이라서'},
+   {n:'',name:'학생 M',cat:'특별한 색',reason:'런던에서 빨강이 특별한 것'},
+   {n:'',name:'학생 N',cat:'걸린 시간',reason:'이렇게 오래 걸리는지 몰라서'},
+   {n:'',name:'학생 O',cat:'가본 장소',reason:'영국의 장소들을 알아볼 수 있어서'},
+   {n:'',name:'학생 P',cat:'특별한 색',reason:'빨강이 특별하다는 걸 처음 들어서'},
+   {n:'',name:'학생 Q',cat:'음식',reason:'피쉬앤칩스를 먹어보고 싶어서'}
+  ]},
+  '3':{ date:'2026-06-15', items:[
+   {n:'',name:'학생 A',cat:'기타',reason:'근위병이 옷을 잘 안 갈아입는 게 신기'},
+   {n:'',name:'학생 B',cat:'지하철 이름',reason:'지하철을 tube라 부르는 게 흥미'},
+   {n:'',name:'학생 C',cat:'지하철 이름',reason:'지하철을 tube라 부르는 게 신기'},
+   {n:'',name:'학생 D',cat:'특별한 색',reason:'영국의 특별한 색이 빨강인 걸 처음 알아서'},
+   {n:'',name:'학생 E',cat:'특별한 색',reason:'빨강이 런던의 특별한 색이라 처음 알아 흥미'},
+   {n:'',name:'학생 F',cat:'우산·날씨',reason:'영국은 비가 많이 안 와 우산을 잘 안 쓰는 게 신기'},
+   {n:'',name:'학생 G',cat:'친구·만남',reason:'친구를 알게 된 나이가 흥미'},
+   {n:'',name:'학생 H',cat:'촬영지·승강장',reason:'해리포터 촬영지 — 해리포터를 재밌게 봐서'},
+   {n:'',name:'학생 I',cat:'엄마 선물',reason:'엄마 선물을 산 것'},
+   {n:'',name:'학생 J',cat:'우산·날씨',reason:'우산 쓰는 시기'},
+   {n:'',name:'학생 K',cat:'우산·날씨',reason:'런던 사람들은 비 많이 올 때만 우산을 쓴다'},
+   {n:'',name:'학생 L',cat:'기타',reason:'근위병'},
+   {n:'',name:'학생 M',cat:'음식',reason:'fish and chips가 맛있어 보여서'},
+   {n:'',name:'학생 N',cat:'특별한 색',reason:'런던의 특별한 색이 빨강이라 놀라움'},
+   {n:'',name:'학생 O',cat:'특별한 색',reason:'빨강이 영국에서 특별한 색이라서'},
+   {n:'',name:'학생 P',cat:'기타',reason:'기온 차가 적어 여행하기 좋을 듯'},
+   {n:'',name:'학생 Q',cat:'촬영지·승강장',reason:'해리포터 촬영지'},
+   {n:'',name:'학생 R',cat:'기타',reason:'근위병의 복장이 자세히 적혀 있어서'},
+   {n:'',name:'학생 S',cat:'지하철 이름',reason:'지하철을 tube라 특이하게 부르는 게 신기'}
+  ]},
+  '4':{ date:'2026-06-15', items:[
+   {n:'',name:'학생 A',cat:'특별한 색',reason:'런던 대표색이 빨강인 걸 처음 알아서'},
+   {n:'',name:'학생 B',cat:'지하철 이름',reason:'지하철을 tube라 부르는 게 더 친근해서'},
+   {n:'',name:'학생 C',cat:'특별한 색',reason:'런던 대표색이 빨강인 걸 처음 알아서'},
+   {n:'',name:'학생 D',cat:'기타',reason:'근위병이 옮기지 않고 가만히 있는 게 신기'},
+   {n:'',name:'학생 E',cat:'기타',reason:'근위병이 궁전 밖에도 있는 게 신기'},
+   {n:'',name:'학생 F',cat:'촬영지·승강장',reason:'아멜리아가 영화 찍은 승강장'},
+   {n:'',name:'학생 G',cat:'기타',reason:'근위병이 움직일 수 없어서'},
+   {n:'',name:'학생 H',cat:'특별한 색',reason:'런던 대표색이 빨강이라 흥미'},
+   {n:'',name:'학생 I',cat:'기타',reason:'신기해서'},
+   {n:'',name:'학생 J',cat:'특별한 색',reason:'빨강을 좋아해서'},
+   {n:'',name:'학생 K',cat:'기타',reason:'근위병이 계속 가만히 있는 게 신기'},
+   {n:'',name:'학생 L',cat:'음식',reason:'런던 음식'},
+   {n:'',name:'학생 M',cat:'음식',reason:'런던 음식이 흥미로웠다'},
+   {n:'',name:'학생 N',cat:'촬영지·승강장',reason:'승강장 이름이 9¾라 특이'},
+   {n:'',name:'학생 O',cat:'엄마 선물',reason:'엄마 선물 산 것 — 나도 런던 가면 선물 살 듯'},
+   {n:'',name:'학생 P',cat:'촬영지·승강장',reason:'9¾ 승강장'},
+   {n:'',name:'학생 Q',cat:'촬영지·승강장',reason:'킹스크로스역 — 해리포터를 좋아해서'},
+   {n:'',name:'학생 R',cat:'특별한 색',reason:'특별한 색이 어떻게 됐는지 궁금해서'},
+   {n:'',name:'학생 S',cat:'지하철 이름',reason:'지하철을 tube라 부르는 게 신기'}
+  ]},
+  '6':{ date:'2026-06-15', items:[
+   {n:'',name:'학생 A',cat:'우산·날씨',reason:'비 와도 우산을 잘 안 쓰는 걸 새로 알아서'},
+   {n:'',name:'학생 B',cat:'음식',reason:'먹은 음식'},
+   {n:'',name:'학생 C',cat:'기타',reason:'출발지가 인천이라는 점'},
+   {n:'',name:'학생 D',cat:'지하철 이름',reason:'지하철 이름을 처음 알아 인상 깊어서'},
+   {n:'',name:'학생 E',cat:'지하철 이름',reason:'subway 대신 tube로 부르는 게 흥미'},
+   {n:'',name:'학생 F',cat:'우산·날씨',reason:'런던은 비 와도 우산 안 쓰고 맞는 게 흥미'},
+   {n:'',name:'학생 G',cat:'기타',reason:'출발지가 인천이라는 점'},
+   {n:'',name:'학생 H',cat:'우산·날씨',reason:'London often has rainy weather가 인상 깊어서'},
+   {n:'',name:'학생 I',cat:'우산·날씨',reason:'비 와도 우산을 안 쓰는 게 신기'},
+   {n:'',name:'학생 J',cat:'가본 장소',reason:'가본 장소'},
+   {n:'',name:'학생 K',cat:'특별한 색',reason:'빨강이 우리나라엔 흔한데 영국선 특별해서'},
+   {n:'',name:'학생 L',cat:'음식',reason:'런던 음식을 소개하고 싶어서'},
+   {n:'',name:'학생 M',cat:'지하철 이름',reason:'지하철을 tube/underground라 부름(subway만 알았는데)'},
+   {n:'',name:'학생 N',cat:'친구·만남',reason:'친구랑 여행 간 것 — 친구랑 여행 가고 싶어서'},
+   {n:'',name:'학생 O',cat:'기타',reason:'근위병 — 내 생각과 같아서'},
+   {n:'',name:'학생 P',cat:'우산·날씨',reason:'비 많이 올 때만 우산 쓴다, 몰랐던 사실'},
+   {n:'',name:'학생 Q',cat:'친구·만남',reason:'친구랑 여행 간 것 — 여행 가고 싶어서'},
+   {n:'',name:'학생 R',cat:'우산·날씨',reason:'비 와도 우산 안 씀 — 날씨를 짐작할 수 있어서'},
+   {n:'',name:'학생 S',cat:'우산·날씨',reason:'영국 날씨'},
+   {n:'',name:'학생 T',cat:'우산·날씨',reason:'우산 시기가 우리나라와 달라서'},
+   {n:'',name:'학생 U',cat:'촬영지·승강장',reason:'해리포터 시리즈 촬영지(9¾)여서'},
+   {n:'',name:'학생 V',cat:'음식',reason:'먹은 음식 — 음식을 좋아해서'},
+   {n:'',name:'학생 W',cat:'특별한 색',reason:'빨강이 특별한 색인 이유를 알게돼서'}
+  ]},
+  '5':{ date:'2026-06-16', items:[
+   {n:'',name:'학생 A',cat:'기타',reason:'근위병 — 사진 찍을 때가 흥미'},
+   {n:'',name:'학생 B',cat:'음식',reason:'감자튀김을 한번 먹어보고 싶어서'},
+   {n:'',name:'학생 C',cat:'특별한 색',reason:'빨간색이 특별한 색이라'},
+   {n:'',name:'학생 D',cat:'우산·날씨',reason:'우산 쓰는 시기가 한국과 달라서'},
+   {n:'',name:'학생 E',cat:'기타',reason:'근위병 옷·표정을 알 수 있어서'},
+   {n:'',name:'학생 F',cat:'촬영지·승강장',reason:'촬영지(움직이지 않는 것)'},
+   {n:'',name:'학생 G',cat:'특별한 색',reason:'빨간색 — 몰랐던 사실'},
+   {n:'',name:'학생 H',cat:'우산·날씨',reason:'우산 쓰는 시기(heavy rain)'},
+   {n:'',name:'학생 I',cat:'이동수단',reason:'빨간 이층버스가 재미있어 보여서'},
+   {n:'',name:'학생 J',cat:'촬영지·승강장',reason:'킹스크로스역 정거장'},
+   {n:'',name:'학생 K',cat:'우산·날씨',reason:'비 올 때만 우산 쓰는 것'},
+   {n:'',name:'학생 L',cat:'촬영지·승강장',reason:'킹스크로스역 해리포터 촬영지'},
+   {n:'',name:'학생 M',cat:'특별한 색',reason:'빨간색'},
+   {n:'',name:'학생 N',cat:'촬영지·승강장',reason:'해리포터 정거장'},
+   {n:'',name:'학생 O',cat:'지하철 이름',reason:'지하철 이름 처음 알아서'},
+   {n:'',name:'학생 P',cat:'우산·날씨',reason:'영국 날씨 — 비가 자주 와 신기'},
+   {n:'',name:'학생 Q',cat:'촬영지·승강장',reason:'해리포터 승강장'},
+   {n:'',name:'학생 R',cat:'음식',reason:'fish and chips'},
+   {n:'',name:'학생 S',cat:'지하철 이름',reason:'지하철을 튜브라 부르는 게 신박'}
+  ]},
+  '7':{ date:'2026-06-16', items:[
+   {n:'',name:'학생 A',cat:'지하철 이름',reason:'지하철 이름 처음 알아서'},
+   {n:'',name:'학생 B',cat:'우산·날씨',reason:'비 올 때 우산 쓰는 게 한국과 달라서'},
+   {n:'',name:'학생 C',cat:'음식',reason:'먹은 음식·식문화'},
+   {n:'',name:'학생 D',cat:'음식',reason:'fish and chips 종류'},
+   {n:'',name:'학생 E',cat:'가본 장소',reason:'버킹엄궁에서 근위병을 본 것'},
+   {n:'',name:'학생 F',cat:'지하철 이름',reason:'지하철을 튜브라 부르는 것'},
+   {n:'',name:'학생 G',cat:'지하철 이름',reason:'지하철을 튜브라 부르는 것 처음 알아서'},
+   {n:'',name:'학생 H',cat:'친구·만남',reason:'근위대를 만나보고 싶어서'},
+   {n:'',name:'학생 I',cat:'기타',reason:'근위병 이야기가 흥미'},
+   {n:'',name:'학생 J',cat:'가본 장소',reason:'버킹엄궁이 거리와 가까워 흥미'},
+   {n:'',name:'학생 K',cat:'이동수단',reason:'이동수단·친구 알게된 나이 연계'},
+   {n:'',name:'학생 L',cat:'지하철 이름',reason:'런던은 지하철을 튜브라 부르는 것'},
+   {n:'',name:'학생 M',cat:'음식',reason:'향신료를 칩이라 부르는 것'},
+   {n:'',name:'학생 N',cat:'우산·날씨',reason:'폭우 때만 우산 쓰는 게 나라마다 달라서'},
+   {n:'',name:'학생 O',cat:'우산·날씨',reason:'폭우 때만 우산 — 우리나라와 달라서'},
+   {n:'',name:'학생 P',cat:'특별한 색',reason:'빨간색이 특별 — 2층 버스도 빨강'},
+   {n:'',name:'학생 Q',cat:'촬영지·승강장',reason:'킹스크로스역 해리포터 촬영지'},
+   {n:'',name:'학생 R',cat:'특별한 색',reason:'특별한 색 — 몰랐던 사실'},
+   {n:'',name:'학생 S',cat:'촬영지·승강장',reason:'해리포터 촬영지'}
+  ]}
+ }
+};
+const INT_ORDER=['특별한 색','지하철 이름','촬영지·승강장','걸린 시간','우산·날씨','음식','이동수단','가본 장소','엄마 선물','친구·만남','기타'];
+let interestBan='all', grammarBan='1';
+
+let cache={}, current='1', chartP=null, chartR=null, chartI=null, lastComments=[], rosters={};
+
+function loadRosters(){ try{ rosters=JSON.parse(localStorage.getItem(RKEY))||{}; }catch(e){ rosters={}; } }
+function saveRosters(){ try{ localStorage.setItem(RKEY,JSON.stringify(rosters)); }catch(e){} }
+function buildRosterInputs(){
+ const row=document.getElementById('rosterRow'); const hint=row.querySelector('.hint');
+ for(let b=1;b<=8;b++){ const lab=document.createElement('label'); const val=rosters[b]>0?rosters[b]:'';
+   lab.innerHTML=`${b}반<input type="number" min="1" data-ban="${b}" value="${val}" placeholder="–">`; row.insertBefore(lab,hint); }
+ row.querySelectorAll('input[data-ban]').forEach(inp=>{ inp.addEventListener('input',()=>{
+   const b=inp.dataset.ban, v=parseInt(inp.value,10); if(v>0) rosters[b]=v; else delete rosters[b]; saveRosters(); render(); }); });
+}
+function clearRosters(){ rosters={}; saveRosters(); document.querySelectorAll('#rosterRow input[data-ban]').forEach(i=>i.value=''); render(); }
+function extractText(r){ if(r==null) return ''; if(typeof r==='string') return r; if(typeof r.text==='string') return r.text;
+ if(Array.isArray(r.content)) return r.content.map(c=>(c&&(c.text||c.json&&JSON.stringify(c.json)))||'').join('\n');
+ if(r.result) return extractText(r.result); if(r.data) return extractText(r.data); try{return JSON.stringify(r);}catch(e){return String(r);} }
+function parseComments(text){
+ let s=String(text).replace(/\\r\\n|\\n/g,'\n').replace(/\\"/g,'"').replace(/\\t/g,' ');
+ const re=/\*\*\s*(\d{3,4})\s*([^•*]*?)\s*•[^*]*?\*\*/g; let m, marks=[];
+ while((m=re.exec(s))!==null){ let nm=(m[1].length===3?'2'+m[1]:m[1]); let name=(m[2]||'').replace(/[\s\d]+$/,'').trim(); marks.push({num:nm,name,start:m.index,end:re.lastIndex}); }
+ const out=[];
+ for(let i=0;i<marks.length;i++){ let body=s.slice(marks[i].end, i+1<marks.length?marks[i+1].start:s.length)
+   .replace(/!\[[^\]]*\]\([^)]*\)/g,' ').replace(/<[^>]*>/g,' ').replace(/#{1,6}\s+[^\n]*/g,' ').replace(/\*\*[^*]*\*\*/g,' ')
+   .replace(/\r?\n/g,' ').replace(/\s{2,}/g,' ').trim();
+   if(body.replace(/[\s\-–·"}{\]\[]/g,'').length>0) out.push({num:marks[i].num,name:marks[i].name,body}); }
+ return out;
+}
+function banOf(num){ return (num&&num.length===4)?num[1]:'?'; }
+function numOf(num){ return (num&&num.length===4)?parseInt(num.slice(2),10):null; }
+function shortNum(num){ return (num&&num.length===4)?num.slice(2):num; }
+function elemCount(body){ return body.split(/[,，、·•\/\n]|(?:\s{2,})/).map(s=>s.trim()).filter(s=>s.length>0).length; }
+async function fetchCh(ch){ if(cache[ch]) return cache[ch]; if(!(window.cowork && window.cowork.callMcpTool)) throw new Error('NO_BRIDGE');
+ const raw=await window.cowork.callMcpTool(TOOL,{id:PAGES[ch]}); const comments=parseComments(extractText(raw)); cache[ch]=comments; return comments; }
+function applySections(){
+ const c=current;
+ document.getElementById('sec1').style.display = (c==='1')?'':'none';
+ document.getElementById('sec2').style.display = (c==='2')?'':'none';
+ var s3=document.getElementById('sec3'); if(s3) s3.style.display=(c==='3')?'':'none';
+ var s4=document.getElementById('sec4'); if(s4) s4.style.display=(c==='4')?'':'none';
+ document.getElementById('panel7').style.display = (c==='1')?'':'none';
+ document.getElementById('sec1head').innerHTML = '1차시 · 인식<span class="s">1단계 「요소 인식」 도달 + 선생님 성찰</span>';
+}
+function pick(ch){ current=ch; document.querySelectorAll('.bar-ctrl button[data-ch]').forEach(b=>b.classList.toggle('on',b.dataset.ch===ch)); applySections(); }
+async function refresh(force){
+ const st=document.getElementById('status'); st.classList.remove('err'); if(force) cache={};
+ if(current!=='1'){
+   const m={'2':'2차시 — 종이 학습지 스캔(드라이브) 기반 · 아래 섹션 참고 · 정리 2026-06-12','3':'3차시 — 종이 학습지 스캔(1·2·3·4·5·8반) 기반 집계 · 아래 섹션 참고','4':'4차시 — 종이 학습지 스캔(1·2·3·4·8반) 기반 집계 · 반별 실시 섹션 차이 반영 · 아래 섹션 참고','5':'5차시 — 예정(미실시)'};
+   st.textContent=m[current]||''; draw([]); return;
+ }
+ st.textContent='Notion에서 1차시 불러오는 중…'; let comments;
+ try{ comments=await fetchCh(current); }
+ catch(e){ st.classList.add('err'); st.textContent = e.message==='NO_BRIDGE' ? '⚠ 이 보기에서는 라이브 연결이 비활성입니다. 사이드바에서 아티팩트를 직접 열면 Notion에서 자동 집계됩니다.' : '⚠ 불러오기 오류: '+e.message; draw([]); return; }
+ const now=new Date();
+ if(comments.length===0){ st.textContent='해당 차시 댓글이 아직 없습니다(미수집) · 갱신 '+now.toLocaleString('ko-KR'); }
+ else { const bans=[...new Set(comments.map(c=>banOf(c.num)).filter(b=>b!=='?'))].sort((a,b)=>(+a)-(+b)); st.textContent='✓ '+current+'차시 · 댓글 '+comments.length+'건 · 참여 반: '+bans.map(b=>b+'반').join(', ')+' · 갱신 '+now.toLocaleString('ko-KR'); }
+ draw(comments);
+}
+function lerp(p){ const a=[220,232,241], b=[209,73,58]; const c=a.map((v,i)=>Math.round(v+(b[i]-v)*p)); return 'rgb('+c[0]+','+c[1]+','+c[2]+')'; }
+function rateColor(p){ const a=[244,200,180], b=[120,170,140]; const c=a.map((v,i)=>Math.round(v+(b[i]-v)*p)); return 'rgb('+c[0]+','+c[1]+','+c[2]+')'; }
+function draw(comments){ lastComments=comments; render(); }
+function banStats(bans){ const stat={};
+ Object.keys(bans).forEach(b=>{ const set=new Set(); bans[b].forEach(c=>{ const n=numOf(c.num); if(n!=null) set.add(n); });
+  const roster=rosters[b]>0?rosters[b]:0; let missing=[], within=0, over=[];
+  if(roster>0){ for(let i=1;i<=roster;i++){ if(set.has(i)) within++; else missing.push(i); } [...set].forEach(n=>{ if(n>roster||n<1) over.push(n); }); over.sort((x,y)=>x-y); }
+  stat[b]={count:bans[b].length, set, roster, missing, within, over, rate: roster>0?Math.round(within/roster*100):null}; });
+ return stat;
+}
+const LVCLASS={'상':'s','중':'m','하':'h','확인':'q'};
+function stageRate(arr){ let s=0,n=0; arr.forEach(x=>{ if(x.lv!=='확인'){ n++; if(x.lv==='상') s++; } }); return n?Math.round(s/n*100):0; }
+function seqOf(reflect,b){ return (reflect&&reflect[b]&&reflect[b].seq)||99; }
+function buildStageHTML(S, ban, pickFn, reflect){
+ const bans=Object.keys(S.byBan).sort((a,b)=>(+a)-(+b)); if(!S.byBan[ban]) ban=bans[0];
+ const st=S.byBan[ban]; const cnt={'상':0,'중':0,'하':0,'확인':0}; st.forEach(s=>cnt[s.lv]++);
+ const scored=cnt['상']+cnt['중']+cnt['하']; const rate=scored?Math.round(cnt['상']/scored*100):0;
+ let h='';
+ if(bans.length>1){ let btnBans=reflect?bans.slice().sort((a,b)=>seqOf(reflect,a)-seqOf(reflect,b)):bans; h+='<div class="stage-sel"><span class="lab">반</span>'+btnBans.map(b=>`<button class="${b===ban?'on':''}" onclick="${pickFn}('${b}')">${b}반</button>`).join('')+'</div>'; }
+ if(bans.length>1){ h+='<div class="cmp"><span class="cl">반순 도달률(확인 제외)</span>'+bans.map(b=>`${b}반 <b>${stageRate(S.byBan[b])}%</b>`).join(' · ')+'</div>'; }
+ h+='<div class="rubric">'+S.rubric.map(r=>`<div class="rb"><b><span class="lv ${r.cls}">${r.lab}</span> ${r.tag}</b><br>${r.txt}</div>`).join('')+'</div>';
+ h+='<div class="sumchips">'
+  +`<span class="sc big">${ban}반 ${S.short} 도달률 <b>${rate}%</b></span>`
+  +`<span class="sc"><span class="lv s">상</span> <b>${cnt['상']}</b>명</span>`
+  +`<span class="sc"><span class="lv m">중</span> <b>${cnt['중']}</b>명</span>`
+  +`<span class="sc"><span class="lv h">하</span> <b>${cnt['하']}</b>명</span>`
+  +`<span class="sc"><span class="lv q">확인</span> <b>${cnt['확인']}</b>명</span>`
+  +`<span class="sc">판정가능 <b>${scored}</b>명</span></div>`;
+ h+='<table class="miss"><tr><th>학생</th><th>판정</th><th>판정 근거</th></tr>';
+ st.forEach(s=>{ h+=`<tr><td class="ban">${s.name}</td><td><span class="lv ${LVCLASS[s.lv]}">${s.lv}</span></td><td style="color:#4a5560">${s.why}</td></tr>`; });
+ h+='</table>';
+ h+=`<div class="stage-meta">기준: ${S.source} · ${S.stage} · 대상: 2학년 ${ban}반 ${S.chasi}차시 · 판정: Claude 보수적 수동 판정(${S.date}) — 선생님 조정 가능. ${S.note}</div>`;
+ if(reflect){ const rf=reflect[ban];
+   if(rf){ h+='<div class="reflect'+(rf.text?'':' none')+'"><div class="rh">선생님 성찰 — '+ban+'반 '+S.chasi+'차시</div>'+(rf.text||'이 회차는 성찰이 아직 기록되지 않았습니다.')+'</div>'; } }
+ return h;
+}
+function pickStageBan1(b){ stageBan1=b; document.getElementById('stagebox').innerHTML=buildStageHTML(STAGES['1'],stageBan1,'pickStageBan1',REFLECT1); }
+function pickStageBan2(b){ stageBan2=b; document.getElementById('stagebox2').innerHTML=buildStageHTML(STAGES['2'],stageBan2,'pickStageBan2',REFLECT2); }
+function renderStage1(){ document.getElementById('stagebox').innerHTML=buildStageHTML(STAGES['1'],stageBan1,'pickStageBan1',REFLECT1); }
+function renderStage2(){ document.getElementById('stagebox2').innerHTML=buildStageHTML(STAGES['2'],stageBan2,'pickStageBan2',REFLECT2); }
+function renderGrammar(){ document.getElementById('grammarbox').innerHTML=buildStageHTML(GRAMMAR,grammarBan,'pickGrammarBan'); }
+function pickGrammarBan(b){ grammarBan=b; renderGrammar(); }
+function pickInterestBan(b){ interestBan=b; renderInterest(); }
+function printPanel8(){ if(current!=='2'){ pick('2'); } interestBan='all'; renderInterest(); setTimeout(function(){ window.print(); }, 400); }
+function renderInterest(){
+ const bans=Object.keys(INTEREST.byBan).sort((a,b)=>(+a)-(+b));
+ const isAll = interestBan==='all';
+ if(!isAll && !INTEREST.byBan[interestBan]) interestBan=bans[0];
+ let items, metaTarget, metaDate;
+ if(isAll){ items=[]; bans.forEach(b=>INTEREST.byBan[b].items.forEach(it=>items.push(it))); metaTarget='전체 학급('+bans.map(b=>b+'반').join('·')+')'; metaDate='합산'; }
+ else { const B=INTEREST.byBan[interestBan]; items=B.items; metaTarget='2학년 '+interestBan+'반'; metaDate=B.date; }
+ const cnt={}; INT_ORDER.forEach(o=>cnt[o]=0); items.forEach(it=>{ if(cnt[it.cat]!=null) cnt[it.cat]++; });
+ const labels=INT_ORDER.filter(o=>cnt[o]>0); const data=labels.map(o=>cnt[o]);
+ let btns='<button class="'+(isAll?'on':'')+'" onclick="pickInterestBan(\'all\')">전체</button>';
+ btns+=bans.map(b=>`<button class="${(!isAll&&b===interestBan)?'on':''}" onclick="pickInterestBan('${b}')">${b}반</button>`).join('');
+ document.getElementById('interestsel').innerHTML='<div class="stage-sel"><span class="lab">보기</span>'+btns+'</div>';
+ if(chartI)chartI.destroy();
+ chartI=new Chart(document.getElementById('interestChart'),{type:'bar',
+  data:{labels,datasets:[{label:'학생 수',data,backgroundColor:labels.map((l,i)=>COLS[i%COLS.length]),borderRadius:5,maxBarThickness:28}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>c.parsed.x+'명'}}},scales:{x:{beginAtZero:true,ticks:{precision:0},title:{display:true,text:'학생 수',font:{size:10}}}}}});
+ let h;
+ const sorted=items.slice().sort((a,b)=>INT_ORDER.indexOf(a.cat)-INT_ORDER.indexOf(b.cat));
+ if(isAll){
+  h='<table class="miss"><tr><th style="width:30%">가장 흥미로운 내용</th><th>이유</th></tr>';
+  sorted.forEach(it=>{ h+=`<tr><td style="font-weight:700;color:#8a6d2f">${it.cat}</td><td style="color:#4a5560">${it.reason}</td></tr>`; });
+  h+='</table>';
+  h+=`<div class="stage-meta">대상: ${metaTarget} · ${INTEREST.chasi}차시 · 응답 ${items.length}건 <b>(이름·번호 비공개)</b> — 다 같이 보며 「우리에게 흥미로운 건 무엇일까?」를 발견해, 다음 글쓰기(브루나이 친구에게)의 밑바탕으로.</div>`;
+ } else {
+  h='<table class="miss"><tr><th>학생</th><th>가장 흥미로운 내용</th><th>이유</th></tr>';
+  sorted.forEach(it=>{ h+=`<tr><td class="ban">${it.name}</td><td style="font-weight:700;color:#8a6d2f">${it.cat}</td><td style="color:#4a5560">${it.reason}</td></tr>`; });
+  h+='</table>';
+  h+=`<div class="stage-meta">출처: ${INTEREST.source} · 대상: ${metaTarget} ${INTEREST.chasi}차시 · 정리: ${metaDate} · 응답 식별 ${items.length}명. 수업 중 보여주면 「친구들은 다 다른 걸 골랐네」를 한눈에.</div>`;
+ }
+ document.getElementById('intTable').innerHTML=h;
+}
+function render(){
+ renderGrammar(); renderStage2();
+ if(current==='2'){ renderInterest(); }
+ const comments=lastComments; const bans={};
+ comments.forEach(c=>{ const b=banOf(c.num); (bans[b]=bans[b]||[]).push(c); });
+ const banKeys=Object.keys(bans).sort((x,y)=>{ if(x==='?')return 1; if(y==='?')return -1; return (+x)-(+y); });
+ const stat=banStats(bans); const elems=comments.map(c=>elemCount(c.body));
+ const avgElem=elems.length?(elems.reduce((a,b)=>a+b,0)/elems.length):0;
+ renderStage1();
+ if(current==='2') return;
+ let missTotal=0, hasRoster=false;
+ banKeys.forEach(b=>{ if(b!=='?'&&stat[b].roster>0){ hasRoster=true; missTotal+=stat[b].missing.length; } });
+ const kpis=[{v:comments.length,l:'댓글 참여(명)'},{v:banKeys.filter(b=>b!=='?').length,l:'참여 반 수'},{v:avgElem.toFixed(1),l:'평균 요소 수'},hasRoster?{v:missTotal,l:'미참여(명)',warn:true}:{v:'–',l:'미참여(정원 입력)'}];
+ document.getElementById('kpis').innerHTML=kpis.map(k=>`<div class="kpi${k.warn?' warn':''}"><div class="v">${k.v}</div><div class="l">${k.l}</div></div>`).join('');
+ const labels=banKeys.map(b=>b==='?'?'미상':b+'반'); const counts=banKeys.map(b=>bans[b].length);
+ const nonQ=banKeys.filter(b=>b!=='?'); const usePct = nonQ.length>0 && banKeys.every(b=>b!=='?'&&stat[b].roster>0);
+ const vals = usePct ? banKeys.map(b=>stat[b].rate) : counts;
+ if(chartP)chartP.destroy();
+ chartP=new Chart(document.getElementById('partic'),{type:'bar',data:{labels,datasets:[{label:usePct?'참여율(%)':'참여 인원(명)',data:vals,backgroundColor:banKeys.map((b,i)=>b==='?'?'#c9cfd6':COLS[i%COLS.length]),borderRadius:5,maxBarThickness:46}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>{const b=banKeys[c.dataIndex]; return usePct?(c.parsed.y+'% ('+stat[b].within+'/'+stat[b].roster+'명)'):(c.parsed.y+'명');}}}},scales:{y:{beginAtZero:true,max:usePct?100:undefined,title:{display:true,text:usePct?'참여율 %':'인원',font:{size:10}}}}}});
+ const buck=[0,0,0,0]; elems.forEach(e=>{ if(e<=1)buck[0]++; else if(e<=3)buck[1]++; else if(e<=6)buck[2]++; else buck[3]++; });
+ if(chartR)chartR.destroy();
+ chartR=new Chart(document.getElementById('rich'),{type:'bar',data:{labels:['1개','2-3개','4-6개','7개+'],datasets:[{label:'학생 수',data:buck,backgroundColor:['#9cc0dd','#7aa8d0','#5cbfa6','#ec8b43'],borderRadius:5,maxBarThickness:60}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:{display:true,text:'학생 수',font:{size:10}}}}}});
+ const mbox=document.getElementById('missbox'); const rosterBans=Object.keys(rosters).filter(b=>rosters[b]>0);
+ const allBans=[...new Set([...banKeys.filter(b=>b!=='?'),...rosterBans])].sort((a,b)=>(+a)-(+b));
+ if(allBans.length===0){ mbox.innerHTML='<div class="empty">반별 정원을 입력하면 미참여 학생 번호가 자동으로 표시됩니다</div>'; }
+ else { let h='<table class="miss"><tr><th>반</th><th>정원</th><th>참여</th><th>미참여</th><th>참여율</th><th>미참여 번호</th></tr>';
+   allBans.forEach(b=>{ const s=stat[b]||{count:0,roster:rosters[b]>0?rosters[b]:0,missing:[],within:0,over:[],rate:null}; const roster=rosters[b]>0?rosters[b]:0;
+     let rateCell='<span class="needroster">정원 미입력</span>'; let missCell='<span class="needroster">정원을 입력하면 표시</span>'; let missN='–';
+     if(roster>0){ const miss=(s.missing||[]); missN=miss.length; rateCell=`<span class="ratepill" style="background:${rateColor((s.rate||0)/100)}">${s.rate}%</span>`;
+       if(miss.length===0){ missCell='<span class="nums ok">전원 참여 ✓</span>'; } else { missCell='<span class="nums">'+miss.map(n=>String(n).padStart(2,'0')+'번').join(', ')+'</span>'; }
+       if(s.over&&s.over.length) missCell+='<span class="over">※ 정원 밖 번호 댓글: '+s.over.map(n=>String(n).padStart(2,'0')+'번').join(', ')+'</span>'; }
+     h+=`<tr><td class="ban">${b}반</td><td class="num">${roster>0?roster:'–'}</td><td class="num">${s.count||0}</td><td class="num">${missN}</td><td>${rateCell}</td><td>${missCell}</td></tr>`; });
+   h+='</table>'; if(!hasRoster) h+='<div style="font-size:11px;color:#8a939c;margin-top:8px">위 「반별 정원」 칸에 각 반 학생 수를 입력하면 빠진 번호를 찾습니다.</div>'; mbox.innerHTML=h; }
+ renderKings(bans, banKeys);
+ const box=document.getElementById('covbox');
+ if(comments.length===0){ box.innerHTML='<div class="empty">집계할 댓글이 없습니다</div>'; return; }
+ let hc='<table class="cov"><tr><th class="rk"></th>'+banKeys.map(b=>`<th>${b==='?'?'미상':b+'반'}</th>`).join('')+'<th>전체</th></tr>';
+ KW.forEach(g=>{ hc+=`<tr><td class="rk">${g.k}</td>`; let totHit=0,totN=0;
+   banKeys.forEach(b=>{ const arr=bans[b]; const hit=arr.filter(c=>g.re.test(c.body)).length; const p=arr.length?hit/arr.length:0; totHit+=hit; totN+=arr.length;
+     hc+=`<td class="cc" style="background:${lerp(p)}" title="${hit}/${arr.length}명">${Math.round(p*100)}</td>`; });
+   const tp=totN?totHit/totN:0; hc+=`<td class="cc" style="background:${lerp(tp)};font-weight:800" title="${totHit}/${totN}명">${Math.round(tp*100)}</td></tr>`; });
+ hc+='</table><div style="font-size:11px;color:#8a939c;margin-top:6px">숫자=언급 학생 비율(%). 색이 따뜻할수록 많은 학생이 그 요소를 골랐음.</div>'; box.innerHTML=hc;
+}
+function renderKings(bans, banKeys){
+ const kbox=document.getElementById('kingbox'); const kb=banKeys.filter(b=>b!=='?');
+ if(kb.length===0){ kbox.innerHTML='<div class="empty">댓글이 모이면 반별 정보왕이 자동으로 표시됩니다</div>'; return; }
+ let h='<div class="kings">';
+ kb.forEach(b=>{ const arr=bans[b]; let best=arr[0], bc=elemCount(arr[0].body); arr.forEach(c=>{ const e=elemCount(c.body); if(e>bc){ bc=e; best=c; } });
+   const nm=(best.name&&best.name.length)?best.name:'학생 T'; h+=`<div class="king"><div class="kb">${b}반 정보왕</div><div class="kn">${shortNum(best.num)}번 ${nm}</div><div class="kc">정보 요소 ${bc}개</div></div>`; });
+ h+='</div>'; kbox.innerHTML=h;
+}
+window.addEventListener('DOMContentLoaded',()=>{ applySections(); renderInterest(); renderGrammar(); renderStage1(); renderStage2(); });
+</script>
+</body>
+</html>
