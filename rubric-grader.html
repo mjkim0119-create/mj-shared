@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>영어 쓰기 수행평가 채점표</title>
+<style>
+:root{ color-scheme: light; }
+*{box-sizing:border-box;}
+body{margin:0;background:#f4f6f9;color:#1d2733;font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:14px;line-height:1.5;}
+.wrap{max-width:1000px;margin:0 auto;padding:18px 16px 60px;}
+h1{font-size:19px;margin:0 0 2px;color:#1f3a5f;}
+.sub{color:#6b7785;font-size:12.5px;margin-bottom:14px;}
+.rubric{background:#eef3f8;border:1px solid #d6e0ea;border-radius:10px;padding:10px 14px;font-size:12px;color:#33475b;margin-bottom:14px;}
+.rubric b{color:#1f3a5f;}
+.tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
+.tab{padding:7px 13px;border-radius:8px 8px 0 0;background:#e6ebf1;color:#5a6878;font-weight:600;font-size:13px;cursor:pointer;border:1px solid #dce3ea;border-bottom:0;}
+.tab .cnt{font-size:11px;color:#94a3b1;margin-left:3px;}
+.tab.active{background:#1f3a5f;color:#fff;}
+.tab.active .cnt{color:#bcd0e6;}
+.savebar{font-size:11.5px;color:#0e7c66;margin-bottom:8px;}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+button{font-family:inherit;font-size:13px;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;}
+.btn-add{background:#1f3a5f;color:#fff;}
+.btn-exp{background:#0e7c66;color:#fff;}
+.btn-ghost{background:#fff;border:1px solid #cdd6e0;color:#33475b;}
+.btn-warn{background:#fbeaea;color:#c0392b;}
+table.sum{width:100%;border-collapse:collapse;margin-bottom:18px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+table.sum th,table.sum td{padding:6px 8px;text-align:center;border-bottom:1px solid #eef1f5;font-size:12.5px;}
+table.sum th{background:#1f3a5f;color:#fff;font-weight:600;}
+table.sum td.name{text-align:left;font-weight:600;}
+table.sum tr:last-child td{border-bottom:0;}
+.tot-badge{font-weight:700;color:#1f3a5f;}
+.empty{color:#9aa5b1;font-size:12.5px;padding:14px;text-align:center;background:#fff;border-radius:10px;margin-bottom:16px;}
+.card{background:#fff;border:1px solid #e3e9f0;border-radius:12px;margin-bottom:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.card.edited{border-color:#f0c987;}
+.card-head{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#f7f9fc;border-bottom:1px solid #eef1f5;cursor:pointer;}
+.card-head input.nm{border:1px solid #d6dde6;border-radius:6px;padding:4px 8px;font-size:13.5px;font-weight:600;width:120px;}
+.card-head input.no-in{border:1px solid #d6dde6;border-radius:6px;padding:4px;font-size:12px;width:42px;text-align:center;}
+.card-head .badge-edit{font-size:10.5px;color:#a9791f;background:#fdf3df;border:1px solid #f0d9a8;border-radius:5px;padding:1px 6px;}
+.card-head .tt{margin-left:auto;font-size:15px;font-weight:800;color:#0e7c66;}
+.card-head .tt small{color:#9aa5b1;font-weight:600;font-size:12px;}
+.card-head .chev{color:#9aa5b1;font-size:12px;width:14px;text-align:center;}
+.card-body{padding:6px 14px 14px;}
+.card-body.collapsed{display:none;}
+table.q{width:100%;border-collapse:collapse;margin:8px 0;}
+table.q th,table.q td{padding:5px 6px;border-bottom:1px solid #f0f3f6;font-size:12.5px;vertical-align:middle;}
+table.q th{color:#6b7785;font-weight:600;text-align:left;font-size:11.5px;}
+table.q th.cl{text-align:center;width:50px;}
+table.q th .mini{display:block;font-size:9.5px;color:#a3adb8;font-weight:500;}
+table.q td.ck{text-align:center;width:50px;}
+table.q .form{color:#8a94a0;font-size:11px;}
+table.q input.qnote{width:100%;font-family:inherit;font-size:11.5px;padding:4px 7px;border:1px solid #e0e6ec;border-radius:6px;color:#33475b;}
+input[type=checkbox]{width:17px;height:17px;accent-color:#0e7c66;cursor:pointer;}
+.scores{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;padding-top:10px;border-top:1px dashed #dde4ec;align-items:flex-end;}
+.sc{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:#6b7785;}
+.sc b{color:#1d2733;font-size:11.5px;}
+.sc select{font-family:inherit;font-size:13px;padding:4px 6px;border:1px solid #cdd6e0;border-radius:6px;background:#fff;}
+.sc .auto{font-weight:700;color:#1f3a5f;font-size:14px;padding:3px 0;}
+.evid{margin-top:10px;display:flex;flex-direction:column;gap:8px;}
+.erow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#f7faf9;border:1px solid #e4efe9;border-radius:8px;padding:8px 10px;}
+.erow .lab{font-weight:700;color:#0e7c66;font-size:12px;min-width:100px;}
+.erow .cnt{width:58px;font-family:inherit;font-size:13px;padding:4px 6px;border:1px solid #cdd6e0;border-radius:6px;}
+.erow .sco{font-weight:800;color:#1f3a5f;font-size:13px;}
+.erow input.note{flex:1;min-width:180px;font-family:inherit;font-size:12px;padding:5px 8px;border:1px solid #cdd6e0;border-radius:6px;}
+.cardbtns{margin-top:8px;display:flex;gap:8px;}
+.cardbtns .b-reset{background:#eef3f8;color:#1f3a5f;border:1px solid #cdd9e6;font-size:12px;padding:5px 10px;}
+.cardbtns .b-del{background:#fbeaea;color:#c0392b;font-size:12px;padding:5px 10px;}
+textarea.exp{width:100%;height:120px;margin-top:8px;border:1px solid #cdd6e0;border-radius:8px;padding:8px;font-family:ui-monospace,Menlo,monospace;font-size:11px;display:none;}
+.note{font-size:11.5px;color:#8a94a0;margin-top:6px;}
+.flag{background:#eefaf3;border:1px solid #b6e3cd;color:#1d6b4a;border-radius:8px;padding:8px 12px;font-size:11.5px;margin-bottom:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>영어 쓰기 수행평가 채점표 — 동물 묘사하기</h1>
+  <div class="sub">2026학년도 1학기 · 2학년 · 30점 만점 &nbsp;|&nbsp; 내용·언어·분량 체크 + 표기/구성 자동 채점</div>
+
+  <div class="rubric">
+    <b>수행 3 / 분량 7 / 내용 7 / 언어 7 / 구성 3 / 표기 3</b> &nbsp;|&nbsp; 내용·언어·분량 환산: 7=7·6=6·5=5·4=4·3이하=3<br>
+    <b>분량</b> = 각 문항이 7단어↑ 완전한 문장이면 체크 &nbsp;·&nbsp; <b>언어</b> = 목표 7형식 정확 사용 &nbsp;·&nbsp; <b>표기</b> = 그 외 mechanic(스펠링·3인칭·수일치·관사) <i>— 목표형식 오류는 언어에서만 감점</i><br>
+    <b>표기</b> 오류수 0~2→3·3~5→2·6~8→1·9+→0 &nbsp;&nbsp; <b>구성</b> 묘사 표현 반복 2회↓→3·3~4회→2·5~6회→1·7회↑→0 (문두·동물이름 제외)<br>
+    <b>작성량 상한</b> 표기·구성은 작성한 문항 수로 상한: 0칸→0·1~3칸→1·4~5칸→2·6~7칸→3 (빈칸이 만든 만점 방지, 다 채우면 틀려도 상한 유지)<br>
+    <b>형식 7항목</b> ①There is/are ②be+with ③have ④현재진행형 ⑤usually+일반동사 ⑥can ⑦관계대명사 that/which
+  </div>
+
+  <div class="flag">✅ <b>2-1·2-2·2-3·2-4·2-5·2-6·2-7·2-8 전 학급 채점 완료</b> · 다른 반은 순차 진행 중. 수정값은 병합 보존(<span style="color:#a9791f">·수정됨</span> 표시), 카드 안 <b>↺ Claude 채점값</b>으로 학생별 되돌리기. 학생 이름은 익명 처리(학생 A·B·C) · 동료 공유용 보기.</div>
+
+  <div class="tabs" id="tabs"></div>
+  <div class="savebar" id="saveState">● 자동 저장 켜짐</div>
+
+  <div class="bar">
+    <button class="btn-add" onclick="addStudent()">+ 학생 추가</button>
+    <button class="btn-exp" onclick="exportCSV(false)">이 반 CSV</button>
+    <button class="btn-exp" onclick="exportCSV(true)">전체 CSV</button>
+    <button class="btn-ghost" onclick="toggleAll()">펼치기/접기</button>
+    <button class="btn-warn" onclick="resetAll()">전체 초기화</button>
+  </div>
+
+  <table class="sum" id="sumTable"></table>
+  <div class="empty" id="emptyMsg" style="display:none">이 반에는 아직 학생이 없어요.</div>
+  <textarea class="exp" id="expBox" readonly></textarea>
+
+  <div id="cards"></div>
+  <div class="note">※ 자동 저장은 이 브라우저(아티팩트 뷰)에 기록됩니다. 결과는 CSV로도 백업하세요. 수행과정은 제출 기록 기준으로 직접 선택(기본 3).</div>
+</div>
+
+<script>
+const CLASSES=["2-1","2-2","2-3","2-4","2-5","2-6","2-7","2-8"];
+const FORMS=[
+ {t:"① 이름·장소", f:"There is/are"},
+ {t:"② 생김새 1", f:"be동사 + with"},
+ {t:"③ 생김새 2", f:"have"},
+ {t:"④ 행동", f:"현재진행형"},
+ {t:"⑤ 일반 특징", f:"usually + 일반동사"},
+ {t:"⑥ 능력", f:"조동사 can"},
+ {t:"⑦ 세부 특징", f:"관계대명사 that/which"},
+];
+const SUH={3:"기한내 제출",2:"초고 지연",1:"최종 지연",0:"미제출"};
+const KEY="grader-v5";
+function S(num,name,c,l,b,qn,suh,gusRep,gusNote,pyoErr,pyoNote){
+  return {num:String(num),name,c,l,b,qnote:qn,suh,gusRep,gusNote,pyoErr,pyoNote,open:false};
+}
+function defaults(){
+  const st={}; CLASSES.forEach(c=>st[c]=[]);
+  const A=[1,1,1,1,1,1,1];
+  st["2-1"]=[
+   S(1,"학생 A",[1,1,0,1,0,1,1],[1,0,1,0,0,1,0],[1,1,0,1,0,1,0],["이름·장소 O / There is O","큰 몸 묘사 O / have 사용(be+with X)","have O / 신체부위 명시 X(형용사만)","행동 O / 'is move' 진행형 오류","미완성(동사 없음)","can bite 능력 O","with baby 세부 O / 관계대명사 없음"],3,2,"묘사 반복 거의 없음(aggressive 2회)",5,"has(3인칭)×2, 관사 누락×2, 'so aggressive' be 누락"),
+   S(2,"학생 B",A,A,A,["이름·장소 O / There is O","sharp teeth 묘사 O / be+with O","soft fur O / has O","protecting O / 진행형 O","usually lives O","can find O","which lives O / 관계대명사 O"],3,1,"묘사 표현 다양",2,"fishes→fish, lives (in a) group"),
+   S(3,"학생 C",[1,1,1,0,0,1,0],[1,0,0,0,0,1,0],[1,0,0,0,0,0,0],["이름·장소 O / There is O (a ice 관사오류)","furry 묘사 O / with 없음(be+with X)","big paw O / 'There is have'(have 형식 X)","미완성(There are move=진행형 X)","미완성","swim 능력 O / can O","미완성"],3,1,"묘사 반복 없음(단, 문항 미완성 다수)",3,"a ice→an, 'is' 중복, 'There can' 주어 오류"),
+   S(4,"학생 D",A,[1,0,0,1,1,1,1],[1,1,1,1,1,1,0],["이름·장소 O / There are O","stylish/big feet O / 'with have'(be+with X)","soft fur·tail O / 'are have'(have 형식 X)","walking O / 진행형 O","usually eat O","can swim O","which have rounded ears O"],3,2,"rounded 2회 외 반복 없음",2,"wulking 철자, Q7 문장 조각"),
+   S(5,"학생 E",[1,1,0,1,1,1,1],[1,1,0,1,0,1,1],[1,1,1,1,0,1,1],["이름·장소 O / There are O","tiny body·soft fur O / be+with O","신체부위 아닌 '이동' 서술 / have 형식 부정확","walking O / 진행형 O","eats carefully O / 'find eats'(usually 형식 X)","can swim O","hunt~which O / 관계대명사 O"],3,1,"묘사 반복 없음",3,"hunt(3인칭), scan 시제 불일치, 'which a live' 비문"),
+   S(6,"학생 F",A,A,A,["이름·장소 O / There is O","white fur O / be+with O","big body·small eyes O / has O","moving~baby bear O / 진행형 O","usually eats fishes O (fishes→fish)","can cut~sharp teeth O","mom bear that protects baby O / 관계대명사 O"],3,2,"묘사 반복 적음(ice field/polar bear 2회)",4,"fishes→fish, 'can cut' 어색, Q4 어색"),
+   S(7,"학생 G",A,A,A,["이름·장소 O / There is O","pointy ears O / be+with O","sharp teeth·small eyes O / has O","moving carefully O / 진행형 O","usually swims well O","can runs fast O (can runs→run)","which moves quickly O / 관계대명사 O"],3,2,"묘사 반복 적음(animal 2회)",2,"'can runs'(run) 외 거의 없음"),
+   S(8,"학생 H",A,[1,1,1,1,0,1,1],A,["이름·장소 O / There are O","long neck O / be+with O","small eyes·short legs O / has O","walking on ice O / 진행형 O","'are usually eat'(usually 형식 X)","can swim O","rounded body which~ O / 관계대명사 O"],3,2,"묘사 반복 적음(sea/animal 2회)",4,"'a long neck'(내용), 'are usually eat' 형식, 주어 It/Polar bears 혼용"),
+   S(9,"학생 I",A,A,A,["이름·장소 O / There is O","soft fur O / be+with O","big paws·sharp teeth O / has O","walking~to find foods O / 진행형 O","usually swims~get foods O","can swim~cold for hours O","aggressive~which has teeth O / 관계대명사 O"],3,3,"묘사 'foods/soft fur/swim' 반복",4,"'a soft fur', foods→food, 'in the soft fur'(with)"),
+   S(10,"학생 J",A,A,A,["이름·장소 O / There is O","furry body O / be+with O","big paws·sharp teeth O / has O","walking~find fish O / 진행형 O","usually swims~protect baby O","can use paws to attack O","which lives in group O / 관계대명사 O"],3,2,"묘사 반복 적음(sharp 2회)",3,"'to fishtail' 어색, 'in group'(a group)"),
+   S(11,"학생 K",A,A,A,["이름·장소 O / There is O","big body O / be+with O","soft furs O / has O","walking~baby bear O / 진행형 O","clever~usually eats fishes O","active~can swim O","which has small ears O / 관계대명사 O"],3,1,"형용사 다양(gentle/clever/active)",2,"furs→fur, fishes→fish"),
+   S(12,"학생 L",A,A,A,["이름·장소 O / There is O","short ears O / be+with O","brave~big feet O / has O","standing on ice O / 진행형 O","dangerous~usually moves quietly O","can swim well O","which has furry body O / 관계대명사 O"],3,2,"묘사 반복 적음(ice field 2회)",2,"'furry body'(a) 외 거의 없음"),
+   S(13,"학생 M",A,[1,1,1,0,1,1,1],[1,1,1,1,1,1,0],["이름·장소 O / There is O","white furry body O / be+with O","big feet·strong legs O / have O(have→has)","'It moving'(진행형 broken·be 누락)","usually swim~cold sea O (swim→swims)","can swim~blue sea O","'It is which~short legs'(관계대명사 단편)"],3,4,"묘사 'white' 4회 반복",6,"have→has, 'It moving'(be 누락), swim→swims, 'on on' 오타, Q7 단편"),
+   S(14,"학생 N",[1,1,1,1,1,1,1],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],["ice field(단어만)","big feet·soft fur·white(단어만)","furry body(단어만)","move(단어만)","ice field(단어만)","climb(단어만)","fast move(단어만)"],3,3,"문장 없이 단어 나열만(검토 필요)",0,"완전한 문장 없음(검토 필요)"),
+   S(15,"학생 O",A,A,A,["이름·장소 O / There is O","furry body O / be+with O","big paws·small ears O / has O","active~swimming in ocean O / 진행형 O","sociable~usually lives in groups O","can catch fishes O (fishes→fish)","which has small eyes O / 관계대명사 O"],3,1,"형용사 다양(active/sociable)",2,"fishes→fish 외 거의 없음"),
+   S(16,"학생 P",A,A,[1,1,1,1,1,1,0],["이름·장소 O / There is O","playful~short legs O / be+with O","pointy ears·rounded bodies O / have O","walking on ice O / 진행형 O","usually swim~cold water O","can swim quickly O","playful~which swimming(관계대명사 O·단편)"],3,3,"묘사 'cold water/swim/playful' 반복",4,"주어 혼용(A polar bear/They), 'swimming on the water'(in), Q7 단편"),
+   S(17,"학생 Q",A,A,A,["이름·장소 O / There are O","furry bodies·white color O / be+with O","sharp teeth·claws O / have O","walking on ice O / 진행형 O","usually hunt fishes·animals O","can swim well·long O","special~which walk quietly O / 관계대명사 O"],3,3,"묘사 'ice field/animals/furry' 반복",5,"'furry bear'(body), fishes→fish, 'swim long' 어색, 수정 다수"),
+   S(18,"학생 R",A,A,A,["이름·장소 O / There is O","white fur O / be+with O","small ears·big paws O / has O","active~standing on snow O / 진행형 O","usually lives in groups·helps O","can swim well O","that has rounded body O / 관계대명사 O"],3,1,"묘사 다양(반복 없음)",3,"'a white fur', 'It is that has' 어색, 'snow eyes'(내용)"),
+   S(19,"학생 S",A,A,A,["이름·장소 O / There is O","furry body O / be+with O","four big paws·small ears O / has O","mom bear moving~baby O / 진행형 O","usually find fishes O (find→finds)","can swim fast O","which can swim in sea O / 관계대명사 O"],3,2,"묘사 반복 적음(swim/sea 2회)",3,"find→finds, fishes→fish, 'her baby'(its)"),
+   S(20,"학생 T",A,A,A,["이름·장소 O / There is O","white fur O / be+with O","short legs·big hands O / has O","walking slowly O / 진행형 O","usually lives in a group O","can survive~low temperature O","which has black ears O / 관계대명사 O"],3,1,"묘사 다양(반복 없음)",2,"'a white fur', 'big hands'(paws·내용)"),
+   S(21,"학생 U",A,A,A,["이름·장소 O / There are O","big feet O / be+with O","soft fur·short tail O / have O","moving~ocean O / 진행형 O","usually swim~ocean O","mom bear can protect baby O","which~protects baby O / 관계대명사 O(run-on)"],3,3,"묘사 'ice field/ocean/polar bear' 반복",6,"'a soft fur', Q7 run-on, 'swim well easily' 중복, 수정 다수"),
+   S(22,"학생 V",A,A,[1,1,1,1,1,1,0],["이름·장소 O / There is O","big paw·soft fur O / be+with O","furry body·small ears O / has O","walking on ice O / 진행형 O","usually catch fish O","can fast swims O","which polar bear helps(관계대명사 O·단편)"],3,2,"묘사 반복 적음(water/ice field 2회)",5,"'is with big paw'(a), 주어 It/They 혼용, 'fast swims'(swims fast), Q7 단편"),
+   S(23,"학생 W",A,A,[1,1,0,0,1,1,1],["이름·장소 O / There is O","white fur O / be+with O","small eyes O / has O(짧음)","protecting its cub O / 진행형 O(짧음)","usually hunt fish O (hunt→hunts)","can swim~sea O","great~which has teeth O / 관계대명사 O"],3,1,"묘사 다양(반복 없음)",4,"'cub baby' 중복, hunt→hunts, 'white fur', 'sea and water' 중복"),
+   S(24,"학생 X",A,[1,0,0,1,0,1,1],[1,1,0,1,1,0,0],["이름·장소 O / There are O","'Polar bears with~'(be+with X·be 누락)","'have friendly and lazy'(have 오용)","walking~mom·baby O / 진행형 O","'are usually~protect'(usually 형식 X)","can carefully move O(짧음)","that protect together O / 관계대명사 O(단편)"],3,2,"묘사 반복 적음(mom/baby 반복)",6,"be 누락(Q2), 'have friendly'(are), 'are usually~protect' 비문, 짧은 문장"),
+   S(25,"학생 Y",A,A,A,["이름·장소 O / There are O","white·soft fur O / be+with O","furry body·little eyes O / have O","finding foods together O / 진행형 O","usually swim together O","can protect little bear O","which has little ears O / 관계대명사 O"],3,2,"묘사 반복 적음(together/little 2회)",4,"'white fur and soft fur' 중복, foods→food, 'little eyes'(small), 수정"),
+   S(26,"학생 Z",A,A,A,["이름·장소 O / There is O","big head O / be+with O","four big feet·small ears O / has O","walking~baby~spot food O / 진행형 O","usually swims~wide sea O","can run fast~eat animals O","which has sharp teeth O / 관계대명사 O"],3,1,"묘사 다양(반복 없음)",1,"오류 거의 없음"),
+   S(27,"학생 AA",A,A,A,["이름·장소 O / There is O","furry body O / be+with O","big feet·sharp teeth O / has O","moving~playful mom bear O / 진행형 O","aggressive~usually hunts fish O","can swim~cold water O","sociable~which helps family O / 관계대명사 O"],3,1,"묘사 다양(반복 없음)",3,"'blue polar bear'(내용), 'hunts a fish'(fish)"),
+   S(28,"학생 AB",A,[1,0,1,1,1,1,1],[1,1,1,1,0,0,0],["이름·장소 O / There is O","'has fur with white'(be+with X·has)","long tail·soft fur O / has O","walking~baby bear O / 진행형 O","usually stays O(짧음)","can swim O(짧음)","which polar bear have fur(관계대명사 O·단편)"],3,2,"묘사 반복 적음(fur 반복)",6,"'in North'(the north), 'has fur with white' 어색, Polar bear 관사 누락, have→has, 짧은 문장"),
+  ];
+  st["2-2"]=[
+   S(1,"학생 A",A,[1,1,1,0,0,0,1],[1,1,1,0,0,0,1],["이름·장소 O / There is O","paws·soft fur 묘사 O / be+with O ('is big paws' 어색)","tail O / has O ('many striped' 어색)","행동 O / 'fast running' 진행형 X","일반특징 O / 일반동사 없음(형식 X)","능력 O / 'is can catching'(can 형식 X)","세부 O / 관계대명사 which O"],3,1,"묘사 반복 없음",3,"'is big paws' 어색, 'many striped' 어색"),
+   S(2,"학생 B",A,A,A,["이름·장소 O / There is O (a 관사 누락)","aggressive·striped 묘사 O / be+with O","teeth·feet O / has O","catching O / 진행형 O","usually find O (find→finds)","can run·jump·climb·swim O","that~ O / 관계대명사 O"],3,1,"묘사 반복 없음",4,"'a tiger' 관사, find→finds, 'an animal' 관사, that (is) dangerous"),
+   S(4,"학생 C",[1,1,1,1,1,1,0],[1,1,1,1,0,1,0],[1,1,1,1,0,1,0],["이름·장소 O / There is O","tail·ears 묘사 O / be+with O","legs·body O / has O ('a strong legs' 오류)","running O / 진행형 O","일반특징 O / 'usually hunting'(형식 X)","can run·catch O","무응답"],3,1,"묘사 반복 없음",2,"'a strong legs' 관사·복수, another animals→other"),
+   S(5,"학생 D",A,A,[1,0,1,1,1,0,1],["이름·장소 O / There is O","striped 묘사 O / be+with O(messy)","feet·fur O / have O (have→has)","running O / 진행형 O","usually find O (find→finds)","can move O (어순 어색)","which~ O / 관계대명사 O"],3,1,"묘사 반복 없음",5,"have→has, find→finds, 'is striped in body' 어색, 수정 다수"),
+   S(6,"학생 E",A,A,A,["이름·장소 O / There is O","furry body 묘사 O / be+with O","striped body·tail O / has O","chasing O / 진행형 O","usually watches O","can protect O","which~ O / 관계대명사 O"],3,2,"묘사 적음(body 2회)",1,"cautious→cautiously"),
+   S(7,"학생 F",[1,1,1,1,1,1,0],[1,1,1,0,1,1,0],[1,1,1,0,1,1,0],["이름·장소 O / There is O","active·teeth 묘사 O / be+with O","tail·body O / has O (a 관사 누락)","행동 O / 'tiger running' 진행형 X","usually hunts O (week→weak)","can climb·run O (can climbs 오류)","미완성"],3,1,"묘사 반복 없음",4,"week→weak, can climbs→climb, 'a long tail' 관사"),
+   S(8,"학생 G",A,A,A,["이름·장소 O / There is O","tail·feet 묘사 O / be+with O","teeth·body O / has O","hunting O / 진행형 O","usually watches O","can climb O","that~ O / 관계대명사 O"],3,1,"묘사 반복 없음",1,"오류 거의 없음"),
+   S(9,"학생 H",A,A,A,["이름·장소 O / There is O","묘사 O / be+with O (어색)","tail·legs O / has O","running·jumping O / 진행형 O","usually scan O (scan→scans, food 중복)","can make·see O (어색)","which~ O / 관계대명사 O"],3,2,"묘사 적음(long 2회)",4,"'is big paw with a tiger' 어색, scan→scans, food 중복, 'make quickly' 어색"),
+   S(10,"학생 I",A,A,A,["이름·장소 O / There is O","striped furry body 묘사 O / be+with O","paws·tail O / has O","chasing O / 진행형 O","usually moves O (preys→prey)","can hide O","which~ O / 관계대명사 O"],3,3,"묘사 'striped' 3회 반복",1,"preys→prey"),
+   S(11,"학생 J",[1,1,1,1,1,1,0],[1,1,1,0,0,1,0],[1,1,1,0,0,1,0],["이름·장소 O / There is O","furry·striped 묘사 O / be+with O(수정)","eyes·teeth O / has O ('a scary big eyes' 오류)","행동 O / 'tiger looking' 진행형 X","일반특징 O / 'is a usually run'(형식 X)","can jump O","미완성(that~)"],3,1,"묘사 반복 없음",4,"'a scary big eyes' 관사·복수, Q7 미완성, 수정 다수"),
+   S(12,"학생 K",[1,1,0,1,1,1,1],[1,0,1,0,0,1,0],[1,0,0,0,0,1,0],["이름·장소 O / There is O","묘사 O / be+with X(with 없음)","신체부위 아님 / have O(has)","행동 시도 / 진행형 X","일반특징 시도 / usually 없음(형식 X)","능력 O / can O","세부 O / 관계대명사 없음(That=지시)"],3,3,"'animal' 3회 반복",6,"'a big animals' 관사·복수, have→has, 비문 다수"),
+   S(13,"학생 L",A,A,A,["이름·장소 O / There is O","soft fur·feet 묘사 O / be+with O","striped·legs O / has O","hopping·running O / 진행형 O","usually chases O","can catch O","which~ O / 관계대명사 O"],3,2,"묘사 적음(big 2회)",4,"the big feet/the long legs/the sharp teeth 관사, a prey 관사"),
+   S(14,"학생 M",A,A,A,["이름·장소 O / There is O","orange striped body 묘사 O / be+with O (a orange→an)","tail·paws·fur O / has O ('the soft fur' 관사)","running O / 진행형 O","usually hunts O","can feel O (movings→movements)","that~ O / 관계대명사 O"],3,1,"묘사 반복 없음",3,"a orange→an orange, 'the soft fur' 관사, movings→movements"),
+   S(15,"학생 N",A,[1,1,1,1,1,0,1],[1,1,1,1,1,0,0],["이름·장소 O / There is O","묘사 O / be+with O(수정)","striped fur O / has O ('an unique' 오류)","running O / 진행형 O","usually find O (find→finds)","능력 O / 'is can feel'(can 형식 X)","세부 O / 관계대명사 which O"],3,3,"묘사 'fur/furry' 3회 반복",4,"an unique→a unique, find→finds, 'for reach'→to reach, 수정 다수"),
+   S(16,"학생 O",[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],["문항 베껴씀/무의미","문항 베껴씀","문항 베껴씀","무응답","무응답","무응답","무응답"],3,0,"사실상 미작성(검토 필요) · 부분 작성(3칸)으로 상한 1 적용",0,"작성 내용 없음(검토 필요) · 부분 작성(3칸)으로 상한 1 적용"),
+   S(17,"학생 P",A,[1,0,1,1,1,1,1],[1,0,1,1,1,1,1],["이름·장소 O / There is O","묘사 O / 'has~with'(be+with X)·'long tail' 반복","nose·fur·ears O / has O","chasing O / 진행형 O","usually hunts O","can run·see O (sees→see)","which has O / 관계대명사 O"],3,3,"묘사 'long tail' 3회 반복",3,"sees→see, 'a striped body' 관사, Q2 중복"),
+   S(18,"학생 Q",A,A,A,["이름·장소 O / There is O","striped body 묘사 O / be+with O","teeth O / has O (teeths→teeth)","running O / 진행형 O","usually catch O (catch→catches)","can make O","which~ O / 관계대명사 O"],3,1,"묘사 반복 없음",3,"teeths→teeth, catch→catches, 'the preys'→prey"),
+   S(19,"학생 R",A,A,A,["이름·장소 O / There is O","striped body 묘사 O / be+with O","ears·tail O / has O","hunting O / 진행형 O","usually chase O (chase→chases)","can jump O","which~ O / 관계대명사 O"],3,2,"묘사 적음(body 2회)",2,"chase→chases, 'help eating'→help eat"),
+   S(20,"학생 S",A,A,[1,1,1,1,1,1,0],["이름·장소 O / There is O","claws·legs 묘사 O / be+with O (어색)","tail·feet O / has O (feets→feet)","chasing O / 진행형 O","usually find O (find→finds)","can run O (fastly→fast)","세부 O / 관계대명사 which O (조각)"],3,2,"묘사 적음(big 2회)",6,"feets→feet, find→finds, 'for eat'→to eat, fastly→fast, everytime, Q7 조각"),
+   S(21,"학생 T",[1,0,0,0,0,0,0],[1,0,0,0,0,0,0],[0,0,0,0,0,0,0],["이름·장소 O / There is O (a 관사 누락)","무응답","무응답","무응답","무응답","무응답","무응답"],3,0,"1문항만 작성(검토 필요) · 대부분 미작성(1칸)으로 상한 1 적용",1,"'a tiger' 관사 (대부분 미작성) · 대부분 미작성(1칸)으로 상한 1 적용"),
+   S(22,"학생 U",A,[1,0,1,1,0,1,0],[1,1,1,1,0,0,1],["이름·장소 O / There is O ('tiger is in' 중복)","furry·tail 묘사 O / 'has~with'(be+with X)","teeth·paws O / has O","chasing O / 진행형 O","일반특징 시도 / 동사 없음","can scan·move O","세부 O / 관계대명사 없음(that 삭제)"],3,1,"묘사 반복 없음",3,"'tiger is in' 중복, Q6 어색, 수정 다수"),
+   S(23,"학생 V",A,A,A,["이름·장소 O / There is O","active·striped skin 묘사 O / be+with O (관사 누락)","fur·ears O / has O","running·chasing O / 진행형 O","usually find O (find→finds)","can protect·move O","that~ O / 관계대명사 O"],3,1,"묘사 반복 없음",4,"'an active/dangerous animal' 관사, find→finds, 'that has sharp teeth'"),
+   S(24,"학생 W",A,A,A,["이름·장소 O / There is O","독립·striped body 묘사 O / be+with O (관사 오류)","eyes O / has O (관사 오류)","hunting O / 진행형 O","usually live O (live→lives, wake→wakes)","can swim O ('at hunting'→while)","which~ O / 관계대명사 O"],3,1,"묘사 반복 없음",5,"the black/the small 관사, live→lives, wake→wakes, 'at hunting'→while"),
+   S(25,"학생 X",A,A,A,["이름·장소 O / There is O","striped skin 묘사 O / be+with O","teeth·tail O / has O","chasing O / 진행형 O","usually kills O (eat→eats)","can climb·hide O","which~ O / 관계대명사 O"],3,1,"묘사 반복 없음",1,"eat→eats"),
+   S(26,"학생 Y",A,A,A,["이름·장소 O / There is O","tail·ears 묘사 O / be+with O","teeth O / has O","hunting O / 진행형 O","usually watches·hunts O ('a animal'→an, 수일치)","can find O ('a animal'→an)","that chases O / 관계대명사 O"],3,1,"묘사 반복 없음",3,"'a animal'→an animal ×2, animal/them 수일치"),
+  ];
+  st["2-3"]=[
+   S(2,"학생 A",A,A,A,["이름·장소 O / There is O","furry body O / be+with O","big nose·claws O / has O","green leaves O / 진행형 O","usually sleep O (sleep→sleeps)","climb O / can O","lazy~that O / 관계대명사 O"],3,1,"묘사 반복 적음(tree 위치 반복)",3,"sleep→sleeps, 'big nose' 관사, 'black big' 어순"),
+   S(4,"학생 B",[1,1,1,1,1,1,0],[1,0,0,0,0,0,0],[1,1,1,1,1,1,0],["이름·장소 O / There is O (koala 관사 누락)","묘사 시도 / 'and furry body'(be+with X)","soft fur·legs / 'is have'(have 형식 X)","행동 시도 / 'is going to'(진행형 X)","usually 위치 어색(형식 X)","능력 O / 'is can climb'(can 형식 X)","미완성(which 단편)"],3,1,"묘사 반복 없음(비문 다수)",3,"koala 관사, 'is have'·'is can' 중복동사, 비문 다수"),
+   S(5,"학생 C",A,A,[1,1,1,1,1,1,0],["이름·장소 O / There are O","Lazy~with soft and gray fur O / be+with O","four short legs·body O / have O","mommy sitting O / 진행형 O","usually catch & sleep O","can catch O","baby koala which protects O / 관계대명사 O(미완성)"],3,2,"묘사 반복 적음(short 2회)",5,"This animals(수일치)×3, catch→catches, 'tree branch' 관사"),
+   S(6,"학생 D",A,A,A,["이름·장소 O / There are O","furry bodies O / be+with O","rounded ears·big noses O / have O","mommy grabbing O / 진행형 O","usually live together O","can climb~using nails O","cute~which have small eyes O / 관계대명사 O"],3,1,"묘사 다양(반복 없음)",2,"'the furry bodies' 관사 외 거의 없음"),
+   S(8,"학생 E",A,A,A,["이름·장소 O / There is O","big paws·floppy ear O / be+with O ('a big paws' 오류)","hands~which can eat / has O ('a hands' 오류)","green leaves O / 진행형 O","usually climbs & sleep O (sleep→sleeps)","can protect baby O","sharp fingers that climb O / 관계대명사 O"],3,3,"묘사 'tree' 3회 반복",6,"'a big paws'·'a hands' 관사·복수, 'a floppy ear'→ears, sleep→sleeps, use→uses"),
+   S(9,"학생 F",A,A,[1,1,1,1,1,1,0],["이름·장소 O / There is O","big ears O / be+with O","small eyes·legs O / has O","watching leaves O / 진행형 O","usually protect O (protect→protects)","climb branch O / can O","which live in groups O / 관계대명사 O(미완성)"],3,1,"묘사 반복 적음(forest 2회)",5,"Koala 관사 누락 다수, protect→protects, live→lives, Q7 미완성"),
+   S(10,"학생 G",A,A,A,["이름·장소 O / There are O","soft furs O / be+with O","short tail·furry body O / have O","mommy moving to eat O / 진행형 O","usually protect baby O (protect→protects)","can climb O","calm~which move carefully O / 관계대명사 O"],3,1,"묘사 반복 적음(mommy koala 반복)",2,"furs→fur, protect→protects, 'climb tree' 관사"),
+   S(11,"학생 H",[1,1,1,1,1,1,0],[1,0,1,0,0,1,0],[1,1,1,1,1,1,0],["이름·장소 O / There are O","furry body / 'Koala has~with'(be+with X)","claw to climb O / has O","'want to eat'(진행형 X)","'usually sleeping'(usually 형식 X)","can carry baby O","무응답"],3,3,"묘사 'tree branch' 3회 반복",4,"'a claw' 관사, want→wants, sleeping 형식, their→its"),
+   S(12,"학생 I",A,A,A,["이름·장소 O / There are O","furry bodies O / be+with O","big noses·rounded ears O / have O","mother catching leaves O / 진행형 O","usually take a nap O","can climb~very well O","sociable~which live together O / 관계대명사 O"],3,2,"묘사 반복 적음(high trees 2회)",2,"'the high trees' 관사 외 거의 없음"),
+   S(13,"학생 J",A,A,[1,1,1,1,1,1,0],["이름·장소 O / There is O(수정)","small eyes·big nose O / be+with O('animal' 수일치)","furry body·small ears O / have O","baby sitting O / 진행형 O","usually eat leaves & bugs O","can sleep O","which eat leaves / 관계대명사 O(미완성)"],3,3,"묘사 'tree branch/natural leaves' 반복",6,"'They are animal'(수일치), 'big nose' 관사, 수정·비문 다수"),
+   S(14,"학생 K",[1,1,1,1,1,1,0],[1,1,1,1,0,1,0],[1,1,1,0,0,0,0],["이름·장소 O / There is O (koala 관사)","furry body O / be+with O (It is koala 관사)","soft fur·legs O / have O(have→has)","sleeping O / 진행형 O(문장 짧음)","'usually' 위치 미완성(형식 X)","can climb O(문장 짧음)","미완성(which koala)"],3,1,"묘사 반복 없음(문항 미완성 다수)",4,"koala 관사 누락×2, have→has, 짧은 문장 다수"),
+   S(15,"학생 L",A,A,A,["이름·장소 O / There are O","small animals~short legs O / be+with O","furry body·small eyes O / has O","mother eating leaves O / 진행형 O","usually eats & sleeps O","can climb~very well O","cute~which have small feet O / 관계대명사 O"],3,2,"묘사 반복 적음(leaves/tree 2회)",2,"주어 They/It 혼용 외 거의 없음"),
+   S(16,"학생 M",[1,1,1,1,0,1,0],[1,0,0,0,0,0,0],[1,0,0,0,0,0,0],["이름·장소 시도 / There is O(broken)","'koala with big sized'(be+with X)","short legs / have(broken)","'is this seeing'(진행형 broken)","미완성/비문","'can this koala'(can broken)","'that's brave'(관계대명사 X)"],3,2,"전반적 비문·미완성(검토 필요)",10,"수일치·관사·어순 오류 다수, 비문"),
+   S(17,"학생 N",A,A,A,["이름·장소 O / There are O","gray soft furs O / be+with O","big black nose O / has O","baby seeing mom O / 진행형 O","usually find & eat O","can climb & move O","sociable~that live O / 관계대명사 O"],3,2,"묘사 반복 적음(trees 2회)",3,"furs→fur, 'is sociable animal' 관사, live→lives"),
+   S(18,"학생 O",A,[0,1,1,1,1,1,1],A,["이름·소개 / 'They are~'(There is/are X)","furry bodies·legs O / be+with O","small eyes·noses O / have O","eating leaves O / 진행형 O","usually sleep~keep energy O","mommy can carry baby O","lazy~which sleep O / 관계대명사 O"],3,2,"묘사 반복 적음(tree branch 2회)",3,"'lazy animal' 관사, sleep→sleeps"),
+   S(19,"학생 P",A,A,[1,1,1,1,0,1,1],["이름·장소 O / There is O","gray fur O / be+with O","black nose·round paws O / has O","green leaves O / 진행형 O","usually sleeps O(문장 짧음)","can climb~move carefully O","which lives in special region O / 관계대명사 O"],3,2,"묘사 반복 적음(tree 2회)",2,"'black nose' 관사 외 거의 없음"),
+   S(21,"학생 Q",A,A,[1,1,1,1,1,1,0],["이름·장소 O / There is O(수정)","short legs O / be+with O","small furry body O / has O","baby watching leaves O / 진행형 O","usually carry baby O","can climb branch O","which are very~ / 관계대명사 O(미완성)"],3,2,"수정 많음(baby 반복)",5,"주어 혼용, 'their baby'→its, Q7 미완성, 수정 다수"),
+   S(22,"학생 R",A,[1,0,1,1,1,1,0],A,["이름·장소 O / There is O","'is eating~with paws'(be+with X)","round black nose·body O / has O","cute koala eating O / 진행형 O","usually sleeps O","lazy koala can carry O","'has strong legs to stay'(관계대명사 X)"],3,3,"묘사 'tree branch' 3회 반복",4,"'the furry body'·'the strong legs' 관사, their→its, 수정 다수"),
+   S(23,"학생 S",A,[1,1,1,0,1,1,1],A,["이름·장소 O / There is O","big nose O / be+with O","big ears·small feet O / has O","'is being on tree'(진행형 어색·X)","usually eats leaves O","gentle koala can climb O","which moves together O / 관계대명사 O"],3,2,"묘사 반복 적음(animal/tree 2회)",3,"'with big nose' 관사, 'climb on the tall tree', 'is being' 어색"),
+   S(24,"학생 T",[1,1,1,1,1,1,0],[1,1,1,1,0,1,0],[1,1,0,1,1,0,0],["이름·장소 O / There is O","soft fur O / be+with O","big ears·nose O / has O(문장 짧음)","eating leaves O / 진행형 O","'is usually sleep'(usually 형식 X)","can climb O(문장 짧음)","무응답"],3,3,"묘사 'tree' 반복",4,"'and nose' 관사, 'is usually sleep' 형식, 'climb tree' 관사"),
+   S(25,"학생 U",A,[1,1,1,1,1,0,1],[1,1,1,0,1,0,0],["이름·장소 O / There is O","short feet O / be+with O","big eyes·fluffy body O / has O","wild koala moving O / 진행형 O(짧음)","usually protects baby O","능력 불명확(can 확인 필요)","which has special feature O / 관계대명사 O(미완성)"],3,2,"저해상도·일부 판독 어려움(검토 필요)",4,"'fluffy body' 관사, their→its, 판독 어려운 부분"),
+   S(26,"학생 V",[1,1,1,1,1,1,0],[1,1,1,1,1,1,0],[1,1,1,0,0,0,0],["이름·장소 O / There are O","'are short legs with gray'(be+with O·어색)","big black nose·body O / have O","mommy breathing leaves O / 진행형 O","usually climb O(짧음)","can climb O(짧음)","'It helps that'(관계대명사 X·단편)"],3,3,"묘사 'climb on the tree' 반복",5,"'are short legs' 어색, have→has, breathing→eating, 짧은 문장"),
+   S(27,"학생 W",[1,1,1,1,1,1,0],[1,1,1,1,0,1,0],[1,1,1,0,1,1,0],["이름·장소 O / There is O","two eyes·nose O / be+with O (koala 관사)","lots of fur·claws O / has O","climbing tree O / 진행형 O(짧음)","'is usually climb'(usually 형식 X)","can climb easily O","무응답"],3,3,"묘사 'climb tree' 반복",5,"koala 관사 누락 다수, 'is usually climb' 형식, 'climb tree' 관사"),
+   S(28,"학생 X",[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],["무응답","무응답","무응답","무응답","무응답","무응답","무응답"],3,0,"사실상 미작성(검토 필요) · 백지(0칸)로 상한 0 적용",0,"작성 내용 없음(검토 필요) · 백지(0칸)로 상한 0 적용"),
+  ];
+  st["2-4"]=[
+   S(1,"학생 A",A,A,A,["이름·장소 O / There is O","big head O / be+with O","soft fur O / has O","watching+standing O / 진행형 O","usually catches O","can run·protect O","aggressive~that king O / 관계대명사 O"],3,2,"묘사 반복 적음(other lions 2회)",3,"'many special soft fur' 어색, 관사"),
+   S(3,"학생 B",A,A,A,["이름·장소 O / There is O","soft brown fur O / be+with O","sharp teeth O / has O","watching dog O / 진행형 O","usually fights·attacks O","can hunt·attack O","lion which active·clever O / 관계대명사 O"],3,3,"'This animal' 반복 구조, animals 반복",5,"'at hair' 어색, 'is lion' 관사, 중복 표현"),
+   S(4,"학생 C",A,A,A,["이름·장소 O / There is O","dangerous·shiny hair O / be+with O","big eyes·legs O / has O","brave lion watching O / 진행형 O","usually hunts O","can run·swim O","which has powerful appearance O / 관계대명사 O"],3,2,"묘사 반복 적음(brave lion 2회)",3,"저해상도, 일부 어색"),
+   S(5,"학생 D",A,A,[1,1,1,0,1,1,1],["이름·장소 O / There is O","body covered with brown fur O / be+with O","long brown fur O / has O","standing O / 진행형 O(짧음)","usually hunt O (hunt→hunts)","can camouflage O","tail which~ O / 관계대명사 O"],3,3,"묘사 'brown fur' 3회 반복",3,"hunt→hunts, 'which end'→whose, 짧은 문장"),
+   S(6,"학생 E",A,A,A,["이름·장소 O / There is O","soft fur O / be+with O","sharp teeth·long tail O / has O","watching·finding O / 진행형 O","usually spots prey O","can run quickly O","cool~which can hunt O / 관계대명사 O"],3,1,"형용사 다양(aggressive/clever/active/cool)",2,"preys→prey 외 거의 없음"),
+   S(7,"학생 F",A,A,[1,1,0,1,1,1,1],["이름·장소 O / There is O","brave·sharp teeth O / be+with O","strong fur O / has O","standing O / 진행형 O(짧음)","usually kills·protects O","can hunt easily O","aggressive~that find O / 관계대명사 O"],3,3,"'other animals' 3회 반복",6,"'his strong fur'(its), kill→kills, 'is aggressive animal'(an), 수정 다수"),
+   S(8,"학생 G",A,A,[1,1,1,1,0,1,1],["이름·장소 O / There is O","brave·long tail O / be+with O","big eyes·soft fur O / has O","standing O / 진행형 O","usually protect family O(짧음)","can eat with teeth O","that lives in savanna O / 관계대명사 O"],3,2,"묘사 반복 적음(savanna 2회)",3,"protect→protects, 'their family'(its), 'in wide savanna' 관사"),
+   S(9,"학생 H",A,A,A,["이름·장소 O / There is O","body color with brown O / be+with O","head which is furry O / has O","standing O / 진행형 O","usually hunts O","can run·bite O","body which furry O / 관계대명사 O"],3,3,"묘사 'furry body' 반복",4,"'in wide savanna' 관사, 'is with brown' 어색, 'furry body' 중복"),
+   S(10,"학생 I",A,A,A,["이름·장소 O / There is O","brown body·fur O / be+with O","sharp teeth·big feet O / has O","calm lion seeing O / 진행형 O","usually goes O(어색)","can hunt O","active~that runs O / 관계대명사 O"],3,3,"묘사 'wide savanna' 3회 반복",5,"'brown with brown' 중복, 'goes their body' 어색, 'other animal' 복수"),
+   S(11,"학생 J",[1,1,1,1,1,1,0],[1,1,1,1,1,1,0],[1,1,0,0,1,1,0],["이름·장소 O / There is O","furry body·big paws O / be+with O","sharp teeth O / have O(have→has, 짧음)","watching for hunt O(짧음)","usually scan O","can climb O","무응답"],3,2,"묘사 반복 적음(animal 반복)",5,"'Lion is/have' 관사·수일치, have→has, scan→scans, Q7 무응답"),
+   S(12,"학생 K",A,A,A,["이름·장소 O / There is O","brave·big paw O / be+with O","sharp teeth·furry body O / has O","looking for animals O / 진행형 O","usually hunt·protect O","can spot·hunt O","aggressive~that hunt O / 관계대명사 O"],3,4,"'hunt/animal' 반복 다수",6,"'wild savanna'(wide), hunt→hunts, protect→protects, 'is aggressive animal'(an)"),
+   S(13,"학생 L",A,A,A,["이름·장소 O / There is O","sharp teeth O / be+with O","soft fur·big paws O / has O","taking a break O / 진행형 O","usually hunts O","can match environment O","king of savanna which~ O / 관계대명사 O"],3,2,"묘사 반복 적음(animal 2회)",2,"'his friends'(its) 외 거의 없음"),
+   S(14,"학생 M",A,[1,0,1,1,1,1,0],[1,1,1,1,1,1,0],["이름·장소 O / There are O","'brave and aggressive'(be+with X·성격)","sharp teeth·fur O / has O","watching·scanning O / 진행형 O","usually hunt O","can run O(어색)","'is help that which'(관계대명사 비문)"],3,2,"'A lion' 반복 구조",6,"'many fur', hunt→hunts, 'use to lion's feet' 어색, Q7 비문(that which)"),
+   S(15,"학생 N",A,A,A,["이름·장소 O / There is O","brown soft fur O / be+with O","furry body·sharp teeth O / has O","standing O / 진행형 O","usually protect baby O","can run quickly O","sharp teeth that catch O / 관계대명사 O"],3,3,"묘사 'sharp teeth' 반복",4,"protect→protects, 'wild grass', 'that catch'→catches"),
+   S(16,"학생 O",[1,1,1,1,1,1,0],[1,1,0,1,0,0,0],[1,0,1,0,0,0,0],["이름·장소 O / There are O","sharp teeth O / be+with O","'It is~tail'(have 형식 X)","'is a scanning'(진행형 broken)","'is usually protect'(usually 형식 X)","'is a quickly run'(can 형식 X)","that/which 비문 단편"],3,1,"전반적 비문·미완성(검토 필요)",7,"'is a scanning'·'is a quickly run'·'is usually protect' 비문, 단편 다수"),
+   S(17,"학생 P",A,[1,1,1,1,0,1,1],[1,1,1,0,1,1,1],["이름·장소 O / There is O","'is~with soft fur'(be+with O)","sharp teeth·tail O / has O","spot·watching O / 진행형 O(짧음)","'is animal usually aggressive'(usually 형식 X)","can run·spot O","which is special ability O / 관계대명사 O"],3,2,"묘사 반복 적음(spot/quickly 2회)",5,"'is a furry body' 어색, 'is animal'(an), 'fast run' 어순"),
+   S(18,"학생 Q",[1,1,1,1,1,1,0],[1,1,1,1,1,1,0],[1,1,1,1,1,1,0],["이름·장소 O / There is O","happy body~with brown O / be+with O","brown hair·sharp teeth O / has O","standing O / 진행형 O","usually hide O(나열 비문)","can run O","무응답"],3,3,"'A lion' 반복, jungle 반복",5,"'happy body' 어색, Q5 나열 비문, 'in jungle' 관사, Q7 무응답"),
+   S(19,"학생 R",A,A,A,["이름·장소 O / There is O","dangerous~with sharp tooth O / be+with O","long tail·furry body O / has O","standing with four legs O / 진행형 O","usually lives alone O","can run·find O","independent~which hunts alone O / 관계대명사 O"],3,1,"형용사 다양(반복 없음)",3,"'sharp tooth'(teeth), 'is independent animal'(an), 'a prey'"),
+   S(20,"학생 S",A,[1,0,1,1,1,1,1],A,["이름·장소 O / There is O","'has~with'(be+with X·has 사용)","special feather O / have O","standing O / 진행형 O","usually scans O","can run faster O","wildlife which~ O / 관계대명사 O"],3,2,"묘사 반복 적음(find 2회)",4,"'has~with'(be+with X), 'special feather' 어색, scans 수일치, 'other animal' 복수"),
+   S(21,"학생 T",[1,1,1,1,1,1,0],[1,1,1,1,1,1,0],[1,1,1,1,1,1,0],["이름·장소 O / There are O","aggressive~with soft fur O / be+with O","sharp teeth·legs O / have O","getting rest O / 진행형 O","usually have group·hunt O","can run·hide O","무응답"],3,1,"묘사 다양(반복 없음)",2,"'getting rest'→take a rest, 'have a group'→live in, Q7 무응답"),
+   S(22,"학생 U",A,[0,0,1,0,1,1,1],[1,1,1,1,1,1,0],["이름·장소 / 'The lion is in'(There is/are X)","'has~skin color'(be+with X)","stronger~ O / has O","'is going to hunt'(진행형 X)","usually hunt O (hunt→hunts)","can run·catch O","which~ O / 관계대명사 O(단편)"],3,2,"'The lion' 반복 구조",4,"'The lion is in'(There is/are X), 'is going to'(진행형 X), hunt→hunts"),
+   S(23,"학생 V",[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],["무응답","무응답","무응답","무응답","무응답","무응답","무응답"],3,0,"사실상 미작성(검토 필요) · 백지(0칸)로 상한 0 적용",0,"작성 내용 없음(검토 필요) · 백지(0칸)로 상한 0 적용"),
+   S(25,"학생 W",A,A,[1,1,1,1,1,1,0],["이름·장소 O / There is O","thick·strong legs O / be+with O","furry body·big paws O / has O","loyal/brave lion protecting O / 진행형 O","usually sleep O (sleep→sleeps)","can hunt very well O","dangerous animal that~ O / 관계대명사 O(단편)"],3,1,"형용사 다양(loyal/brave/lazy/aggressive)",3,"sleep→sleeps, 'his family'(its), Q7 단편"),
+   S(26,"학생 X",A,A,A,["이름·장소 O / There is O","yellow skin O / be+with O","sharp teeth·soft fur O / has O","looking for animals O / 진행형 O","usually hunts·protects O","can run~when chases O","dangerous~that has soft fur O / 관계대명사 O"],3,3,"묘사 'other animals/soft fur' 반복",2,"'although it's rich' 어색 외 거의 없음"),
+   S(27,"학생 Y",A,A,A,["이름·장소 O / There is O","long tail O / be+with O","furry body O / has O","walking near lions O / 진행형 O","usually finds animals O","can run·protect O","that has two big feet O / 관계대명사 O"],3,2,"묘사 반복 적음(other 2회)",2,"'two big feet' 내용 오류, 'the other animals' 관사"),
+   S(28,"학생 Z",A,A,A,["이름·장소 O / There is O","brave~with brown fur O / be+with O","sharp teeth·soft fur O / have O(have→has)","watching sunset O / 진행형 O","usually hunt~buffalo/zebra O","can help O","hunt which~ O / 관계대명사 O"],3,2,"묘사 반복 적음(brave/animal 2회)",5,"have→has, hunt→hunts×2, 'other lion family'(lions), Q7 일치 어색"),
+  ];
+  st["2-6"]=[
+   S(1,"학생 A",A,A,A,["이름·장소 O / There are O (wolfs 철자)","pointy ears 묘사 O / be+with O","big feet·sharp teeth O / have O","scanning O / 진행형 O","usually run O","can climb O","which watch O / 관계대명사 O"],3,2,"묘사 반복 적음(big feet 2회)",2,"wolfs→wolves, preys→prey"),
+   S(2,"학생 B",[1,1,1,0,0,0,0],[1,1,0,0,0,0,0],[1,1,0,0,0,0,0],["이름·장소 O / There are O (wolf 수일치)","furry·sharp teeth O / be+with O","tail·legs O / 'There are has'(have 형식 X)","미완성(There are together=진행형 X)","미완성(usually 동사 없음)","무응답","무응답"],3,1,"묘사 반복 없음(미완성 다수) · 부분 작성(5칸)으로 상한 2 적용",2,"wolf 수일치(are+wolf)×2 · 부분 작성(5칸)으로 상한 2 적용"),
+   S(3,"학생 C",A,A,A,["이름·장소 O / There are O","dark furry body O / be+with O","furry tail·sharp teeth O / have O (the 관사)","walking O / 진행형 O","usually move O","can run O","which have O / 관계대명사 O"],3,2,"묘사 반복 적음(furry/cute 각 2회)",2,"the sharp teeth(관사), faster(부사 어색)"),
+   S(4,"학생 D",A,A,A,["이름·장소 O / There are O","long tail O / be+with O","pointy ears·aggressive eyes O / have O","running O / 진행형 O","usually live O","can run O","that help O / 관계대명사 O"],3,2,"묘사 반복 적음(hunt the animals 2회)",1,"오류 거의 없음"),
+   S(5,"학생 E",A,[1,1,1,1,0,1,0],[1,1,1,1,1,1,0],["이름·장소 O / There are O","gray fur 묘사 O / be+with O(a 관사 누락)","pointy ears·sharp teeth O / has O","walking O / 진행형 O","묘사 O / 'is usually match'(usually 형식 X)","can run O","세부 O / 'is helps which'(관계대명사 부정확)"],3,1,"묘사 반복 없음",2,"관사 누락(a sociable animal), person→people"),
+   S(6,"학생 F",A,A,A,["이름·장소 O / There are O","soft fur 묘사 O / be+with O(are soft fur 어색)","tail·teeth O / have O (long tail→tails)","running O / 진행형 O","usually move O","can climb O (easy→easily)","that stylish/clever O / 관계대명사 O"],3,2,"묘사 반복 적음(fast 2회)",3,"long tail→tails, climb easy→easily, 'are soft fur' 어색"),
+   S(7,"학생 G",A,A,A,["이름·장소 O / There are O (wolfs 철자)","furry·색 묘사 O / be+with O","pointy ears·legs O / have O","running O / 진행형 O","usually run·hunt O","can carry O","that have~ O / 관계대명사 O"],3,2,"묘사 반복 적음(pointy 2회)",1,"wolfs→wolves"),
+   S(8,"학생 H",A,[1,1,0,1,0,1,0],[1,1,0,1,0,1,0],["이름·장소 O / There are O (wolf 수일치)","색·soft fur 묘사 O / be+with O","teeth·tail O / 'There are have'(have 형식 X)","running O / 진행형 O","eat 일반특징 O / 'are usually eat'(usually 형식 X)","can move O","aggressive·ears 세부 O / 'Which are have'(관계대명사 부정확)"],3,1,"묘사 반복 없음(snow forest는 장소)",2,"wolf 수일치(are+wolf)"),
+   S(9,"학생 I",A,A,A,["이름·장소 O / There are O","pointy ears O / be+with O","teeth·fur O / have O","walking O / 진행형 O","usually help O","can run·hide O","that live together O / 관계대명사 O"],3,1,"묘사 반복 없음",1,"오류 거의 없음"),
+   S(10,"학생 J",A,[1,1,1,1,1,0,0],[1,1,1,1,1,0,0],["이름·장소 O / There are O (wolfs 철자)","sharp teeth O / be+with O (a 관사 오류)","soft fur·ears O / have O ('It have'→has)","turning·finding O / 진행형 O","usually scan·eat O","능력 O / 'can moving'(can 형식 X)","세부 O / 'which is long tail'(관계대명사 부정확)"],3,1,"묘사 반복 없음",3,"wolfs→wolves, It have→has, 'a sharp teeth' 관사"),
+   S(12,"학생 K",[1,1,1,1,1,1,0],[1,0,1,0,1,1,0],[1,1,0,0,0,1,0],["이름·장소 O / There is O (a 관사 누락)","tail·body 묘사 O / have 사용(be+with X)","soft fur O / has O","행동 O / 'wolf running' 진행형 X","usually scan O (scan→scans)","can climb O","무응답"],3,1,"묘사 반복 없음",3,"'a wolf' 관사, wolf have→has, scan→scans"),
+   S(13,"학생 L",A,[1,0,1,1,1,1,1],[1,1,1,1,1,1,0],["이름·장소 O / There are O (wolfs 철자)","색 묘사 O / 'It has~with'(be+with X, has 사용)","sharp teeth·nails O / have O","looking O / 진행형 O","usually fight O","can make groups O","세부 O / 'If~which' 구조 어색(관계대명사 O)"],3,2,"묘사 반복 적음(sharp 2회)",3,"wolfs→wolves, 'black color fur' 어색, Q7 비문"),
+   S(14,"학생 M",A,A,A,["이름·장소 O / There are O","furry bodies O / be+with O","sharp teeth·ears O / have O","scanning O / 진행형 O","usually shout O","can hunt O","which help O / 관계대명사 O"],3,1,"묘사 반복 없음",1,"communicate 철자"),
+   S(15,"학생 N",[1,1,1,1,0,0,0],[1,1,0,1,0,0,0],[0,0,0,0,0,0,0],["이름·장소 O / There is O (broken)","furry·teeth 묘사 O / be+with O(단편)","aggressive / 'is have'(have 형식 X)","running O / 진행형 O","미완성('is'만)","미완성('is'만, can 없음)","미완성/비문"],3,1,"묘사 반복 없음(전반적 미완성)",5,"'a wolf' 관사, 'is snow' 비문, 단편 다수"),
+   S(16,"학생 O",A,A,A,["이름·장소 O / There are O (wolfs 철자)","pointy ears 묘사 O / be+with O","sharp teeth O / have O","running O / 진행형 O","usually catch O","can climb O","that can run O / 관계대명사 O"],3,1,"묘사 반복 없음",1,"wolfs→wolves"),
+   S(17,"학생 P",A,[1,0,1,1,1,1,1],A,["이름·장소 O / There are O","furry body·tail 묘사 O / 'have~with'(be+with X)","teeth·ears·fur O / have O","looking O / 진행형 O","usually live·hunt O","can run·spot O","which active·brave O / 관계대명사 O"],3,2,"묘사 반복 적음(warm 2회)",2,"'a warm grey fur' 관사, preys→prey"),
+   S(18,"학생 Q",[1,1,1,1,1,1,0],[1,1,1,1,1,1,0],[0,1,1,0,1,1,0],["이름·장소 O / There are O (wolf 수일치)","paw·furry body 묘사 O / be+with O('are big paw' 어색)","teeth·nose O / have O","행동 O / 진행형 O","usually catch O (another→other)","can run O","무응답"],3,2,"묘사 반복 적음(big 2회)",3,"wolf 수일치, 'are big paw' 어색, another animals→other"),
+   S(19,"학생 R",A,A,A,["이름·장소 O / There are O (wolfs 철자)","soft fur 묘사 O / be+with O","furry body·ears O / have O","running O / 진행형 O","usually live O","can escape O","which aggressive O / 관계대명사 O"],3,2,"묘사 반복 적음(fur 2회)",4,"wolfs→wolves, 'the wolfs' 관사, foods→food, escape from"),
+   S(20,"학생 S",A,A,A,["이름·장소 O / There is O (a 관사 누락)","long tail 묘사 O / be+with O (a 관사 누락)","paws·furry body O / has O","climbing O / 진행형 O","usually scans O","can jump·protect O (high jump 어순)","which~personality O / 관계대명사 O"],3,4,"묘사 'big' 4회 반복",3,"'a wolf'·'a big animal' 관사, high jump 어순"),
+   S(21,"학생 T",A,A,A,["이름·장소 O / There are O (wolfs 철자)","gray fur 묘사 O / be+with O","ears·body O / have O","jumping O / 진행형 O","usually run O","can climb O","that clever O / 관계대명사 O"],3,3,"묘사 'fur' 3회 반복",3,"wolfs→wolves, 'big size' 어색, special color→colorful"),
+   S(22,"학생 U",[1,1,1,1,1,0,1],[1,0,0,0,0,0,1],[0,0,0,0,0,0,0],["이름·장소 시도 / There are O(broken)","색 묘사 / be+with X","sharp teeth / 'There are have'(have 형식 X)","행동 시도 / 진행형 불명확","일반특징 시도 / 'usually living'(형식 X)","능력 불명확 / can 없음","세부 / which O(broken)"],3,1,"묘사 반복 없음(전반적 비문)",7,"수일치·관사·비문 다수"),
+   S(23,"학생 V",A,[1,0,1,1,1,1,1],A,["이름·장소 O / There are O","size·grey furs 묘사 O / 'show~with'(be+with X)","furry tail O / have O","looking O / 진행형 O","usually hunt O","can run·fight O","that~ O / 관계대명사 O"],3,2,"묘사 반복 적음(fur 2회)",3,"furs→fur, preys→prey, 'that makes'→make"),
+   S(24,"학생 W",[1,1,0,1,1,1,1],[1,1,1,1,0,1,1],[1,1,1,1,0,0,0],["이름·장소 O / There are O","teeth·tail 묘사 O / be+with O","신체부위 아님(brave/active) / has O","climbing O / 진행형 O","일반특징 O / 'is usually hunt'(형식 X)","can hunt O ('can wise' 어색)","세부 O / which O(messy)"],3,1,"묘사 반복 없음",5,"'is sharp teeth' 어색, other animal→animals, 'can wise' 비문"),
+   S(25,"학생 X",A,[1,1,1,1,0,1,1],A,["이름·장소 O / There are O (wolfs 철자)","soft fur 묘사 O / be+with O","ears·tail O / have O","finding O / 진행형 O","일반특징 O / 'usually moving'(형식 X)","can run O ('a foods' 오류)","which have O / 관계대명사 O"],3,1,"묘사 반복 없음",3,"wolfs→wolves, 'a foods'→food"),
+   S(26,"학생 Y",A,A,A,["이름·장소 O / There are O","soft·grey fur 묘사 O / be+with O","teeth·ears O / have O","finding O / 진행형 O","usually move·protect O","can hunt O","that sociable O / 관계대명사 O"],3,1,"묘사 반복 없음",3,"'at the mountain' 전치사, foods→food, preys→prey"),
+   S(27,"학생 Z",A,A,A,["이름·장소 O / There are O","small·grey body 묘사 O / be+with O","sharp teeth O / have O ('It have'→has)","moving O / 진행형 O","usually search O","can call O","which have O / 관계대명사 O (have→has)"],3,1,"묘사 반복 없음",4,"It have→has, 'a sharp teeth' 관사, which have→has, ear→ears"),
+   S(28,"학생 AA",A,A,A,["이름·장소 O / There are O","dark furry bodies 묘사 O / be+with O","teeth·ears O / have O","moving O / 진행형 O","usually look O","can run·hunt O","which act quietly O / 관계대명사 O"],3,1,"묘사 반복 없음",1,"foods→food"),
+  ];
+  st["2-5"]=[
+   S(2,"학생 A",[1,1,1,1,0,1,0],[1,1,1,1,0,1,0],[0,1,1,1,0,1,0],["이름·장소 / There is O('frog' 주어 누락·짧음)","big eyes O / be+with O","rounded body·paw O / has O","hiding on leaves O / 진행형 O","무응답","can jump·hide·climb O","무응답"],3,1,"묘사 반복 적음 · 부분 작성(5칸)으로 상한 2 적용",3,"'There is here' 주어 누락, 'big paw'(paws), 관사"),
+   S(3,"학생 B",[1,1,0,1,0,1,1],[1,1,0,0,0,0,0],[0,0,0,0,0,0,0],["frog·mountain 시도 / There is O(broken)","slimy/tree branch / be+with O(어색)","'What frog has'(have 형식 X·broken)","'What is frog'(진행형 X·broken)","미완성/비문","'Can you frog'(can broken)","'That frog'(지시·관계대명사 X)"],3,1,"전반적 비문·의문문 형태(검토 필요)",10,"문장 다수 비문·미완성, 수정 다수"),
+   S(4,"학생 C",A,A,A,["이름·장소 O / There is O","green skin O / be+with O","long legs·rounded body O / has O","moving on leaves O / 진행형 O","usually scans animals O","can jump high·far O","small~which brave O / 관계대명사 O"],3,2,"묘사 반복 적음(green leaves 2회)",3,"'is small animal'(a), 'is brave animal' 중복, 'rounded body' 관사"),
+   S(6,"학생 D",A,A,A,["이름·장소 O / There is O","colorful·long legs O / be+with O","big red eyes·short arms O / has O","jumping leaf to leaf O / 진행형 O","usually moves~place O","can jump high O","which usually have round body O / 관계대명사 O"],3,2,"묘사 반복 적음(long legs 2회)",2,"'usually have'(has), 'another place' 중복 외 거의 없음"),
+   S(7,"학생 E",A,A,[1,1,1,1,1,1,0],["이름·장소 O / There is O('animal live' 어색)","small body·brave·active O / be+with O","big feet·long legs O / has O","quickly jumping O / 진행형 O","usually moves O(어색)","can hop high·fast O","that independent·unique O / 관계대명사 O(미완성)"],3,2,"묘사 반복 적음(long legs 2회)",5,"'There is animal'(an), 'is with small body', 'that independent~animal' 동사 누락"),
+   S(8,"학생 F",A,A,[1,1,1,0,1,1,1],["이름·장소 O / There is O","small body O / be+with O","two long legs O / has O","hoping on leaves O / 진행형 O(짧음)","usually catch bug O (catch→catches)","can hop high O","frog which has back legs O / 관계대명사 O"],3,2,"묘사 반복 적음(legs 반복)",4,"'is a bug'(frog?), hoping→hopping, catch→catches, 'small body' 관사"),
+   S(9,"학생 G",[1,1,1,1,0,1,0],[1,0,1,0,0,1,0],[0,0,1,1,0,1,0],["이름·장소 / There is O(주어 누락)","spotted·rainbow / be+with X(with 없음)","red eyes·spotted body / have O","'is be jumping'(진행형 broken)","미완성(usually만)","can jump·move O","'There which'(관계대명사 X·단편)"],3,3,"묘사 'green leaf' 반복",8,"'There is on'(주어 누락), 'There are body' 비문, have→has, 'is be jumping'"),
+   S(10,"학생 H",[1,1,1,1,1,1,0],[1,1,1,1,1,1,0],[1,1,1,1,1,1,0],["이름·장소 O / There is O","small·striped O / be+with O","strong legs O / has O","jumping to leaf O / 진행형 O","usually looks colorful O","can jump high O","무응답"],3,2,"묘사 반복 적음(This animal 반복)",3,"'with striped'(striped skin), 'their legs'(its)"),
+   S(11,"학생 I",[1,1,1,1,1,1,0],[1,1,1,1,0,1,0],[1,1,1,1,1,1,0],["이름·장소 O / There is O","long legs O / be+with O","big eyes·paw O / has O","hopping on leaves O / 진행형 O","'is usually wandering'(usually+ing 형식 X)","can jump high O","무응답"],3,2,"묘사 반복 적음(green leaves 2회)",3,"'is small animal'(a), 'big paw'(paws), 'is usually wandering' 형식"),
+   S(12,"학생 J",A,A,A,["이름·장소 O / There is O","colorful·striped body O / be+with O","sticky paw O / have O(have→has)","jumping in forest O / 진행형 O","usually catch O (catch→catches)","can stick on leaf O","striped body which match O / 관계대명사 O"],3,3,"묘사 'forest/body' 반복",6,"have→has×2, 'sticky paw'(a), catch→catches, match→matches"),
+   S(13,"학생 K",A,A,A,["이름·장소 O / There is O","stylish·colorful skin O / be+with O","big eyes·small nose O / has O","jumping with legs O / 진행형 O","usually eats flies O","can swim O","which protects itself with poison O / 관계대명사 O"],3,1,"묘사 다양(반복 없음)",2,"'in jungle'(the) 외 거의 없음"),
+   S(14,"학생 L",A,A,A,["이름·장소 O / There is O","small·long legs O / be+with O","long tongue which helps hunt O / has O","jumping·finding bugs O / 진행형 O","usually lives alone O","can jump high·far O","poison which protects O / 관계대명사 O"],3,2,"묘사 반복 적음(long legs/small bugs 2회)",1,"오류 거의 없음"),
+   S(15,"학생 M",A,[1,0,1,1,1,1,0],A,["이름·장소 O / There is O","'It has long legs with body'(be+with X·has 사용)","rounded body·shiny eyes O / has O","jumping through leaves O / 진행형 O","usually hunt bugs O","can be important O(어색)","'We should be careful~'(관계대명사 X)"],3,3,"묘사 'body' 3회 반복",6,"'with the body'(a), jump/hunt 3인칭, their→its, 'run for away'"),
+   S(16,"학생 N",[1,1,1,1,1,0,0],[1,0,0,0,0,0,0],[0,0,0,0,0,0,0],["이름·장소 시도 / There is O(broken)","'There are colors with'(be+with broken)","'There is long legs'(have 형식 X)","'There are is jumping'(진행형 broken)","'are usually jumping'(형식 X)","'can high jumping'(can broken)","'Which down'(관계대명사 X·단편)"],3,1,"전반적 비문·미완성(검토 필요)",10,"수일치·비문·단편 다수"),
+   S(17,"학생 O",[1,0,0,0,0,0,0],[1,0,0,0,0,0,0],[1,0,0,0,0,0,0],["이름·장소 O / There is O","무응답","무응답","무응답","무응답","무응답","무응답"],3,0,"1문항만 작성(검토 필요) · 대부분 미작성(1칸)으로 상한 1 적용",0,"Q2~Q7 미작성 · 대부분 미작성(1칸)으로 상한 1 적용"),
+   S(18,"학생 P",A,A,A,["이름·장소 O / There is O","colorful skin O / be+with O","big·red eyes O / has O","jumping to leaf O / 진행형 O","usually eat bugs O (eat→eats)","can swim·jump O","which jump away~people O / 관계대명사 O"],3,2,"묘사 반복 적음(jump 반복)",2,"eat→eats, jump→jumps 외 거의 없음"),
+   S(19,"학생 Q",A,[1,1,1,1,0,1,1],[1,1,1,1,1,1,0],["이름·장소 O / There is O","green body·patterns O / be+with O","two long legs·big eyes O / have O(have→has)","jumping with legs O / 진행형 O","'is usually catch'(usually 형식 X)","can carry bugs O","'Frog crying that'(관계대명사 O·broken)"],3,3,"묘사 'Frog/bugs/legs' 반복",6,"'is green body'(has), have→has, 'is usually catch' 형식, their→its, Q7 broken"),
+   S(20,"학생 R",A,[1,1,1,1,0,1,1],A,["이름·장소 O / There is O","long tongue O / be+with O","long·strong legs O / has O","jumping leaf to leaf O / 진행형 O","'is usually sing'(usually 형식 X)","can hide·eat O","clever~that big mouth O / 관계대명사 O"],3,2,"묘사 반복 적음(leaves 반복)",4,"'is usually sing' 형식, 'leaves to leaves'(leaf), 'and eats'(eat)"),
+   S(21,"학생 S",A,[0,1,1,1,0,1,1],[0,1,0,1,1,1,1],["이름·장소 / 'Frog is jumping'(There is/are X)","round body·green skin O / be+with O","long tongue O / has O(짧음)","jumping on leaves O / 진행형 O","'is usually move'(usually 형식 X)","can hop O","independent~that O / 관계대명사 O"],3,2,"묘사 'jumping' 반복",5,"'is a round body'(has), 'a independent'(an), 'is usually move' 형식, 'on the forest'(in)"),
+   S(22,"학생 T",A,A,A,["이름·장소 O / There is O","long legs O / be+with O","big eyes·red hands O / has O","jumping high O / 진행형 O","usually uses tongue O","can fool predators O","small~which lives alone O / 관계대명사 O"],3,1,"묘사 다양(반복 없음)",2,"'red hands'(내용·feet) 외 거의 없음"),
+   S(23,"학생 U",A,[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],["green leaves(단어만)","rounded body(단어만)","jump/gentle(단어만)","jump leaves(단어만)","forest high jump(단어만)","high jump(단어만)","brave(단어만)"],3,4,"문장 없이 단어 나열만(검토 필요)",0,"완전한 문장 없음(검토 필요)"),
+   S(24,"학생 V",A,A,A,["이름·장소 O / There is O","oval shaped·short front legs O / be+with O","two long back legs O / has O","jumping leaf to leaf O / 진행형 O","usually eats insects O","can stretch tongues O","that has red eyes O / 관계대명사 O"],3,2,"묘사 반복 적음(legs 2회)",2,"주어 It/They 혼용 외 거의 없음"),
+   S(25,"학생 W",A,A,A,["이름·장소 O / There is O","short front legs O / be+with O(어색)","red eyes·colorful body O / has O","jumping on leaves O / 진행형 O","usually hop O (hop→hops)","can swim·catch fly O","big feet that help jump O / 관계대명사 O"],3,2,"묘사 반복 적음(jungle 2회)",4,"'with that' 어색, hop→hops, 'with tongue'(its)"),
+   S(26,"학생 X",A,A,A,["이름·장소 O / There is O","unique blue patterns O / be+with O","long·thin legs·tiny paws O / has O","jumping across trees O / 진행형 O","usually eats flies O","can jump high·far O","which has red eyes O / 관계대명사 O"],3,1,"묘사 다양(반복 없음)",1,"오류 거의 없음"),
+   S(27,"학생 Y",A,A,A,["이름·장소 O / There is O","long legs·long tongue O / be+with O","big round eyes·yellow stripes O / has O","jumping leaf to leaf O / 진행형 O","usually eats bugs·lives alone O","can jump·eat O","which very independent O / 관계대명사 O"],3,2,"묘사 반복 적음(long/bugs 2회)",2,"'leaf to other leaf'(another), 'round big'(big round) 외 거의 없음"),
+  ];
+  st["2-7"]=[
+   S(1,"학생 A",A,[1,0,1,1,1,1,1],A,["이름·장소 O / There is O","white skin·black stripes / 'has~with'(be+with X)","striped·long legs O / has O","running O / 진행형 O","usually eats grass O","can hide O","sharp ears that help O / 관계대명사 O"],3,3,"묘사 'striped' 3회 반복",5,"'black striped'(stripes), their→its, 'somewhere bush' 관사"),
+   S(2,"학생 B",A,A,A,["이름·장소 O / There is O","round body·striped O / be+with O","big eyes·long legs O / has O","running O / 진행형 O","usually runs from predator O","can run quickly O","that has striped pattern O / 관계대명사 O"],3,3,"묘사 'predator/savanna/pattern' 반복",4,"Zebra 관사 누락, 'is with round body'(a), 'striped pattern'(a)"),
+   S(3,"학생 C",A,A,A,["이름·장소 O / There is O","big·striped body O / be+with O","pointy ears·small eyes O / has O","running from lion O / 진행형 O","usually eats leaves O","can protect himself O","special body which helps hide O / 관계대명사 O"],3,2,"묘사 반복 적음(dangerous 2회)",4,"'striped body'(a), himself→itself, 'special body'(a)"),
+   S(4,"학생 D",A,A,A,["이름·장소 O / There is O","striped body O / be+with O","small eyes·big feet O / has O","running O / 진행형 O","usually eats green leaves O","can run fast O","that runs fast O / 관계대명사 O"],3,4,"'wide savanna' 4회 반복",2,"오류 거의 없음(반복만)"),
+   S(5,"학생 E",A,A,A,["이름·장소 O / There is O","white·black colors O / be+with O","striped skin to camouflage O / has O","running away from lion O / 진행형 O","usually stay in group O (stay→stays)","can run fast O","long tail that protects O / 관계대명사 O"],3,2,"묘사 반복 적음(striped 2회)",5,"stay→stays, 'in group'(a), 'strong leg'(legs)"),
+   S(6,"학생 F",A,A,A,["이름·장소 O / There is O","striped skin O / be+with O","long·strong legs O / has O","running away from lion O / 진행형 O","usually lives group O","can escape from predator O","which lives alone O / 관계대명사 O"],3,2,"묘사 반복 적음(wide savanna 2회)",4,"'lives group'(in a group), 'striped skin'(a), 수정"),
+   S(7,"학생 G",A,A,A,["이름·장소 O / There is O","short tail O / be+with O","striped body·pointy ears O / has O","chasing~lion O / 진행형 O","usually eat grass O (eat→eats)","can run·jump O","gentle~which protect body O / 관계대명사 O"],3,1,"묘사 다양(반복 적음)",4,"'striped body'(a), eat→eats, protect→protects"),
+   S(9,"학생 H",A,A,A,["이름·장소 O / There is O","striped body O / be+with O","big ears·long legs O / has O","running to avoid lion O / 진행형 O","usually lives in group O","can run·jump O","long furry tail which~ O / 관계대명사 O"],3,1,"묘사 다양(반복 없음)",1,"오류 거의 없음"),
+   S(11,"학생 I",A,[1,1,1,1,0,1,1],A,["이름·장소 O / There is O","floppy ears·small feet O / be+with O","long tail·striped body O / has O","running~because lion O / 진행형 O","'is usually escape'(usually 형식 X)","can watch animals O","sociable~which have group O / 관계대명사 O"],3,2,"묘사 반복 적음(animal 반복)",8,"'white savanna'(wide), 'lion is move' 비문, 'is usually escape', 'which have'(has), 수정 다수"),
+   S(12,"학생 J",A,A,A,["이름·장소 O / There is O","striped skin O / be+with O","tail·four legs·soft fur O / has O","running·escaping O / 진행형 O","usually runs·scans O","can run·hide O","that is sociable O / 관계대명사 O"],3,2,"묘사 반복 적음(zebra 반복)",3,"'has tail'(a tail), 수정"),
+   S(13,"학생 K",A,A,[1,1,0,1,1,1,1],["이름·장소 O / There is O","long tail O / be+with O","unique striped body O / has O(짧음)","running O / 진행형 O","usually eats grass·lives O","can run fast O","short legs which run fast O / 관계대명사 O"],3,3,"묘사 'wide savanna/short legs' 반복",5,"'unique striped body'(a), 'in the group'(a group), 수정 다수"),
+   S(14,"학생 L",[1,1,1,1,1,0,0],[1,0,0,0,0,0,0],[0,0,0,0,0,0,0],["이름·장소 시도 / There is O(broken)","'There is zebra striped'(be+with broken)","'They have zebra hide'(have broken)","'It's zebra fast run'(진행형 X)","'usually zebra'(형식 X)","'It's can zebra'(can broken)","'Which is zebra'(관계대명사 broken)"],3,1,"전반적 비문·단어 나열(검토 필요)",10,"문장 대부분 비문·미완성"),
+   S(15,"학생 M",A,A,A,["이름·장소 O / There is O","gentle·striped body O / be+with O","short tail·pointy ears O / has O","running fast O / 진행형 O","usually runs from predators O","can hop·run O","strong legs which help escape O / 관계대명사 O"],3,1,"묘사 다양(반복 없음)",2,"'which helps'(help) 외 거의 없음"),
+   S(16,"학생 N",A,[1,1,1,0,1,1,0],[1,1,1,0,1,1,0],["이름·장소 O / There is O","white·long tail O / be+with O","striped body·long tail O / has O","'There is running'(진행형 broken·주어 누락)","usually runs away O","can~ O(어색)","thick fur(관계대명사 X)"],3,4,"'savanna' 4회 반복",5,"'white and long tail' 어색, 'There is running' 주어누락, 'quickly twice'·'spread harmony' 어색"),
+   S(17,"학생 O",A,[1,1,1,0,0,1,0],[1,1,1,1,0,1,0],["이름·장소 O / There is O","spotted body O / be+with O(spotted→striped 내용)","pointy ears·short tail O / has O","'fast jump'(진행형 X·비문)","'usually active'(형식 X·동사 없음)","can fast escape O","'A zebra which'(관계대명사 단편)"],3,3,"묘사 'jump/fast' 반복",6,"'spotted'(striped 내용), 'fast jumps' 비문, 'usually active' 동사없음, Q7 단편"),
+   S(19,"학생 P",A,A,A,["이름·장소 O / There is O","striped·pointy ears O / be+with O","short legs·long tail O / has O","escaping from lion O / 진행형 O","usually helps each other O","can run·jump O","which lives in team O / 관계대명사 O"],3,3,"묘사 'This animal/team' 반복",4,"'with striped'(skin), 'long tail'(a), 'in team'(a team)"),
+   S(20,"학생 Q",A,A,A,["이름·장소 O / There is O","striped skin O / be+with O","long tail·four legs O / has O","running~because lion follows O / 진행형 O","usually eat leaves O (eat→eats)","can run fast O","which has striped skin O / 관계대명사 O"],3,3,"묘사 'There is/leaves/striped' 반복",4,"'striped skin'(a), eat→eats, 수정"),
+   S(21,"학생 R",A,A,A,["이름·장소 O / There is O","agile·brave~with soft fur O / be+with O","striped body·long tail O / has O","running O / 진행형 O","usually escape·find food O (escape→escapes)","can protect itself O","that runs very fast O / 관계대명사 O"],3,2,"묘사 반복 적음(wide savanna 2회)",2,"escape→escapes 외 거의 없음"),
+   S(22,"학생 S",A,A,A,["이름·장소 O / There is O","big·striped O / be+with O","long tail·pointy ears O / has O","running O / 진행형 O","usually eat leaves O (eat→eats)","can run fast O","striped which helps hide O / 관계대명사 O"],3,2,"묘사 반복 적음(striped/savanna 2회)",4,"'with striped'(a body), eat→eats, 'has striped'(stripes)"),
+   S(23,"학생 T",A,A,A,["이름·장소 O / There is O","big·striped body O / be+with O","long tail·pointy ears O / has O","running O / 진행형 O","usually live O (live→lives)","can run·protect O","social~that sociable O / 관계대명사 O"],3,3,"'wide savanna' 3회 반복",5,"'striped body'(a), live→lives, 'is social animal'(a), 'social~sociable' 중복"),
+   S(24,"학생 U",[1,1,1,1,1,0,0],[1,1,1,0,0,0,0],[1,1,1,1,1,0,0],["이름·장소 O / There is O","long legs O / be+with O","black·white lines O / has O","'lion coming~zebra running'(진행형 비문)","'It is protect young'(usually 형식 X)","'It cans'(미완성)","'It is'(미완성)"],3,1,"뒷부분 미완성(검토 필요)",6,"'It is protect' 비문, 'It cans'·'It is' 미완성, they→them"),
+   S(25,"학생 V",A,A,A,["이름·장소 O / There is O","land animal·striped body O / be+with O","white·black colors O / has O","escaping from lion O / 진행형 O","usually eats green leaves O","can run at high speeds O","gentle~which lives O / 관계대명사 O"],3,3,"'wide savanna' 3회 반복",2,"'body colors' 중복 외 거의 없음"),
+   S(26,"학생 W",A,A,[1,1,1,1,1,1,0],["이름·장소 O / There is O","black·white~with body O / be+with O(어색)","short tail·special feathers O / has O","running away O / 진행형 O","usually moves O","can jump·run O","body which~feathers O / 관계대명사 O(단편)"],3,3,"묘사 'feathers/short tail/special' 반복",5,"'with body' 어색, 'special feathers'(내용 오류), specially→especially, Q7 단편"),
+   S(27,"학생 X",A,[1,1,1,1,0,1,1],[1,0,1,1,0,1,1],["이름·장소 O / There is O","stripes~so fast / be+with O(어색)","spotted·white·black O / has O","escaping from lion O / 진행형 O","'usually is carrying'(usually 형식 X)","can run~like horse O","which escape from lion O / 관계대명사 O"],3,2,"묘사 'lion' 반복(비문 다수)",7,"'so fast' 어색, spotted(striped), escape→escapes, 'dangerous by lion' 어색, 수정 다수"),
+  ];
+  st["2-8"]=[
+   S(1,"학생 A",A,A,A,["이름·장소 O / There is O","small body O / be+with O","big·brown tail O / has O","holding nut O / 진행형 O","usually keeps nuts O","can climb fast O","big mouth that keep nuts O / 관계대명사 O"],3,2,"묘사 반복 적음(nuts/tree 2회)",4,"'big and brown tail' 어순, 수정"),
+   S(2,"학생 B",A,A,A,["이름·장소 O / There is O","pointy ears O / be+with O","brown fur·furry tail O / has O","sitting O / 진행형 O","usually climb tree O (climb→climbs)","can carry nuts O","which can climb tree O / 관계대명사 O"],3,2,"묘사 반복 적음(tree 2회)",3,"'furry tail'(a), climb→climbs, 'climb tree'(the)"),
+   S(3,"학생 C",[1,1,1,1,1,1,0],[1,1,1,0,0,0,0],[1,1,1,0,0,0,0],["이름·장소 O / There is O","brown color body O / be+with O","furry body·big eyes O / has O","'going to trees'(진행형 broken)","'Usually a squirrel white jungle'(형식 X)","'can squirrel ability'(can broken)","'Which squirrel'(관계대명사 단편)"],3,2,"뒷부분 비문·미완성(검토 필요)",8,"비문 다수, 'white jungle'(in the), 'with a squirrel a brown body' 비문"),
+   S(4,"학생 D",[1,1,1,1,1,1,0],[1,1,1,1,1,1,0],[1,1,1,1,1,1,0],["이름·장소 O / There is O","brown fur·long tail O / be+with O","soft fur·long tail O / has O","squirrel eating nut O / 진행형 O","usually climb·scan O (climb→climbs)","can put many nuts O","무응답(It is an~)"],3,3,"묘사 'tree/long tail/fur' 반복",5,"'an unique'(a), climb→climbs, 'in forest'(the), Q7 미완성"),
+   S(5,"학생 E",A,A,A,["이름·장소 O / There is O","soft fur·furry body O / be+with O","sharp teeth·long tail O / has O","eating·watching O / 진행형 O","usually climbs·find nuts O","can climb fast O (can climbs→climb)","cute~which likes nuts O / 관계대명사 O"],3,3,"묘사 'tree branch/nuts' 반복",5,"'is a soft fur'(has), find→finds, 'can climbs'(climb), 'climbs tree branch'(the)"),
+   S(6,"학생 F",A,A,[1,1,1,1,1,1,0],["이름·장소 O / There is O","short ears O / be+with O","brown fur·big tail O / has O","eating nut on tree O / 진행형 O","usually eats·finds nuts O","can climb·jump O","squirrel which keeps nuts O / 관계대명사 O(단편)"],3,2,"묘사 반복 적음(nuts 반복)",3,"'finds nuts' 중복, Q7 단편"),
+   S(7,"학생 G",[1,1,1,1,0,1,0],[1,1,1,1,0,1,0],[1,1,1,1,0,1,0],["이름·장소 O / There is O","'This is~big eyes with tail'(be+with O·어색)","'This is~has furry body'(has·중복동사)","'This is~watching nut'(진행형 O)","'This is~usually'(미완성·형식 X)","'can the climb and jump'(can broken)","'This is a squirrel'(미완성)"],3,4,"'This is a squirrel' 구조 반복(단조)",6,"'is~has' 중복동사, 'can the climb' 비문, 미완성 문장 다수"),
+   S(8,"학생 H",A,[1,1,1,1,0,1,1],A,["이름·장소 O / There is O","brown furry body·tail O / be+with O","soft fur·big tail O / has O","eating nut on branch O / 진행형 O","'is usually carry'(usually 형식 X)","can eat·climb O","soft fur which has teeth O / 관계대명사 O"],3,3,"묘사 'soft fur/nuts' 반복",5,"'is with~body'(a), 'big tail'(a), 'is usually carry' 형식, 'find it'(them)"),
+   S(10,"학생 I",A,A,A,["이름·장소 O / There is O","soft fur O / be+with O","long tail·short nose O / has O","eating nut on branch O / 진행형 O","usually collects·sleeps O","can run·climb O","which has brown fur·tail O / 관계대명사 O"],3,2,"묘사 반복 적음(branch 2회)",2,"'short nose'(a), 'at winter'(in)"),
+   S(11,"학생 J",A,A,A,["이름·장소 O / There is O","brown fur·round body O / be+with O","furry tail·pointy ears O / has O","eating nut O / 진행형 O","usually use legs to jump O (use→uses)","can climb high tree O","sharp teeth that~ O / 관계대명사 O"],3,2,"묘사 반복 적음(tree 3회)",4,"use→uses, their→its, 'that makes eat' 어색, 'high tree'(the)"),
+   S(12,"학생 K",A,A,A,["이름·장소 O / There is O","short legs O / be+with O","pointy ears·long tail O / has O","eating nut~sharp teeth O / 진행형 O","usually moves quickly O","can climb up tree O","playful~which has furry body O / 관계대명사 O"],3,1,"묘사 다양(반복 없음)",2,"'furry body'(a) 외 거의 없음"),
+   S(13,"학생 L",A,[1,1,1,1,1,1,0],[1,1,0,1,1,1,1],["이름·장소 O / There is O","pointy ears O / be+with O","rounded·furry body O / has O(짧음)","eating nut on tree O / 진행형 O","usually climb·carry O (climb→climbs)","can run·find nut O","small body with soft fur(관계대명사 X)"],3,3,"묘사 'A squirrel/nut/body' 반복",6,"'is very small animal'(a), climb→climbs, 'fast run' 어순, Q7 관계대명사 없음"),
+   S(14,"학생 M",A,[1,1,1,0,1,1,1],[1,1,1,1,0,1,0],["이름·장소 O / There is O","soft fur O / be+with O","furry body·long tail O / has O","'A squirrel eating'(진행형 broken·be 누락)","usually escape O (escape→escapes)","can climb fast O","small body that help run O / 관계대명사 O(단편)"],3,2,"묘사 반복 적음(tree/fast 2회)",6,"be 누락(Q4), escape→escapes, 'that help'(helps), Q7 단편"),
+   S(15,"학생 N",A,A,A,["이름·장소 O / There is O","brown·small body O / be+with O","long tail·short legs O / has O","eating brown nut O / 진행형 O","usually climbs O","can match colors O","that runs fast O / 관계대명사 O"],3,2,"묘사 반복 적음(tree branch 2회)",5,"'eating quietly the nut' 어순, 'fast well' 중복, 수정 다수"),
+   S(16,"학생 O",[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],["'There is'만 작성","무응답","무응답","무응답","무응답","무응답","무응답"],3,0,"사실상 미작성(검토 필요) · 대부분 미작성(1칸)으로 상한 1 적용",0,"답안 거의 없음(검토 필요) · 대부분 미작성(1칸)으로 상한 1 적용"),
+   S(17,"학생 P",A,A,A,["이름·장소 O / There is O","soft brown fur O / be+with O","long tail·big eyes O / has O","watching nut~on hands O / 진행형 O","usually climbs·search O","can find nuts O","curious·active~that O / 관계대명사 O"],3,1,"묘사 다양(반복 없음)",2,"'search'(searches), 'on its hands'(in)"),
+   S(18,"학생 Q",A,A,A,["이름·장소 O / There is O","short legs O / be+with O","mouth pocket·big eyes O / has O","eating nut~hands O / 진행형 O","usually runs fast O","can store food~mouth pocket O","that has big furry tail O / 관계대명사 O"],3,2,"묘사 반복 적음(mouth pocket/forest 2회)",1,"오류 거의 없음"),
+   S(19,"학생 R",A,A,A,["이름·장소 O / There is O","small ears·feet O / be+with O","long·curvy·furry tail O / has O","eating nut~front teeth O / 진행형 O","usually climbs trees O","can run fast~escape O","which lives in tree hole O / 관계대명사 O"],3,1,"묘사 다양(반복 없음)",2,"'curvy, furry tail'(a) 외 거의 없음"),
+   S(20,"학생 S",A,A,A,["이름·장소 O / There is O","orange body O / be+with O","big tail·big eyes O / has O","holding·trying to eat O / 진행형 O","usually climbs tree O","can hide·store food O","which can run~danger O / 관계대명사 O"],3,2,"묘사 반복 적음(nut/big 2회)",3,"'the nut' 반복, 수정"),
+   S(21,"학생 T",A,A,A,["이름·장소 O / There is O","brown·small body O / be+with O","soft fur·big tail O / has O","eating nut on branch O / 진행형 O","usually moves·finds foods O","can keep foods in mouth O","big mouth which keep foods O / 관계대명사 O"],3,3,"묘사 'foods/mouth' 반복",5,"'brown small body' 어순, 'a soft fur', foods→food×3, their→its"),
+   S(22,"학생 U",A,A,A,["이름·장소 O / There is O","clever·big eyes O / be+with O","brown fur·big tail O / has O","eating nut on tree O / 진행형 O","usually climbs tree fast O","can store food O","that has soft brown fur O / 관계대명사 O"],3,2,"묘사 반복 적음(tree 2회)",3,"저해상도, 사소한 오류"),
+   S(23,"학생 V",A,A,A,["이름·장소 O / There is O","furry body O / be+with O","big tail·pointy ears O / has O","eating nut~two legs O / 진행형 O","usually stores nuts~winter O","can climb tree quickly O","which runs fast in forest O / 관계대명사 O"],3,2,"묘사 반복 적음(nut/tree 2회)",1,"오류 거의 없음"),
+   S(24,"학생 W",A,A,A,["이름·장소 O / There is O","long tail O / be+with O","furry body·pointy ears O / has O","holding nut·eating O / 진행형 O","usually lives on trees O","can climb·run O","which loves nuts O / 관계대명사 O"],3,2,"묘사 반복 적음(trees/nuts 2회)",2,"'Squirrel'(A), 'on the tall trees'(in)"),
+   S(25,"학생 X",[1,1,1,1,1,1,0],[1,1,1,1,0,1,0],[1,1,1,1,1,1,0],["이름·장소 O / There is O","furry body·long tail O / be+with O","strip·sharp teeth O / have O(have→has)","eating nut on branch O / 진행형 O","'is usually climb'(usually 형식 X)","can climb very well O","'Which animal do you like'(질문·관계대명사 X)"],3,3,"묘사 'climb tree' 반복",6,"'is a furry body'(has), have→has, 'a strip'(stripes), 'is usually climb' 형식, Q7 주제 이탈"),
+   S(26,"학생 Y",[1,1,1,1,1,1,0],[1,1,1,1,1,1,0],[1,1,1,1,1,1,0],["이름·장소 O / There is O","rounded body·pointed ears O / be+with O","long tail·soft fur O / has O","eating nut on branch O / 진행형 O","usually find nut·live O (find→finds)","can jump·climb O","'That is a boy~'(관계대명사 X·주제 이탈)"],3,3,"묘사 'tree/nut' 반복",5,"'is rounded body'(has), 'eating nut'(a), find→finds, live→lives, Q7 이탈"),
+   S(27,"학생 Z",[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],["무응답","무응답","무응답","무응답","무응답","무응답","무응답"],3,0,"사실상 미작성(검토 필요) · 백지(0칸)로 상한 0 적용",0,"작성 내용 없음(검토 필요) · 백지(0칸)로 상한 0 적용"),
+   S(28,"학생 AA",A,[1,1,1,1,0,1,0],[1,0,0,0,1,0,0],["이름·장소 O / There is O","brown color O / be+with O(짧음)","big teeth O / has O(짧음)","eating on leaf O / 진행형 O(짧음)","'is usually go'(usually 형식 X)","can climb tree O(짧음)","needs friends·nuts(관계대명사 X)"],3,2,"묘사 반복 적음(nuts/tree 2회)",6,"Squirrel 관사 누락 다수, 'is with brown color', 'a big teeth', 'is usually go' 형식, 짧은 문장"),
+  ];
+  return st;
+}
+function normalize(s){
+  if(!Array.isArray(s.c)) s.c=[0,0,0,0,0,0,0];
+  if(!Array.isArray(s.l)) s.l=[0,0,0,0,0,0,0];
+  if(!Array.isArray(s.b)){ const n=+s.bun||0; s.b=[0,0,0,0,0,0,0]; for(let i=0;i<7&&i<n;i++)s.b[i]=1; }
+  if(!Array.isArray(s.qnote)) s.qnote=["","","","","","",""];
+  ["suh","gusRep","pyoErr"].forEach(k=>{ s[k]=+s[k]||0; });
+  if(typeof s.gusNote!=="string") s.gusNote="";
+  if(typeof s.pyoNote!=="string") s.pyoNote="";
+  s.num=String(s.num==null?"":s.num);
+  return s;
+}
+const sum=a=>a.reduce((x,y)=>x+(+y||0),0);
+function editedAgainst(ss, ds){
+  const keys=["name","suh","gusRep","pyoErr","gusNote","pyoNote"];
+  for(const k of keys) if(String(ss[k])!==String(ds[k])) return true;
+  for(let i=0;i<7;i++){
+    if((ss.c[i]||0)!==(ds.c[i]||0)) return true;
+    if((ss.l[i]||0)!==(ds.l[i]||0)) return true;
+    if((ss.qnote[i]||"")!==(ds.qnote[i]||"")) return true;
+  }
+  if(sum(ss.b)!==sum(ds.b)) return true;
+  return false;
+}
+let state, active="2-1";
+function load(){
+  let stored=null;
+  try{const raw=localStorage.getItem(KEY); if(raw) stored=JSON.parse(raw);}catch(e){}
+  const def=defaults(); state={};
+  CLASSES.forEach(c=>{
+    const sList=(stored&&Array.isArray(stored[c]))?stored[c].map(normalize):[];
+    const dList=def[c]||[];
+    const dMap={}; dList.forEach(ds=>dMap[String(ds.num)]=ds);
+    const used=new Set(); const result=[];
+    sList.forEach(ss=>{
+      const ds=dMap[ss.num];
+      if(ds && !editedAgainst(ss,ds)) result.push(JSON.parse(JSON.stringify(ds)));
+      else result.push(ss);
+      used.add(ss.num);
+    });
+    dList.forEach(ds=>{ if(!used.has(String(ds.num))) result.push(JSON.parse(JSON.stringify(ds))); });
+    state[c]=result;
+  });
+  window.__SEED__=def;
+}
+function seedFor(c,num){ const list=(window.__SEED__&&window.__SEED__[c])||[]; return list.find(x=>String(x.num)===String(num)); }
+function isEdited(c,s){ const d=seedFor(c,s.num); return d?editedAgainst(s,d):false; }
+function save(){
+  try{localStorage.setItem(KEY,JSON.stringify(state)); flash("● 저장됨 "+new Date().toLocaleTimeString());}
+  catch(e){flash("⚠ 저장 불가(임시 사용)");}
+}
+let flashT;
+function flash(m){const el=document.getElementById("saveState"); el.textContent=m; clearTimeout(flashT); flashT=setTimeout(()=>el.textContent="● 자동 저장 켜짐",1500);}
+
+const mapCnt=n=>{n=+n||0; return n>=4?Math.min(n,7):3;};
+const pyoScore=e=>{e=+e||0; return e<=2?3:e<=5?2:e<=8?1:0;};
+const gusScore=r=>{r=+r||0; return r<=2?3:r<=4?2:r<=6?1:0;};
+const content=s=>mapCnt(sum(s.c));
+const lang=s=>mapCnt(sum(s.l));
+const bunryang=s=>mapCnt(sum(s.b));
+const isBlankPrompt=(s,i)=>((s.c[i]||0)===0&&(s.l[i]||0)===0&&(s.b[i]||0)===0&&(!(s.qnote[i]||"").trim()||/무응답/.test(s.qnote[i]||"")));
+const attempted=s=>{let n=0;for(let i=0;i<7;i++)if(!isBlankPrompt(s,i))n++;return n;};
+const coverCap=s=>{const a=attempted(s);return a===0?0:a<=3?1:a<=5?2:3;};
+const gus=s=>Math.min(gusScore(s.gusRep),coverCap(s));
+const pyo=s=>Math.min(pyoScore(s.pyoErr),coverCap(s));
+const total=s=>(+s.suh)+bunryang(s)+content(s)+lang(s)+gus(s)+pyo(s);
+const cur=()=>state[active];
+
+function render(){
+  renderTabs(); renderSummary();
+  const box=document.getElementById("cards"); box.innerHTML="";
+  const list=cur();
+  document.getElementById("emptyMsg").style.display=list.length?"none":"block";
+  list.forEach((s,i)=>box.appendChild(card(s,i)));
+}
+function renderTabs(){
+  const t=document.getElementById("tabs"); t.innerHTML="";
+  CLASSES.forEach(c=>{
+    const n=state[c].length;
+    const d=document.createElement("div");
+    d.className="tab"+(c===active?" active":"");
+    d.innerHTML=c+(n?`<span class="cnt">${n}</span>`:"");
+    d.onclick=()=>{active=c; render();};
+    t.appendChild(d);
+  });
+}
+function renderSummary(){
+  const t=document.getElementById("sumTable"); const list=cur();
+  if(!list.length){t.style.display="none";return;} t.style.display="";
+  let h="<tr><th>이름</th><th>수행</th><th>분량</th><th>내용</th><th>언어</th><th>구성</th><th>표기</th><th>합계</th></tr>";
+  let tsum=0;
+  list.forEach(s=>{ tsum+=total(s);
+    h+=`<tr><td class="name">${esc(s.name)||"-"}</td>`+
+       `<td>${s.suh}</td><td>${bunryang(s)}</td><td>${content(s)}</td><td>${lang(s)}</td>`+
+       `<td>${gus(s)}</td><td>${pyo(s)}</td><td class="tot-badge">${total(s)}</td></tr>`;
+  });
+  h+=`<tr><td colspan="7" style="text-align:right;color:#6b7785">평균 (n=${list.length})</td><td class="tot-badge">${list.length?(tsum/list.length).toFixed(1):0}</td></tr>`;
+  t.innerHTML=h;
+}
+const opt=(v,labels)=>[3,2,1,0].map(n=>`<option value="${n}" ${v==n?"selected":""}>${n} · ${labels[n]}</option>`).join("");
+function card(s,i){
+  const d=document.createElement("div");
+  const edited=isEdited(active,s);
+  d.className="card"+(edited?" edited":"");
+  let qrows="";
+  FORMS.forEach((f,qi)=>{
+    qrows+=`<tr><td>${f.t}<div class="form">${f.f}</div></td>`+
+      `<td class="ck"><input type="checkbox" ${s.c[qi]?"checked":""} onchange="setQ(${i},'c',${qi},this.checked)"></td>`+
+      `<td class="ck"><input type="checkbox" ${s.l[qi]?"checked":""} onchange="setQ(${i},'l',${qi},this.checked)"></td>`+
+      `<td class="ck"><input type="checkbox" ${s.b[qi]?"checked":""} onchange="setQ(${i},'b',${qi},this.checked)"></td>`+
+      `<td><input class="qnote" value="${esc((s.qnote&&s.qnote[qi])||"")}" placeholder="근거" onchange="setQnote(${i},${qi},this.value)"></td></tr>`;
+  });
+  d.innerHTML=`
+   <div class="card-head" onclick="toggle(${i},event)">
+     <span class="chev">${s.open?"▾":"▸"}</span>
+     <input class="nm" value="${esc(s.name)}" onclick="event.stopPropagation()" onchange="setField(${i},'name',this.value)" placeholder="이름">
+     ${edited?'<span class="badge-edit">·수정됨</span>':''}
+     <span class="tt">${total(s)}<small>/30</small></span>
+   </div>
+   <div class="card-body ${s.open?"":"collapsed"}">
+     <table class="q">
+       <tr><th>형식 항목</th><th class="cl">내용</th><th class="cl">언어</th><th class="cl">분량<span class="mini">7단어↑</span></th><th>근거 메모</th></tr>
+       ${qrows}
+     </table>
+     <div class="scores">
+       <div class="sc">내용 <span class="auto">${content(s)}/7</span></div>
+       <div class="sc">언어 <span class="auto">${lang(s)}/7</span></div>
+       <div class="sc">분량 <span class="auto">${bunryang(s)}/7</span></div>
+       <div class="sc"><b>수행과정</b><select onchange="setField(${i},'suh',this.value)">${opt(s.suh,SUH)}</select></div>
+     </div>
+     <div class="evid">
+       <div class="erow"><span class="lab">표기 오류수</span><input class="cnt" type="number" min="0" value="${s.pyoErr}" onchange="setField(${i},'pyoErr',this.value)"><span class="sco">→ ${pyo(s)}점</span><input class="note" value="${esc(s.pyoNote)}" placeholder="mechanic 오류(목표형식 제외)" onchange="setField(${i},'pyoNote',this.value)"></div>
+       <div class="erow"><span class="lab">구성 묘사반복</span><input class="cnt" type="number" min="0" value="${s.gusRep}" onchange="setField(${i},'gusRep',this.value)"><span class="sco">→ ${gus(s)}점</span><input class="note" value="${esc(s.gusNote)}" placeholder="반복된 묘사 표현(근거)" onchange="setField(${i},'gusNote',this.value)"></div>
+     </div>
+     <div class="cardbtns">
+       ${seedFor(active,s.num)?`<button class="b-reset" onclick="resetStudent(${i})">↺ Claude 채점값</button>`:''}
+       <button class="b-del" onclick="delStudent(${i})">학생 삭제</button>
+     </div>
+   </div>`;
+  return d;
+}
+function setQ(i,k,qi,v){cur()[i][k][qi]=v?1:0; save(); render();}
+function setQnote(i,qi,v){cur()[i].qnote[qi]=v; save(); render();}
+function setField(i,k,v){const num=["suh","gusRep","pyoErr"].includes(k); cur()[i][k]=num?(+v):v; save(); render();}
+function toggle(i,e){cur()[i].open=!cur()[i].open; save(); render();}
+function toggleAll(){const any=cur().some(s=>!s.open);cur().forEach(s=>s.open=any);save();render();}
+function addStudent(){cur().push({num:String(cur().length+1),name:"",c:[0,0,0,0,0,0,0],l:[0,0,0,0,0,0,0],b:[0,0,0,0,0,0,0],qnote:["","","","","","",""],suh:3,gusRep:0,gusNote:"",pyoErr:0,pyoNote:"",open:true});save();render();}
+function delStudent(i){if(confirm("이 학생을 삭제할까요?")){cur().splice(i,1);save();render();}}
+function resetStudent(i){
+  const s=cur()[i]; const d=seedFor(active,s.num);
+  if(!d){alert("이 학생의 Claude 기본값이 없습니다.");return;}
+  if(confirm("이 학생을 Claude 채점값으로 되돌릴까요? (직접 수정한 내용은 사라집니다)")){
+    const copy=JSON.parse(JSON.stringify(d)); copy.open=true; cur()[i]=copy; save(); render();
+  }
+}
+function resetAll(){if(confirm("모든 반의 모든 수정을 지우고 Claude 기본값으로 되돌릴까요?")){try{localStorage.removeItem(KEY);}catch(e){} load();active="2-1";render();}}
+function esc(x){return (x||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));}
+function exportCSV(all){
+  let rows=[["반","이름","수행","분량","내용","언어","구성","표기","합계","표기오류수","표기근거","구성묘사반복","구성근거"]];
+  const classes=all?CLASSES:[active];
+  classes.forEach(c=>state[c].forEach(s=>rows.push([c,s.name,s.suh,bunryang(s),content(s),lang(s),gus(s),pyo(s),total(s),s.pyoErr,'"'+(s.pyoNote||"").replace(/"/g,'""')+'"',s.gusRep,'"'+(s.gusNote||"").replace(/"/g,'""')+'"'])));
+  const csv=rows.map(r=>r.join(",")).join("\n");
+  const box=document.getElementById("expBox"); box.style.display="block"; box.value=csv; box.select();
+  try{navigator.clipboard.writeText(csv);}catch(e){}
+}
+load(); render();
+</script>
+</body>
+</html>
