@@ -96,6 +96,19 @@ p{margin:0 0 14px}
 .gcap .em{font-size:20px}
 .gcap h4{margin:5px 0 5px;font-size:15px;font-weight:800}
 .gcap p{margin:0;font-size:12.5px;color:var(--soft);line-height:1.55}
+.gopen{display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-size:12.5px;font-weight:800;
+ color:#fff;text-decoration:none;border-radius:10px;padding:8px 14px;transition:.15s}
+.gopen:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.gopen.t{background:var(--teal)}
+.gopen.b{background:var(--coral)}
+.gnolink{display:inline-block;margin-top:12px;font-size:11.5px;font-weight:700;color:#9a8f7a;background:#f3efe7;border-radius:9px;padding:7px 12px}
+/* share bar */
+.sharebar{display:flex;flex-wrap:wrap;align-items:center;gap:9px;justify-content:center;margin-top:20px;
+ background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 18px;box-shadow:0 2px 10px rgba(60,40,20,.05)}
+.sharebar .sbl{font-size:12.5px;font-weight:800;color:var(--soft)}
+.sharebar a{font-size:12.8px;font-weight:800;color:var(--teal);text-decoration:none;
+ background:var(--teal-s);border-radius:99px;padding:5px 13px}
+.sharebar a:hover{background:var(--teal);color:#fff}
 
 /* callout */
 .tipbox{background:var(--gold-s);border:1px solid #e6cf9a;border-radius:16px;padding:18px 22px;margin-top:8px}
@@ -114,6 +127,12 @@ p{margin:0 0 14px}
  <span class="kick">동료 교사용 · 제작 과정 그대로</span>
  <h1>학생 설문을 <span class="u">살아있는 대시보드</span>로<br>바꾼 레시피</h1>
  <p>구글 폼 응답 2개를 가지고, Claude(Cowork)에게 어떤 순서로 무엇을 요청해서 교사용 분석 대시보드와 학생 공유 대시보드를 만들었는지 — 실제 프롬프트까지 그대로 정리했어요. 아래 프롬프트는 <b>복사 버튼</b>으로 바로 가져다 쓸 수 있어요.</p>
+ <div class="sharebar">
+  <span class="sbl">🔗 바로 열어보기</span>
+  <a href="https://mjkim0119-create.github.io/mj-shared/echo-teacher.html" target="_blank" rel="noopener">📊 교사용 대시보드</a>
+  <a href="https://mjkim0119-create.github.io/mj-shared/echo-student.html" target="_blank" rel="noopener">💌 학생 대시보드</a>
+  <a href="https://mjkim0119-create.github.io/mj-shared/echo-recipe.html" target="_blank" rel="noopener">📄 이 레시피 링크</a>
+ </div>
 </div></div>
 
 <section><div class="wrap">
@@ -142,7 +161,8 @@ p{margin:0 0 14px}
     <div class="pvrow"><i>자기성찰</i><b style="width:64%"></b></div>
    </div>
    <div class="gcap"><div class="em">📊</div><h4>교사용 분석 대시보드</h4>
-    <p>반 선택 필터 · 정의적 영역별 막대 · 서술형 심층 분석 · 원문 모아보기 탭. 수업 성찰·기록용.</p></div>
+    <p>반 선택 필터 · 정의적 영역별 막대 · 서술형 심층 분석 · 원문 모아보기 탭. 수업 성찰·기록용.</p>
+    <a class="gopen t" href="https://mjkim0119-create.github.io/mj-shared/echo-teacher.html" target="_blank" rel="noopener">실물 열어보기 →</a></div>
   </div>
   <div class="gcard">
    <div class="pv pv-b">
@@ -151,7 +171,8 @@ p{margin:0 0 14px}
     <div class="pvheart">💗 37명 · "내 설문이 시험이 됐어"</div>
    </div>
    <div class="gcap"><div class="em">💌</div><h4>학생 공유 대시보드</h4>
-    <p>따뜻한 편지형 스크롤. 은유·성장·시험 환류·2학기 방향. 아이들에게 보여주는 용도.</p></div>
+    <p>따뜻한 편지형 스크롤. 은유·성장·시험 환류·2학기 방향. 아이들에게 보여주는 용도.</p>
+    <a class="gopen b" href="https://mjkim0119-create.github.io/mj-shared/echo-student.html" target="_blank" rel="noopener">실물 열어보기 →</a></div>
   </div>
   <div class="gcard">
    <div class="pv pv-c">
@@ -162,7 +183,8 @@ p{margin:0 0 14px}
     <div class="pvtr"><span>…</span><span>개인정보 제외</span><span>✓</span></div>
    </div>
    <div class="gcap"><div class="em">📁</div><h4>정제 데이터</h4>
-    <p>학번·이름 뺀 반별 집계본. 다음 학기·다른 분석에 그대로 재활용 가능.</p></div>
+    <p>학번·이름 뺀 반별 집계본. 다음 학기·다른 분석에 그대로 재활용 가능.</p>
+    <span class="gnolink">📄 파일로 보관 (링크 없음)</span></div>
   </div>
  </div>
 </div></section>
@@ -264,7 +286,7 @@ p{margin:0 0 14px}
    <li><b>원문 보존</b> — "요약하지 말고 원문 그대로"를 꼭 넣어야 학생 목소리가 안 뭉개져요.</li>
    <li><b>한 단계씩</b> — 처음부터 완성본을 시키기보다, 정제→분석→학생용 순으로 결과를 보며 쌓아야 원하는 게 나와요.</li>
    <li><b>HTML 파일 vs 아티팩트</b> — 남한테 넘기거나 링크로 뿌릴 거면 <b>HTML 파일</b>, 내가 계속 사이드바에서 볼 거면 아티팩트. 공유용은 파일이 정답.</li>
-   <li><b>공개 링크</b> — 파일을 학생들에게 링크로 뿌리고 싶으면 "이 HTML을 공개 주소로 게시해줘"라고 하면 돼요.</li>
+   <li><b>공개 링크</b> — "이 HTML을 공개 주소로 게시해줘"라고 하면 웹 링크가 나와요. 이 레시피의 세 대시보드도 그렇게 게시했어요 (위 <b>바로 열어보기</b> 버튼). 단, 공개 링크는 주소를 아는 누구나 볼 수 있으니 학생 원문이 담긴 건 공유 범위를 유의하세요.</li>
   </ul>
  </div>
 </div></section>
