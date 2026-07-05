@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>너희가 만든 1학기 영어</title>
+<style>
+:root{
+ --bg:#fbf7f0;--ink:#2c2a27;--soft:#6f6a62;--card:#fff;--line:#ece4d7;
+ --coral:#e8664d;--coral-s:#fceae5;--teal:#2f9e8f;--teal-s:#e4f4f1;
+ --gold:#e0a53a;--gold-s:#fbf1dc;--violet:#7b6bd6;--violet-s:#eeebfa;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font-family:'Apple SD Gothic Neo','Pretendard','Malgun Gothic',system-ui,sans-serif;
+ line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px}
+section{padding:64px 0}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* hero */
+.hero{padding:80px 0 56px;text-align:center;
+ background:radial-gradient(1200px 380px at 50% -60px,#fff2e6 0%,rgba(255,242,230,0) 70%)}
+.hero .kick{display:inline-block;font-size:13px;font-weight:800;letter-spacing:.12em;
+ color:var(--coral);background:var(--coral-s);border-radius:999px;padding:6px 15px;margin-bottom:18px}
+.hero h1{font-size:clamp(30px,6vw,50px);line-height:1.18;margin:0 0 14px;font-weight:900;letter-spacing:-.02em}
+.hero h1 .u{background:linear-gradient(transparent 62%,#ffd9b0 62%)}
+.hero p{font-size:clamp(15px,2.4vw,18px);color:var(--soft);margin:0 auto;max-width:560px}
+.hero .scrolltip{margin-top:34px;font-size:12.5px;color:#b3a893;font-weight:700}
+.hero .scrolltip span{display:block;font-size:20px;margin-top:4px;animation:bob 1.6s infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+.eyebrow{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.stitle{font-size:clamp(23px,4.2vw,33px);font-weight:900;letter-spacing:-.02em;margin:6px 0 8px;line-height:1.25}
+.slead{font-size:15.5px;color:var(--soft);margin:0 0 28px;max-width:600px}
+
+/* metaphor cards */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.mcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px 16px;
+ box-shadow:0 2px 10px rgba(60,40,20,.04);position:relative;font-size:14px;color:#3a362f}
+.mcard::before{content:'\201C';position:absolute;top:2px;left:12px;font-size:40px;color:#f0c98f;font-family:Georgia,serif;line-height:1}
+.mcard .body{padding-top:16px}
+.mwall{margin-top:16px}
+.mwall-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;
+ max-height:0;overflow:hidden;transition:max-height .5s ease}
+.mwall-grid.open{max-height:2600px}
+.mini{background:#fffdfa;border:1px solid var(--line);border-radius:12px;padding:12px 13px;font-size:12.8px;color:#544f47}
+.morebtn{margin-top:16px;background:#fff;border:1.5px solid var(--gold);color:#a9772a;font-weight:800;
+ border-radius:999px;padding:9px 20px;font-size:13.5px;cursor:pointer}
+.morebtn:hover{background:var(--gold-s)}
+
+/* growth bars */
+.grow{background:var(--teal-s);border-radius:22px;padding:30px 26px}
+.bar{margin:14px 0}
+.bar .lab{display:flex;justify-content:space-between;font-size:14px;font-weight:700;margin-bottom:6px}
+.bar .lab .n{color:var(--teal);font-weight:900}
+.bar .track{height:14px;background:#fff;border-radius:99px;overflow:hidden}
+.bar .fill{height:100%;width:0;background:linear-gradient(90deg,#37b0a0,#2f9e8f);border-radius:99px;transition:width 1.1s cubic-bezier(.2,.7,.2,1)}
+.voices{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:22px}
+.voice{background:#fff;border-left:4px solid var(--teal);border-radius:0 12px 12px 0;padding:12px 15px;font-size:13.3px;color:#3a4b47}
+.honest{margin-top:26px;background:#fff;border:1px dashed #d8cfc0;border-radius:16px;padding:20px 22px}
+.honest h4{margin:0 0 10px;font-size:15px;color:#8a6d2f}
+.honest .h-v{font-size:13px;color:#6f6a62;padding:5px 0;border-top:1px solid #f0eadf}
+.honest .h-v:first-of-type{border-top:none}
+
+/* loop */
+.loopflow{display:flex;align-items:stretch;gap:12px;flex-wrap:wrap;margin:8px 0 26px}
+.lstep{flex:1;min-width:180px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;text-align:center;position:relative}
+.lstep .ico{font-size:30px}
+.lstep h4{margin:8px 0 4px;font-size:16px}
+.lstep p{margin:0;font-size:13px;color:var(--soft)}
+.lstep.hl{background:var(--gold-s);border-color:#e6cf9a}
+.arrow{align-self:center;font-size:26px;color:#d8a35a;font-weight:900}
+.big26{text-align:center;font-size:15px;color:#3a362f;background:var(--gold-s);border-radius:16px;padding:18px 20px;margin-bottom:20px}
+.big26 b{color:var(--gold);font-size:28px;font-weight:900}
+.loopq{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.lq{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:13.3px;color:#3a362f}
+.lq .cl{font-size:11px;font-weight:800;color:#fff;background:var(--gold);border-radius:6px;padding:1px 8px;margin-right:6px}
+.ecgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.eccard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;box-shadow:0 2px 10px rgba(60,40,20,.04)}
+.eccard.flag{background:var(--gold-s);border-color:#e6cf9a;box-shadow:0 6px 20px rgba(224,165,58,.14)}
+.eccard .h{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.eccard .h .em{font-size:24px}
+.eccard .h h4{margin:0;font-size:15.5px;font-weight:800;flex:1;line-height:1.25}
+.eccard .h .c{font-size:11px;font-weight:800;color:#a9772a;background:#fff;border:1px solid #e6cf9a;border-radius:99px;padding:3px 9px;white-space:nowrap}
+.eccard.flag .h .c{background:var(--gold);color:#fff;border-color:var(--gold)}
+.eccard .r{font-size:12.6px;color:#544f47;line-height:1.5;padding:7px 0 7px 14px;position:relative;border-top:1px solid #f2ece1}
+.eccard .r:first-of-type{border-top:none}
+.eccard .r::before{content:'';position:absolute;left:2px;top:13px;width:5px;height:5px;border-radius:50%;background:#d8a35a}
+.eccard .crown{display:inline-block;font-size:10.5px;font-weight:800;color:#fff;background:var(--gold);border-radius:5px;padding:1px 7px;margin-bottom:10px}
+.ecfoot{text-align:center;font-size:14px;color:#3a362f;background:var(--gold-s);border-radius:16px;padding:18px 22px;margin-top:22px;line-height:1.6}
+
+/* directions */
+.dsec{background:linear-gradient(180deg,#f4effa,#fbf7f0);border-radius:26px;padding:36px 26px}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-top:8px}
+.dcard{background:#fff;border:2px solid var(--line);border-radius:18px;padding:20px;cursor:pointer;
+ transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.dcard:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(90,70,140,.1)}
+.dcard.on{border-color:var(--violet);box-shadow:0 8px 26px rgba(123,107,214,.22)}
+.dcard .top{display:flex;align-items:center;gap:10px}
+.dcard .emoji{font-size:26px}
+.dcard h4{margin:0;font-size:16.5px;font-weight:800;flex:1}
+.dcard .cnt{font-size:11.5px;font-weight:800;color:var(--violet);background:var(--violet-s);border-radius:99px;padding:3px 10px;white-space:nowrap}
+.dcard .prev{font-size:13.3px;color:#544f5e;margin:12px 0 0}
+.dcard .detail{max-height:0;overflow:hidden;transition:max-height .45s ease}
+.dcard.on .detail{max-height:520px}
+.dcard .detail .inner{padding-top:14px;margin-top:14px;border-top:1px dashed #ddd6ec}
+.dcard .detail .lbl{font-size:11.5px;font-weight:800;color:var(--violet);letter-spacing:.04em;margin-bottom:8px}
+.dcard .dv{font-size:12.7px;color:#5b5560;background:#faf9fe;border-radius:10px;padding:9px 12px;margin-bottom:7px}
+.dnote{margin:26px 0 0;background:#fff;border:1px solid #e6dff7;border-radius:16px;
+ padding:17px 20px;text-align:center;font-size:13.6px;color:#5b5560;line-height:1.65}
+
+/* closing */
+.note{background:#2c2a27;color:#f4efe6;color:#f4efe6;border-radius:24px;padding:40px 32px;text-align:center}
+.note .heart{font-size:34px}
+.note h3{font-size:22px;margin:10px 0 14px;font-weight:900;color:#fff}
+.note p{font-size:15px;color:#d8d1c6;max-width:560px;margin:0 auto 8px}
+.note .sign{margin-top:22px;font-size:15px;font-weight:800;color:#ffd9b0}
+.foot{text-align:center;font-size:12px;color:#b3a893;padding:30px 0 60px}
+
+@media(max-width:560px){
+ section{padding:48px 0}
+ .arrow{transform:rotate(90deg)}
+ .loopflow{flex-direction:column}
+}
+</style></head>
+<body>
+
+<div class="hero">
+ <div class="wrap">
+  <span class="kick">2학년 · 1학기 영어를 돌아보며</span>
+  <h1>너희가 만든<br><span class="u">1학기 영어</span>였어</h1>
+  <p>선생님이 너희 설문 답을 하나도 빠짐없이 다 읽었어.<br>너희가 쓴 말들이 수업을 어떻게 바꿨는지, 그리고 2학기를 어떻게 같이 만들지 보여줄게.</p>
+  <div class="scrolltip">아래로 내려봐<span>↓</span></div>
+ </div>
+</div>
+
+<section id="s1"><div class="wrap">
+ <div class="reveal">
+  <div class="eyebrow" style="color:var(--coral)">① 너희가 한 말</div>
+  <h2 class="stitle">"나에게 올해 영어 수업은 ___ 같았다"</h2>
+  <p class="slead">같은 질문에 <b id="metaN"></b>개의 서로 다른 대답이 나왔어. 정답이 없는 질문이었고, 그래서 너희 한 명 한 명이 다 달랐지. 몇 개만 같이 볼까?</p>
+ </div>
+ <div class="mgrid reveal" id="featWrap"></div>
+ <div class="mwall reveal">
+  <button class="morebtn" id="moreBtn">더 많은 목소리 펼치기 ▾</button>
+  <div class="mwall-grid" id="restWrap" style="margin-top:14px"></div>
+ </div>
+</div></section>
+
+<section id="s2"><div class="wrap">
+ <div class="reveal">
+  <div class="eyebrow" style="color:var(--teal)">② 그래서 우리가 이렇게 됐어</div>
+  <h2 class="stitle">3월의 나 → 지금의 나</h2>
+  <p class="slead">"무엇이 달라졌냐"는 질문에 너희가 가장 많이 쓴 말들이야. 숫자는 그렇게 답한 친구 수.</p>
+ </div>
+ <div class="grow reveal" id="growBars"></div>
+ <div class="voices reveal" id="growVoices"></div>
+ <div class="honest reveal">
+  <h4>💛 이런 목소리도 있었어</h4>
+  <div id="toughWrap"></div>
+  <p style="font-size:12.5px;color:#8a837a;margin:12px 0 0">아직 영어가 어렵거나 아쉬웠던 친구들. 이 목소리도 똑같이 소중해서, 2학기엔 더 챙길게.</p>
+ </div>
+</div></section>
+
+<section id="s3"><div class="wrap">
+ <div class="reveal">
+  <div class="eyebrow" style="color:var(--gold)">③ 너희 수업이 시험이 됐어</div>
+  <h2 class="stitle">시험지의 거의 모든 문제가,<br>우리 교실에서 나왔어</h2>
+  <p class="slead">시험 끝나고 "어떤 문항이 기억에 남았고, 왜 그런지" 너희가 적어줬지. 그 이유를 모아보니 <b>거의 다 우리가 함께 한 수업</b>으로 이어졌어. 회화, 문법, 본문, 단어게임 — 그리고 너희가 직접 한 설문까지.</p>
+ </div>
+
+ <div class="big26 reveal">그중 가장 특별한 건 <b style="font-size:16px">26번</b> — 수업 중 <b>너희가 직접 한 설문</b>이 그대로 시험 문제가 됐어. <b id="loop26"></b>명이 이 문항을 기억에 남는다고 꼽았지.</div>
+ <div class="loopflow reveal">
+  <div class="lstep"><div class="ico">🗣️</div><h4>너희가 답했고</h4><p>수업 중 설문에 너희 생각을 적었지</p></div>
+  <div class="arrow">→</div>
+  <div class="lstep hl"><div class="ico">📝</div><h4>26번이 됐고</h4><p>그 설문이 시험 문제로</p></div>
+  <div class="arrow">→</div>
+  <div class="lstep"><div class="ico">✅</div><h4>너희가 풀었어</h4><p>내가 만든 게 나에게 돌아옴</p></div>
+ </div>
+
+ <div class="reveal" style="margin-top:34px">
+  <h3 style="font-size:18px;font-weight:900;margin:0 0 4px">그런데 26번만이 아니었어</h3>
+  <p class="slead" style="margin-bottom:18px">너희가 "기억에 남는다"고 꼽은 문항들 — 각각이 어떤 수업에서 왔는지, 너희가 적어준 이유 그대로야. 숫자는 그 수업을 짚어준 친구 수.</p>
+ </div>
+ <div class="ecgrid reveal" id="examWrap"></div>
+ <div class="ecfoot reveal">이 중 하나라도 <b>"아, 그거!"</b> 했다면 — 그 수업이 곧 시험이었던 거야. 너희가 교실에서 한 모든 게 어딘가로 돌아와.</div>
+</div></section>
+
+<section id="s4"><div class="wrap">
+ <div class="reveal">
+  <div class="eyebrow" style="color:var(--violet)">④ 2학기, 이렇게 만들어갈게</div>
+  <h2 class="stitle">너희 목소리로,<br>2학기 방향을 이렇게 잡았어</h2>
+  <p class="slead">너희가 "더 해보고 싶다"고 적어준 걸 방향으로 묶었어. 선생님은 이걸 2학기 수업에 이렇게 담아가고 있어. 카드를 눌러보면 그 방향을 바란 친구들의 진짜 목소리가 나와.</p>
+ </div>
+ <div class="dsec reveal">
+  <div class="dgrid" id="dirWrap"></div>
+  <p class="dnote">여기 있는 방향 모두, 선생님이 2학기 수업을 짜면서 실제로 참고하고 있어. 너희는 이미 목소리를 냈으니까 — 이제 그걸 수업으로 만드는 건 선생님 몫이야. 💜</p>
+ </div>
+</div></section>
+
+<section id="close"><div class="wrap reveal">
+ <div class="note">
+  <div class="heart">💌</div>
+  <h3>너희 답 하나하나가 다음 수업이 돼</h3>
+  <p>이 페이지에 있는 모든 문장은 너희가 진짜로 쓴 말이야. 선생님은 이걸 데이터로만 보지 않았어 — 너희가 어디서 웃었고, 어디서 막혔고, 뭘 더 하고 싶은지 읽었지.</p>
+  <p>2학기 영어는 선생님 혼자 정하는 게 아니라, 너희가 남겨준 목소리까지 담아서 같이 만들 거야.</p>
+  <div class="sign">— 민주쌤 💚</div>
+ </div>
+ <div class="foot">ECHO · 2학년 영어 학기말 설문 · 정의적 응답 203명 · 시험 성찰 68명 · 모든 문장은 학생 원문 그대로</div>
+</div></section>
+
+<script>
+const D={"feat":["나에게 올해 영어 수업은 복권 같았다 왜냐하면 좋은 선생님을 만나서 영어실력이 늘었기 때문이다","광부 땅 속에 묻혀있어서 보이지 않는 보석(영어)을 캐내면서 성장했기 때문이다.","나에게 올해 영어수업은 신비로웠다. 왜냐하면 언제는 재밌고 언제는 힘들고 헷갈리는 항상 느낌이 드는 수업이였기 때문이다","나에게 올해 영어 수업은 열기구 같았다. 왜냐하면 열기구가 점점 천천히 하늘로 올라가는 것처럼 내 실력도 올라갔기 때문이다.","나에게 올해 영어 수업은 아테네의 민회같았다. 왜냐하면 아테네는 직접민주주의이었고 간접민주주의가 아닌 직접민주주의로 참여하지 못하는 사람이 있었으나 참여하는 사람의 의견이 직접적으로 크게 반영되었다. 그 이유는 지금우리사회가 규모가 더커져 간접 민주주","자유같았다 여러 활동을 하며 다른시간과 다르ㄴ 수업이라고느껴졌기 때문이다","나에게 올해 영어 수업은 풍선 같았다. 왜냐하면 하루하루 배워갈수록 점점 더 영어라는 과목이 부풀어 오르는 느낌이 들었기 때문이다.","나에게 올해 영어 수업은 꿈이다,왜냐하면 영어를 잘봐야 예술고등학교에 갈수 있어서","나에게 올해 영어수업은 계시판 같았다. 왜냐하면 친구들과 자기 자신만의 이야기를 발표하며 전달했기 때문이다.","나에게 올해 영어수업은 리메이크된 글 같았다. 왜냐하면 지금까지 영어수업과 비슷한듯 보여도 결이 다른 수업이었다. 원래 있던 글의 내용은 변하지 않았지만, 세부사항이 바뀌어서 다른 것처럼 느껴지는 것 처럼 말이다.","나에게 올해 영어 수업은 약과 같았다. 왜냐하면 학기초에 영어를 거의 모르는 나에게 의미있고 좋은 수업이 되었다고 생각하기 때문이다.","나에게 올해 영어 수업은 꿈같았다 왜냐하면 영어를 배우는게 꿈 같았기 때문이다","나에게 올해 영어 수업은 영화 같았다. 왜냐하면 성장 해가는 모습이 마치 영화의 한 장면 같아서","선풍기같았다. 어려운게 많았지만 선생님덕분에 쌩하고 바람처럼 지나갔기때문에","음식 / 여러 활동을하면서 그 활동을 재밌게 느끼고 기다리는 과정이있었기때문이다","퀘스트 같았다 하나씩 알아가고 배워가며 성장했기 때문이다.","나에게 올해 영어 수업은 혼자서 공부했을 때는 이해가되지 않았던 문법을 이해시켜주는 문법 도우미 같았다. 왜냐하면 문법 설명을 규칙을 찾고 일정 단어만 외우는 것이 한국의 전형적인 아법인데, 그게 아닌 이해 중심으로 하는 수업이 좋았다.","나에게 올해 영어 수업은 퍼즐같았다.왜냐하면 여러 개념을을 서로 연관지어 가며 알려주셨기 때문이다.","나에게 올해 영어수업은 선물같았다. 이렇게 의미있고 기다려지는 영어수업은 처음이였다.","혜성, 재밌는 것들이 많았기 때문이다.","나에게 올해 영어수업은 에이아이같았다 왜냐하면 새로운 지식을 계속 쌓았기 때문이다.","나에게 올해 영어 수업은 미래를 향한 징검다리 같았다. 왜냐하면 앞으로 영어 쓸 일이 많아질 것 같고 앞으로의 영어에 대한 자신감을 많이 키운것 같기 때문이다.","나에게 올해 영어 수업은 불붙일때 장작 같았다. 왜냐하면 불이 붙지않다가 불을 붙이니까 빛을 내며 활활잘타서 .”","한줄기의빛이자짙은어둠 재미있는 영어수업이라 한줄기에빛 질문을하는환경이나이런게 저에게맞지않는 짙은어둠","나에게 올해 영어수업은 동아리 활동 같았다.왜냐하면 다양한 참여형 활동과 자유로운 분위기,재미있는 수업이 마치 동아리 활동 하는것 같았다."],"rest":["나에게 올해 영어 수업은 그럭저럭인 것 같았다. 왜냐하면 그럭저럭 하기 때문에.","나에게올해수업은 행복같앗다 왜냐하면 영어시간마다 재밋잇는 게임 수업을 하기때문이다","나에게 올해 영어 수업은 어려웠다. 왜냐하면 어렵기 때문이다.","나에게 올해 영어 수업은 흥미가 느껴졌다. 왜냐하면 클래스 카드처럼 게임으로 하는 활동이 재밌었다.","나에게 올해 영어 수업은 풀 같았다.왜냐하면 선생님의 수업내용이해가 풀처럼 딱 되었기때문","나에게 올해 영어 수업은 재밌었던 것 같다. 왜냐하면 수업 내용이 재밌었기 때문이다.","올해 수업은 재밌었다 왜냐하면 다양한 홯동들로 했기 때문이다","나에게 올해 영어 수업은 흥미로웠다 왜냐면 새로운 활동을 많이해서","게임같았다 왜냐면 너무 어렵기때문에","나에게 올해 영어 수업은 재미있었다.왜냐하면 영어 수업하는 동안 많은 재미있는 활동들을 많이 했기 때문이다.","영어 점수를 올린 계기가 되었다","도전적이였다 매앨 무언가를 새로하기 때문이다","나에게 올해 영어 수업은 새로운 도전인 것 같았다. 왜냐하면 1학년 때와 수업 방식이 완전히 달랐기 때문이다.","나에게 올해 영어 수업은 재밌다 왜냐면 게임 해서","나에게 올해 영어 수업은 해석이였던 것 같다 왜냐햐면 난이도가 올라가면서 해석의 난이도가 엄청 어려워졌기 때문이다","나의 올해 수업은 파도 같았다. 왜냐하면 어느 때는 집중이 잘되서 잘했는데 어느 때는 집중을 잘못해서 선생님 말씀을 못듣기고 했기 때문이다","나에게 올해 영어 수업은 조금 더 많은걸 이해하고 배울 수 있었던 시간같다.","나에게 올해 영어수업은 재미있었다 왜냐하면 많은 활동을 해서이다","나는 올해 영어 수업이 재미있었던것 같았다. 왜냐면 여러 영어 활동을 패드를 사용해서 재미있게 했기 때문이다","나에게 올해 영어 수업은 잘한거 같다 왜냐하면 나는 어릴때 부터 영어를 잘해서","신기했다 왜냐하면 1학년때는 딱 시험중심으로만 수업을 했다면 올해는 다양한 활동으로 시험준비를 했기 때문이다","나에게 올해 영어수업은 노는거 같았다 왜냐하면 친구들과 할동 하는것도 많았고 게임을 하면서 공부해서 재밌었다","금같은 시간이었다, 내가 영어를 잘하게되는 시간이어서","나에게 올해 영어수업은 쫌 어렵기도 하고 어쩌다 몇개는 쉬웠던것 같다. 왜냐하면 영어에 쫌 약한것(?) 같다","나에게 올해 영어 수업은 조금 색달랐다. 왜냐하면 조금 더 많이 소통하는 영어 시간이었던 것 ㄱ,ㅌ기 때문이다","나에게 올해 영어수업은 영어에 대한 자신감을 키워주는 수업같았다, 왜냐하면 막연 포기하고 있었던 영어가 조금 읽히기 시작했기 때문이다","나에게 올해 영오 수업은 특이했다. 다른 쌤들이랑 수업 방식이 달라서 새로움","주옥같다. 유익해서","나에게 올해 영어수업은 나무같았다 왜냐하면 겉으론 필요하지 않아보여도 없어지면 막상 엄청 필요하기때문이다","나에게 올해 영어 수업은 작년과는 완전히 다른 방식이었다. 왜냐하면 작년에는 문법을 더 중요시 했다면 올해는 본문을 더 중요시했기 때문이다.","게임같았다 왜냐하면 게임 하는 방식으로 단어를 외우고 테스트를 하는게 재미있었기 때문이다","나에게 올해 영어 수업은 재미썼다 왜냐하면 블루킷이 재미있었다","영어수업은 창의적이게 느껴졌다, 왜냐하면 다른 수업들이랑 다르게 직접 경험을통해 학습을 할수있어서 재미있었다.","나에게 올해 영어 수업은 힘들었다.왜냐하면 관계대명사가 너무 어려웠기 때문이다.","나에게 올해 영어 수업은 재밋고 배운것이 많앗다 왜냐하면 단어같은것도 게임을하며 배우니까 재밋고 기억에 오래남는다","나에게 올해 영어 수업은 재미있었다. 왜냐하면 새로운 활동을 많이해서","나에게 올해 영어 수업은 좋았던것같다 왜냐하면 다양한 활동을 하면서 영어 실력이 늘었기 때문이다","나에게 올해 영어 수업은 즐거웠다. 왜냐하면 블루캣 덕분이다","전환점, 작년과 달리 실전 영어와 회화, 다채로운 수업이 있어서 신기했다.","나에게 올해 영어 수업은 재밋었던 것 같았다. 왜냐면 블루켓 같은 게임을 많이 했으니까.","신기한것 같았다. 왜냐하면 작년 영어 수업은 평범 했는데 활동이 많이 늘어서 영어 실력이 매우 좋아진 것 같아서 좋았다.","태어나서 처음해본 형태의 영어 수업이지만 지금까지 했던 어떤 수업보다 기억에 남는다 왜냐면 보통 수업은 선생님께서 준비해 주신 자료를 그냥 외우거나 주체적이지 않게 진행을 한다. 그래서 영어가 내 의견이 들어가는 언어같은 과목이라고 생각이 된적이 없었","나에게 올해 영어 수업은 의미 있었던 것 같았다. 왜냐하면 진짜 쓸 수 있는 영어를 배우는 느낌이었기 때문이다","나에게 올해 영어 수업은 참신했어서 기억에 더 잘 들어온 것 같았다. 왜냐하면 기존에 했던 영어 수업은 교과서와 프린트 위주의 수업이였는데 몇몇 통계자료도 보고 단어 외울때 퀴즈로 외우는 것이 머리속에 잘들어왔기 때문이다.","나에게 올해 영어 수업은 쉬웠던 것 같았다. 왜냐하면 문제가 잘 풀리기 때문이다.","올해 영어 수업은 전과는 다르게 만히 특별했다. 왜냐하면 작년에는 진도 나가는것에 집중적으로 해서 색다른 경험을 해보지 못했기 때문이다.","나에게 올해영어수업은 발전이었다. 왜냐하면 지금까지 학교에서 해준적 없는 수업이었고 표현이 늘고,시험분석하기 까지하면서 고등학교까지 연결될수 있는 시험문제를 풀어서 좋았더.","영어 수업은 새로웠다. 왜냐하면 전에는 해보지 못한 다양한 여어 활동을 해봤기 때문이다","나에게 올해 수업은 새로웠다. 왜냐하면 클래스룸, ai, 설문조사 등 많이 새로운 것을 수업에 활용해봤기 때문이다.","나의 올해 영어 수업은 좋았다. 이유는 언제나 재밌게 해서","영어 수업은 재미있었다 왜냐하면 영어 시간에 패드로 한 퀴즈가 재미있기 때문이다.","재밌어5다, 퀴즈랑 게임 같은거도 해서!!","나에게 영어수어은 재밌었던것 같다 왜냐하면 작년보다 수업이 집중되기 때문이다","그래도 즐거웠다 여전히 영어를 못하긴하지맘 수업이나 내용이 학생이 집중할 수 있고 직접 참여할 수 있기에 잠도 안오고 재미있게 수업할 수 잇던점가다","나에게 영어수업은 별로 노력하지 않아서 실력이 안늘은 것 걑다","특이했다. 교과서를 많이 안써서.","나에게 올해 영어 수업은 신기술 같았따. 왜냐하면 영어가 하면 할수록 어려워지는게 마치 신기술 개발과같았다.","평소 같았다 왜냐하면 그냥 그랬기 때문이다","나에게 올해 영어 수업은 재밌었고 새로웠다. 선생님의 수업 방식이 처음 보는 방식이기 때문이다","나에게 올해 영어 수업은 신선했다. 원래 영어는 내신을 위한 것이라고 생각했었는데 이번 년도 수업을 들으면서 영어를 언어로서 처음 느끼게 되어서 신선하다고 느꼈다.","나에게 올해 영어 수업은 좋은경험 같았다. 왜냐하면 재미있는 영어수업을 통해 많은걸 배웠기 때문이다","나에게 올해영어 수업은 좋던거같다 왜냐하면 단어게임도 하고 아주 유익한 수업이됀거같아서이다","나에세 올해 영어수업은 즐거웠다. 왜냐하면 친구들과 선생님이 재밌게 수업 분위기를 만들어줬기 때문이다","새로운과목을 배우는 것 같았다 왜냐하면 수업방식이 아예 달라서 더 도움되는것 같았다","나에게 올해 영어수업은 도움이 되었다","나에게 올해 영어 수업은 나에게 도움이 된 것 같았다. 왜냐하면 작년까지 90점대였던 영어시험 점수가 올해 처음으로 100점을 맞았기 때문이다.","나에게 올해 영어 수업은 좋았다, 왜냐하면 선생님이 수업을재 미있게 해 주셨기 때문이다","나에게 올해 영어 수업은 소중한 시간 같았다 왜냐하면 영어의 중요성과 흥미를 알았음","나에게 올해 영어 수업은 유익했던것같다.왜냐면 전에는 학교에서 단원마다 나오는 영어 단어를 신경을 별로 안쓴것같은데 블루킷같은 단어활동을해서 영어 점수도 잘나오고 다양한단어를 알게된것같기때문이다.","나의 올해 영어 수업은 영어를 언어로 받아들이게 되는 시간 같았다. 왜냐하면 1학년 때 배웠던 내신 느낌의 암기하는 과목에서 다양한 활동을 하며 재미있는 언어로 느껴졌기 때문이다.","의미있는 경험같앗다. 말 그대로 나에게 유익하고 의미잇는 경험이라서였다.","재미있는것,인상깊은게 많았음","나에게 올해영어 수업은 교육이였다. 왜냐하면 더 많고 새로운 가르침과 나에게 자신감을 좀더 심어주었기 때문이다","나에게 올해 영어 수업은 재미 잇엇다 왜냐한면 여러 게을 해서","나에게 올해 수업은 재미있던거 같다. 왜냐하면 활동도 많았고 수업시간 활동이 시험에 외부자문으로 나오기 때문이다","나에게 올해 영어 수업은 싷험실 같았다. 왜냐하면 수업에서 무언갈 새로 시도해 보려는 수업이 많았기 때문이다.","나에게 올해 영어 수업은 열쇠 같았다.왜냐하면 나의 영어를 열어줬기 때문이다","나에게 올해 영어 수업은 제일 유익한 시간인 것 같았다. 왜냐하면 태블릿으로 많은 활동을 하면서 이해 가는게 제일 빨랐다.","그럭저럭했었던, 흥미를 못느꼈다","나에게 올해 영어 수업은 게임 같았다. 실제로 단어를 배우기 위해 게임을 했기 때문이다.","나에게 올해 영어 수업은 흥미로웠다. 왜냐하면 지금까지 받아본적 없는 수업 방식이였기 때문이다.","나에게 올해 영어 수업은 새로운 수업 같았다. 왜냐하면 이전과는 다른 방식의 수업이었기 때문이다.","나에게 올해 수업은 성장같았다. 왜냐하면 영어를 더욱 잘 활용하게 됬기 때문이다.","좋았다, 왜냐하면 선생님의 수업방식이 공부가 잘되었기 때문이다.","나에게 올해 수업은 재미있었다 다양한 게임과 쪽지시험을 통해 재미있게 수업했기 때문이다","나에게 올해 영어 수업은 게임 같았다 왜냐하면 게임을 많이했기 때문에","올해 영어 수업은 괜찮은것 같았다 왜냐하면 수업이 괜찮았기 때문이다","유용한 영어들도 있었지만 조금 쉬운문제들이 많았다","나에게 올해 영어 수업은 게임 같았다. 왜냐하면 학습지 수업만 하는게 아니라 여러 다른 활동을 같이 했기 때문이다.","수업이 이해하기 편하고 재미있었다!!!!","나에게 올해 영어 수업은 영양제같았다. 영어 실력이 더 좋아지게 해줬기 때문이다.","나에게 올해 영어 수업은 확실히 실력이 늘은 것 같았다. 왜냐하면 몰랐던 문장구조들을 자세히 다 알아봤기 때문이다.","재미있었다 시험준비를 바탕으로 하면서 이해도 잘되는부분이 많았다","나에게 올해 수업은 시계같다.왜냐하면 영어 실력이 점점 좋아지고 있기 때문이다","나에게 올해 영어 수업은 새로운 경험이었다. 왜냐하면 여태껏 영어수업을 해오면서 이런 영어수업은 처음이었기 때문이다.","단어와 문법 실력을 더 높여주는 수업이다.","올해 영어 수업은 의미 있었던 것 같았다. 왜냐하면 4과 학습지 중에서 본문에 있는 정보들을 카테고리로 나누어서 했던게 있었는데 이렇게 본문 수업을 할 수 있다는 생각이 들었기 때문이다.","새로운 활동을 많이 해서 재미있었다","나에게 올해 영어 수업은 새로웠다.이전까지와는 다르게 유동적으로 받아들일 수 있는 수업 같았다.","나에게 올해 영어 수업은 긴장됐다. 왜냐하면 다른 아이들은 쉽게 쉽게 하는 것 같은데 나만 뒤처지는 것 같았기 때문이다.","“나에게 올해 영어 수업은 게임 같았다. 왜냐하면 재밌었다.”","나데게 올해 영어 수업은 수업 같았다. 왜냐하면 다른 수업이랑 좀 다르고 재밌어도 수업은 수업이다.","게임(블루킷) 게임이 가장 생각이 잘 나서","나에게 올해 영어 수업은 좋았다 왜냐하면 게임도 했기 때문이다","나에게 올해 영어수업은 재미있었다 왜냐하면 다양한 활동들을 많이 했기때문이다","나에게 올해 영어 수업은 시험 같았다. 왜냐하면 어려워서","어려울것 같았다왜냐하면 영어가 처음부터 계속 어려웠기 때문이다","나에게 올해 영어 수업은 한결같았다. 왜냐하면 예전처럼 열심히 들었기 때문이다.","나에게 올해 영어 수업은 좋았다. 왜냐하면 수업이 재미있었기 때문","작년,영어는 늘 지루한 과목이기 때문이다.","게임 / 게임을 많이해서","나에게 올해 영어수업은 회화나 토킹보다는 문법위주로 진행되는 느낌이어서 아쉬웠다","나에게 올해 영어 수업은 체험학습 같았다. 왜냐하면 직접 말하고 쓰면서 게임으로 단어 등을 배울 수 있었다 직접 체험하는(?)것 같았기 때문이다.","나에게 올해 영어 수업은 학원 수업이랑 비슷했다. 왜냐하면 내 영어 학원도 문법을 주로 다루지 않고 단어랑 영어 뉴스 말하기를 시키는데 학교 수업이랑 비슷 했던 것 같기 때문.","저에게 이번 년도 영어 수업은 괜찮았던 것같습니다. 왜냐하면 수업 자체가 즐거워서 괜찮았습니다.","영어 시간은 조금 재미있었습니다.","나에게 올해 영어 수업은 흥미로운 수업 같았다 왜냐하면 예전에 하던 영어 수업하고 다르다고 생각이 들었고 더 기억에 남는 수업들이 많았었기 때문이다","올해 영어 수업은 샌개하고 특이하지만 나름 재미있었다","너무 좋았다 왜냐면 영어에 대해서 자신감이 생기고 재미가 있어졌기 때문이다.","올해 영어 수업은 좋았다 왜냐하면 평소와는 다른 방식의 수업이었기 때문","나에게 올해 영어 수업은 색다른 수업 같았다. 왜냐하면 작년에는 패드를 쓰지 않고 프린트로만 수업했는데 패드로 수업을 하니 색다르고 재미있었다.","나에게 올해 영어수업은 자신감 같았다 왜냐하면 자신있게 영어를 말 할 수 있게 되었기 때문이다","나에게 올해 영어 수업은 특별했다. 왜냐하면 패드를 사용하며 영어수업을 한것은 처음이기 때문이다.","나에게 올해 영어 수업은 좋았다 왜냐하면 다양한 활동으로 인해 더 배울 수 있던 것 같다","나에게 올해 영어 수업은 새로웠다 왜냐하면 전에 받던 수업과는 다른 방식 으로 받았기 때문에 새로웠다","나에게 올해 영어 수업은 새로웠다. 왜냐하면 패드로 수업을 하는게 신기했기 때문이다.","나에게 영어 시험은 도장깨기 같았다 매일 다른 활동을 했기 때문이다","나에게 올해 영어 수업은 새로운 활동 같았다. 왜냐하면 다양한 방법으로 수업을 해서 평소의 영어 수업과는 다르게 느껴졌기 때문이다.","의미 있었다"],"growth":["3월에는 틀릴까봐 두려워서 영어로 말을 못했지만 지금은 틀려도 다시 할수있다는 자신감이 생겼다","영어에 대한 자신감이 조금 생겼다","조금 더 자신감이 생겼다","영어가 쉬워졌다","영어에 대한 개념을 더 잘알게되었다","조금 영어 말하때 자신감이 늘었다","자신감이 생겼다.","자신감이 더 생겼다","영어 문장 쓰는것에 자신감이 생김","영어 발음 실력","영어실력이 더 좋아졌다","옛날에는 막상 영어로 말하면 너무 떨렸는데 이제는 떨리지 않고 자신감이 생겼다","조금 더 자신감이 생겼다","영어 문장을 쓸 때 문장을 더 튼실하게 만들고 더 자세히 쓰도록 고치는 방법을 알게되었다.","3월에는 have p.p를 학원에서 가르쳐주어도 잘하지못햇는데 선생님의 수업을 들으니 잘하게 되엇다","자신감이 조금 더 붙었다","내 영어 실력에 더 확신을 가지고 더 자신있게 말할 수 있다.","영어로 표현할 때 문법적인 면에서 올바른지 머릿속으로 조금 더 점검해본다","영어로 말하는것에대한 자신감이생겼다.","영어로 표현하는 방법에 대해 많이 알게 되어서 영어로 표현하는 것에 조금 자신감이 생긴거 같다.","아주 조금 자신감을 키우게 되었다(국제교류부 포함)","더 잘해졌다.","내 생각을 검토 하는 것이 나아 진 것 같다","더 자신감이 생겼다","영어를 말할때 좀더 자신감이 생겼다.","자신감이 높아진 것 같습니다","영어로 몰하기를 할때 좀 더 자신감이 생겼다.","더 흥미롭고 자신 있어졌다","영어를 쓰려고 할때 더 자신감이 생겼다","3월에는 영어 수업을 원래 좋아하지 않았는데 이제는 영어가 재미가 있다.","영어에 대해 크게 중요성을 못느꼈던 것 같은데 지금은 얼마나 중요한지 깨달음","영어를 좀 더 잘하고 싶어졌고 영어가 중요하다고 생각이 들었다.","조금더 자신감이 생겼다.","좀더 자신감을 얻었다","더욱 자신감 있게 말 할수있다","영어에대한 자신감이 생겼다","더 적극적으로","영어로 표현할 때 자신감이 생겨 더욱 다양한 표현들을 사용함.","영어를 대하는 태도가 더 긍정적으로 변했다","영어를 써서 말할 때 이게 문법적으로 맞나? 라고 되돌아보게 되는 습관이 생겼다.","전보다 자신감이 생겼다.","영어로 내가 하고 싶은 말을 하는데 좀 더 자신감이 생긴 것 같다","조금이나마 더 자신 있어 진거같다","좀더 열심히 하게 되었다","틀리는걸 조금덜 무서워함","영어로 말하는 것에 대한 부담이 줄어들었다.","조금 더 영어에 자신감이 생겼다?","영어를 더 열심히 한다","조금 더 자신감을 가졌다","자신감이 생김","영어로 표현할 때 문법을 틀리는 것에 조금 두려움이 없어졌다.","이제는 영어를 좀 더 잘하게 되었다.","좀 더 자신이 늘었다","자신감이 생김","조금 더 자신감이 생겼다.","3월에는 영어로 내 자신을 표현하는 것이 뭔가 어색한 느낌이 있었는데 계속 영어를 쓰다보니 자신감이 생긴것 같다","자신감있게 말할수있게 된것같다","더 자신있게 말할 수 있게 된 것 같다","영어실력이 늘었음","자신감이 생겼다.","살짝의 자신감..?","더 자신감 있어졌다"],"tough":["3월:영어 싫다 지금: 완전 싫다.근데 시험 잘 봤어서 좋았다 (애증 관계?)","영어에는 없었던 압박감이 생겼다","영어를 더 못해짐","예전에는 내가 영어로 말하고 틀린 것이 있다고 느껴도 고치기 싫었는데, 고치는 과정을 겪으면서 영어 실력이 더 향상된 것 같다.","처음엔 영어를 제일 못해서 자신감이없었는데 지금은 괜찮아진것같다","더 소심해짐","전보다는 자신이 없어진것 같다.","그전에는 영어가하기싫었는데 이제는 영어가 재밌어졌다","나에게 올해 영어 수업은 어려웠다. 왜냐하면 어렵기 때문이다.","나에게 올해 영어 수업은 해석이였던 것 같다 왜냐햐면 난이도가 올라가면서 해석의 난이도가 엄청 어려워졌기 때문이다","나에게 올해 영어 수업은 평범했다 왜냐하면 평범했기 때문이다.","나에게 올해 영어 수업은 힘들었다.왜냐하면 관계대명사가 너무 어려웠기 때문이다.","선풍기같았다. 어려운게 많았지만 선생님덕분에 쌩하고 바람처럼 지나갔기때문에","별로 의미가 없다","모르는걸 이해하고 나아가는것","나에게 올해 영어 수업은 긴장됐다. 왜냐하면 다른 아이들은 쉽게 쉽게 하는 것 같은데 나만 뒤처지는 것 같았기 때문이다.","나에게 올해 영어 수업은 시험 같았다. 왜냐하면 어려워서","나에게 올해 영어수업은 회화나 토킹보다는 문법위주로 진행되는 느낌이어서 아쉬웠다","나에게 올해 영어 수업은 똑같았다. 왜냐하면 나한테 달라진게 없기 때문이다","별로 차이가 없던것 같다","모르는걸 배우고 알아가는 과정"],"loop":[{"cls":2,"sat":"50%/평범해서","memo":"26번/수업에서 한 설문이 문제에 적용 되서 ┃ 1번/회화시간에 한 내용이 나와서,2번/회화시간에 한 내용이 나와서,26번/수업시간에 한 설문이 나와서"},{"cls":2,"sat":"98% 다 맞긴 했는데 중간에 고민을 많이 한게 있었음.","memo":"23번 어려워서 ┃ 26번 설문 25번 길찾기 17번 본문"},{"cls":2,"sat":"95, 2,3점짜리 문제 틀려서ㅠㅠ","memo":"19번, 어려워서 ┃ 11번 선생님이 강조하셨던 문제가 나와서 7번 블루킷으로 많이 해서 26번 우리가 설문한 것으로 사험 문제가 나와서"},{"cls":2,"sat":"80% 다양한 유형의 문제를 풀어볼 수 있는 기회였다","memo":"23번, 가장 많이 안 풀어본 유형이라서 헷갈렸다 ┃ 26,11, 1 회화 시간과 본문 내용 읽기"},{"cls":2,"sat":"100% 100점이라서","memo":"19번 마지막까지 고민하다 4번에서 3번으로 바꿧는데 맞췃당 ┃ 6. 블루킷 영영풀이 단어 26. 수빈이의 영국 여행에서 신기햇던 점 설문조사 11. 수행때틀렷던 선행사 s맞추기"},{"cls":2,"sat":"70% 이번엔 정말 백점 맞을줄 알았는데 조금 아쉬웠다 ㅠㅠ","memo":"19번, 이것만 맞으면 백점 맞을수있었는데 마지막 보기에 for을 못 보고 특정 날짜를 말한줄알아서 2번을 해버려서 문제가 너무 잘 기억난다. ┃ 26,25,19 문법 수업, 직접 참여했던 수업, 길찾는 수업"},{"cls":2,"sat":"45, 공부 했던만큼 나오지 않아서 속상했는데 또 내가 그만큼 하지 않아서 그런거같다","memo":"26. 마지막문젠데 우리가 설문했던걸로 해서 기억이 남았다 ┃ 25.옥타비오쌤이랑 한명씩 돌아가면서 어디가고싶은지 말하는거 26뉴욕관련 본문 설문했던거 잘 모르겟다"},{"cls":2,"sat":"100% 내가 공부한 만큼 시험 결과가 좋은 것 같아서.","memo":"23번 어려워서 ┃ 11 .선행사를 보고 동사를 고르는 수업을 해서. 19.현재완료라는 것을 알 수 있는 단어 수업을 해서. 26. 우리가 설문 조사한 것이 시험에 나와서"},{"cls":2,"sat":"100%, 100점을 맞아서","memo":"26번, 내가 설문했던 결과가 나와서 ┃ 8번,23번, 본문 빈칸 채우기 문제여서 본문 수업한 내용이 기억났다. 11번, 선생님이 여러번 강조해주셨던 문제여서 기억났다"},{"cls":2,"sat":"90.134%, 내가 두 문제만 더 맞추어도 100점일 수 있었기 때문이다.","memo":"26번, 런던 여행 본문을 할 때 했던 것이 문제로 나왔기 때문이다 ┃ 26번, 11번, 23번"},{"cls":2,"sat":"79점, 90%, 지금까지 영어 시험을 본 점수중 가장 높은 점수이기 때문에, 다만 높은점수는 아니기에","memo":"3번: 고민을 가장 오래함 ┃ 25번: 회화시간에 길을 묻고 답하는 수업이 기억났음, 26번: 4단원 본문을 읽고 어떤 이야기가 가장재미있었는지 투표한게 생각나서, 8번: 3단원 본문을 시험 전날 공부한게 생각나서"},{"cls":2,"sat":"100/굉장히 만족함/약간의 어려움이 있었지만, 그 어려움을 이겨내고 100점을 받았기 때문이다","memo":"26번/학생 수가 200명이 아닌 101명이어서 가장 혼란스러웠고, 푸는데 오래결렸기 때문이다 ┃ 11번/ 관계대명사, 19번/현재완료, 23번/3과 본문"},{"cls":3,"sat":"100 재밋어서","memo":"26번 수업에관한내용 ┃ nan"},{"cls":3,"sat":"20 바보같이 하나 틀려서","memo":"19번 어이 없이 틀려서 ┃ 19번:4과 어법 26번:설문 24번:지문"},{"cls":3,"sat":"0 너무 못해서","memo":"23번인다 부엉이의 능력을 말하는 문제 ┃ 26번"},{"cls":3,"sat":"100% 다 맞아서","memo":"3번. 5번 보기가 헷갈렸다. ┃ 20, 23, 26"},{"cls":3,"sat":"100","memo":"23.결론을 도출하는 것이 참신헸다. ┃ 2=회화수업, 26=설문,22.=모의고사 문제"},{"cls":3,"sat":"100(열심히 공부를 해 시험을 봐 100점을 받아서)","memo":"19번(현재완료를 쓸때 쓰지 못하는것, 쓸 수 있는것을 잘 구분하지 못할 뻔 해서) ┃ 5번(쌤이 많이 강조하셨던 문제), 25번(회화시간 게임), 26번(설문조사 했던 것)"},{"cls":3,"sat":"90, 다 맞았긴 했는데 헷갈리는 문제가 있어서","memo":"23번, 처음보는 문제 유형이었고 문제들 중에 가장 어려운 문제였던 것 같아서 ┃ 23번, 18번, 26번"},{"cls":3,"sat":"80 잘본거같아서","memo":"23 ┃ 26"},{"cls":3,"sat":"77% 이유:시험을 너무 못 보긴 했지만 점수가 너무 럭키했기 때문이다.(77점)","memo":"19번 이유:문법을 못한 나에게 실망했던 문제이기 때문이다. ┃ 26번-4과 본문 설문 25번-옥타비오 쌤 미니게임 8번-동물 설명해야하는 수행"},{"cls":3,"sat":"90% 틀리면 안돼는 것을 틀려서","memo":"19. 문법이 어렵게 나와서 ┃ 7. 클래스 키드에서 외운 단어가 나와서, 19. 선생님이 중요하다고 말한 현재진행형이 안돼는 것이 나와서, 26. 우리가 설문조사한 것이 나와서."},{"cls":3,"sat":"90% / 100점이긴해도 푸는동안 헷갈렸던 문제들이 있어서 다음 시험에는 더 잘하고 싶다","memo":"23번 / 처음보는 문제였고 가장 헷갈렸던 문제라서 ┃ 7번 - 영어퀴즈 문제 19번 - 현재완료랑 과거시제 비교 26번 - 우리가 했던 설문조사"},{"cls":3,"sat":"30% 실수도 많이 했고 생각보다 점수가 잘 안 나왔다.","memo":"19. 꼼꼼히 보지 않아서 틀렸던 문제라서 기억에 남는다 ┃ 25. 회화쌤과 한 수업이 생각났다 26.수업 내용에 관련된 자료이다 5. 선생님이 수업시간에 계속 강조하셨던 내용이다"},{"cls":3,"sat":"100%. 모든 문제네 대한 이유와 까닭을 알려주시는 것이 너무 신기했다. 많이 생각 하신것 같아서 시험 볼때 허무하게 시험보는것 같지 않아서 좋았다.","memo":"23번. 추론 문제가 되게 재미있었다. 내가 읽는게 다가 아니라 내가 읽은것을 풀어서 푸는 상황이 재미있었다. ┃ 26번. 설문조사 한게 시험에 나왔다//21번.교과서에서 나온 수상택시 등 이 나왔다.//7번. 블루킷에서 나온 문제가 나왔다"},{"cls":3,"sat":"100","memo":"26번,전에 우리가 했던 설문에 대한 거 였기도하고 중간때에도 이런 유형의 문제가 있었는데 이번에도 있어서 좋았고 시험을 재미있게 풀 수있었다 ┃ 26 - 설문,18 - 시험 보기 전에 했던 대비 프린트,19"},{"cls":6,"sat":"60// 90점은 넘어야한다고 생각을 했었는데 90점은 넘었어도 90점에서도 가장 낮은 점수여서","memo":"19// 아는데 틀려서 ┃ 1,2- 회화 26-본문에서 흥미로운 부분 설문"},{"cls":6,"sat":"0,20번 문제를 2번에서 1번으로 고치지만 않았으면 100점인데 고쳐서 만족하지 못한다","memo":"26번, 학생들이 설문한게 나와서 ┃ nan"},{"cls":6,"sat":"85%..? 중간고사 보다 12점이 올라서 좋았다. 공부한 보람이있어서 행복? 기뻤다.","memo":"26번. 지문을 읽느라 문제를 잊어서 틀렸다. ┃ 5,11,14번. 11,14번은 본문을 읽었었고, 5번은 어휘를 제대로 알아보는활동."},{"cls":6,"sat":"80, 문제를 풀면서 난이도가 높지 않아도 확신을 가지기 힘들었다.","memo":"23번, 색다른 문제라 재미있었다. ┃ 18,19,26번이다. 18번은 감정과 관련하여 수업을 했고, 19번은 문법을 배운 수업과 관련되어 있고, 26번은 우리가 지문에 대해 설문을 한 것과 관련이 있었다."},{"cls":6,"sat":"70%, 2문제를 틀렸는데 그 2문제 모두 빨리 푸느라 실수한 거였다(집에서 다시 보니 풀기쉬운 문제였다..)","memo":"19번, 맞긴 했지만 제일 오래 생각한 문제였다 ┃ 26번, 수업시간에 조사했던 내용이 담겨있다 19번은 문법수업때, 1,2번은 원어민 쌤과 했던 내용이다"},{"cls":6,"sat":"95, 헷갈리던 문제를 틀려서 틀린문제에 대한 아쉬움은 없지만 그래도 이번에 열심히 했기에 기대했는데 100을 못받아서 아쉽다.","memo":"23, 틀린문제이고 유일하게 아 이건 틀릴수도 있을것 같다 라는 생각이 든 문제이다. ┃ 26 설문, 1, 25 말하기 활동"},{"cls":6,"sat":"100%,100점이라서","memo":"23번,틀릴뻔해서 ┃ 18번 감정태그 붙히기, 26번 설문조사, 5~6 수업..?"},{"cls":6,"sat":"65 더 노력하면 점수를 잘 받을 수 있다고 생각하기 때문이다.","memo":"22 처음 나오는 형식이여서 ┃ 18: 수업시간에 배웠던 문제여서 11: 배운 문법이 생각나서 26: 조사했던 내용이 생각나서"},{"cls":6,"sat":"만족도: 75 / 쫌.. 틀렸다 100점 맞으려 했는데 아쉬웠다.","memo":"26번 / 학생이 설문한 결과가 문제에 나와서 ┃ 13번 / blooket 할때 해본 문제와 비슷해서 25번 / 회화 수업할때 풀어본 문제여서 26번 / 학생이 설문한 결과여서"},{"cls":6,"sat":"100점, 90% 중간때 영어 시험을 치며 어렵다고 생각이 들어서 이번에는 쉽게 풀 수 있기를 바라며 열심히 영어 공부를했는데 여전히 헷갈리는 문제가 많았던 것","memo":"19번 글씨를 제대로 안읽어서 틀릴뻔했늩데 고쳐서 맞았다! ┃ 7번 블루킷했던게 생각이 났다! 19번 인풋 아웃풋했던 활동이 생각났다! 26번! 수업시간에 설문했던게샟각났다!"},{"cls":6,"sat":"시험 점수 100점. 만족도 100%. 23번이 너무 어렵게 느껴졌지만 결국 맞춰서 행복했다.","memo":"19번. 문장 앞부분을 확인할 생각을 안했어서. ┃ 11번,19번. 문법수업이 기억남. 26번. 설문조사가 기억남"}],"s1loop":["Have a good conversation 단원에서 친구들과 이야기 한 설문이 시험에 그대로 나왔을 때","동화중학교 학생들의 말하기 중 잘한것과 못한것을 설문을 통해 알게됨","첫 시간에 영어란 무엇인가에 대해 영어로 문장을 만든 활동이 있었는데 AI가 내 문장을 제일 좋다고뽑아줬던 기억이 있다.","내 의견을 썼던 것이 수업 자료에 등장했었다"],"s2c":{"자신감↑":39,"기타":22,"문법·문장력":17,"말하기·표현":14,"실력 향상":11,"부정·정체":8,"흥미·태도↑":6,"자기성찰·점검":4,"불안↓":3},"directions":[{"key":"game","emoji":"🎮","title":"블루킷·게임 더 자주","count":16,"preview":"단어를 게임으로 익히는 블루킷을 더 자주, 레벨 선택도 넣어서. \"재미있게 반복\"이 목표.","voices":["문제를 맞히고 돈 얻는 게임을 저 하면 좋게싸","좀더 블로킷 많이 하면 좋을것 같음","블루켓","블루킷 더 자주 해주세요"]},{"key":"grammar","emoji":"🧩","title":"문법 콕콕 더 짚기","count":7,"preview":"현재완료·관계대명사처럼 헷갈린 문법을 한 시간 몰아서 정리하고, 모의고사로 연습.","voices":["문법 관련 수업을 더 했음 좋겠다","좀 더 문법 문제를 많이 풀어보면 좋을 것 같다.","문법 설명을 더 해주셨으면 좋갰다. 모의고사를 통한 연습을 더 했으면 좋겠다 학습지를 더 배부해, 공부할 자료가 늘어났으면 좋겠다","문법같은걸 한번씩만 더 설명해주면 좋겠다"]},{"key":"text","emoji":"📖","title":"본문·해석 같이 뜯어보기","count":5,"preview":"본문을 다 같이 해석하고 중요한 단어에 표시하며 읽기. \"혼자 해석이 부족했어\"에 대한 답.","voices":["본문을 같이 분석하면 좋을 것 같다.","본문 해석을 해서 필기해두거싶당","어휘위주로 했으면 좋겠다","단어 암기 말고 본문 문장 위주로 수업하면 좋겠어요"]},{"key":"exam","emoji":"📝","title":"미니 테스트로 시험 대비","count":4,"preview":"중간·기말 전에 미니고사로 미리 점검. 어떤 유형이 나올지 감 잡고 들어가기.","voices":["시험 문제 찝어주기!","시험 보기전에 미리 미니시험 테스트","자습 주세염","중간, 기말고사 전에 보는 미니 테스트 좀 더 보고 싶어요"]},{"key":"keep","emoji":"💚","title":"지금 이대로도 좋아","count":10,"preview":"\"지금도 최고예요, 이대로 쭉\"이라는 목소리. 잘 되고 있는 건 그대로 지키기.","voices":["지금도 최고입니다.","지금 그대로가 가장 좋은것 같다.","앞으로 잘부탁 드립니다","앞으로도 이렇게 수업하고 싶다"]}],"stats":{"answered_meta":177,"conf":39,"loop26":37,"n_aff":203,"n_exam":67},"examcats":[{"emoji":"🙋","title":"26번 · 우리 반 설문","count":37,"flag":true,"reasons":["26번, 우리가 설문한 것으로 시험 문제가 나와서","수빈이의 영국 여행에서 신기했던 점 설문조사한 게 나와서","4단원 본문 읽고 어떤 이야기가 가장 재미있었는지 투표한 게 생각나서"]},{"emoji":"🗣️","title":"회화 · 길찾기","count":33,"flag":false,"reasons":["25번, 회화시간에 길을 묻고 답하는 수업이 기억났음","옥타비오쌤이랑 한 명씩 돌아가며 어디 가고 싶은지 말하던 거","1·2번, 회화시간에 한 내용이 그대로 나와서"]},{"emoji":"📝","title":"문법 (관계대명사·현재완료)","count":29,"flag":false,"reasons":["11번, 관계대명사 수일치 수업을 해서","19번, 현재완료라는 걸 알 수 있는 단어 수업을 해서","선행사를 보고 동사를 고르는 수업을 해서"]},{"emoji":"📖","title":"본문 수업","count":23,"flag":false,"reasons":["본문 빈칸 채우기 문제여서 본문 수업한 내용이 기억났다","4번, 본문에서 접속사 세모 치던 게 생각나서","8번, 3단원 본문을 시험 전날 공부한 게 생각나서"]},{"emoji":"🔍","title":"23번 · 새 유형 추론","count":24,"flag":false,"reasons":["23번 빈칸 추론, 선생님이 강조하신 단어가 떠올랐다","3과 본문 내용이 추론 문제로 나와서","어려웠지만 새로운 유형이라 오히려 기억에 남았다"]},{"emoji":"🎮","title":"블루킷 · 단어게임","count":11,"flag":false,"reasons":["7번, 블루킷으로 많이 해서","블루킷 영영풀이로 외운 단어가 나와서","클래스카드에서 외운 단어가 그대로 나와서"]}]};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+// ---- ① metaphors
+$('#metaN').textContent=D.stats.answered_meta;
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const feat=shuffle(D.feat).slice(0,9);
+$('#featWrap').innerHTML=feat.map(m=>`<div class="mcard"><div class="body">${esc(m)}</div></div>`).join('');
+$('#restWrap').innerHTML=shuffle(D.rest.concat(D.feat.slice(9))).slice(0,40).map(m=>`<div class="mini">${esc(m)}</div>`).join('');
+$('#moreBtn').onclick=function(){const g=$('#restWrap');g.classList.toggle('open');
+ this.textContent=g.classList.contains('open')?'접기 ▴':'더 많은 목소리 펼치기 ▾';};
+
+// ---- ② growth
+const order=['자신감↑','문법·문장력','말하기·표현','실력 향상','흥미·태도↑','불안↓','자기성찰·점검'];
+const nmeNm={'자신감↑':'자신감이 생겼다','문법·문장력':'문법·문장을 더 잘 쓴다','말하기·표현':'말하기가 편해졌다','실력 향상':'실력이 늘었다','흥미·태도↑':'영어가 더 좋아졌다','불안↓':'틀리는 게 덜 무섭다','자기성찰·점검':'스스로 점검하게 됐다'};
+const s2=D.s2c;const mx=Math.max(...order.map(k=>s2[k]||0));
+$('#growBars').innerHTML=order.filter(k=>s2[k]).map(k=>
+ `<div class="bar"><div class="lab"><span>${nmeNm[k]||k}</span><span class="n">${s2[k]}명</span></div>
+  <div class="track"><div class="fill" data-w="${Math.round((s2[k]/mx)*100)}"></div></div></div>`).join('');
+$('#growVoices').innerHTML=shuffle(D.growth).slice(0,6).map(v=>`<div class="voice">${esc(v)}</div>`).join('');
+$('#toughWrap').innerHTML=shuffle(D.tough).slice(0,4).map(v=>`<div class="h-v">· ${esc(v)}</div>`).join('');
+
+// ---- ③ exam categories (whole test traced to class, not just 26)
+$('#loop26').textContent=D.stats.loop26;
+$('#examWrap').innerHTML=D.examcats.map(c=>`
+ <div class="eccard${c.flag?' flag':''}">
+  ${c.flag?'<span class="crown">🏆 가장 특별한 문항</span>':''}
+  <div class="h"><span class="em">${c.emoji}</span><h4>${esc(c.title)}</h4><span class="c">${c.count}명</span></div>
+  ${c.reasons.map(r=>`<div class="r">${esc(r)}</div>`).join('')}
+ </div>`).join('');
+
+// ---- ④ directions (browse & hear friends' voices — no picking)
+const dw=$('#dirWrap');
+dw.innerHTML=D.directions.map((d,i)=>`
+ <div class="dcard" data-i="${i}">
+  <div class="top"><span class="emoji">${d.emoji}</span><h4>${esc(d.title)}</h4><span class="cnt">${d.count}명이 바랐어</span></div>
+  <p class="prev">${esc(d.preview)}</p>
+  <div class="detail"><div class="inner"><div class="lbl">이렇게 말한 친구들 👇</div>
+   ${d.voices.map(v=>`<div class="dv">${esc(v)}</div>`).join('')||'<div class="dv">직접 적어준 친구들의 바람이야</div>'}
+  </div></div>
+ </div>`).join('');
+dw.querySelectorAll('.dcard').forEach(c=>{ c.onclick=()=>c.classList.toggle('on'); });
+
+// ---- reveal on scroll + animate bars
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{
+ if(e.isIntersecting){e.target.classList.add('in');
+  if(e.target.id==='growBars'||e.target.querySelector&&e.target.querySelector('.fill')){
+   e.target.querySelectorAll?.('.fill').forEach(f=>f.style.width=f.dataset.w+'%');}
+  io.unobserve(e.target);}
+});},{threshold:.14});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+// ensure bars animate (growBars is a .reveal)
+</script>
+</body></html>
