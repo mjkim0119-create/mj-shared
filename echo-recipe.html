@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECHO 설문 대시보드 제작 레시피 · 동료 교사용</title>
+<style>
+:root{
+ --bg:#fbf7f0;--ink:#2c2a27;--soft:#6f6a62;--card:#fff;--line:#ece4d7;
+ --coral:#e8664d;--coral-s:#fceae5;--teal:#2f9e8f;--teal-s:#e4f4f1;
+ --gold:#e0a53a;--gold-s:#fbf1dc;--violet:#7b6bd6;--violet-s:#eeebfa;
+ --code:#33404f;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font-family:'Apple SD Gothic Neo','Pretendard','Malgun Gothic',system-ui,sans-serif;
+ line-height:1.68;-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding:0 20px}
+a{color:var(--teal)}
+
+/* hero */
+.hero{padding:64px 0 40px;text-align:center;
+ background:radial-gradient(1000px 340px at 50% -50px,#fff2e6 0%,rgba(255,242,230,0) 70%)}
+.hero .kick{display:inline-block;font-size:12.5px;font-weight:800;letter-spacing:.1em;
+ color:var(--coral);background:var(--coral-s);border-radius:999px;padding:6px 15px;margin-bottom:16px}
+.hero h1{font-size:clamp(27px,5vw,40px);line-height:1.22;margin:0 0 12px;font-weight:900;letter-spacing:-.02em}
+.hero h1 .u{background:linear-gradient(transparent 60%,#ffd9b0 60%)}
+.hero p{font-size:15.5px;color:var(--soft);margin:0 auto;max-width:600px}
+
+section{padding:30px 0}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+.stitle{font-size:clamp(21px,3.6vw,27px);font-weight:900;letter-spacing:-.02em;margin:5px 0 14px;line-height:1.3}
+.lead{font-size:15px;color:var(--soft);margin:0 0 20px;max-width:640px}
+p{margin:0 0 14px}
+
+/* concept chips */
+.concepts{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:6px 0 8px}
+.concept{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:16px 17px;box-shadow:0 2px 10px rgba(60,40,20,.04)}
+.concept .em{font-size:22px}
+.concept h4{margin:8px 0 4px;font-size:14.5px;font-weight:800}
+.concept p{margin:0;font-size:12.8px;color:var(--soft);line-height:1.55}
+
+/* raw data cards */
+.rawcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin-bottom:14px;box-shadow:0 2px 10px rgba(60,40,20,.04)}
+.rawcard .tag{display:inline-block;font-size:11.5px;font-weight:800;color:#fff;border-radius:7px;padding:2px 10px;margin-bottom:9px}
+.rawcard.a .tag{background:var(--teal)}
+.rawcard.b .tag{background:var(--gold)}
+.rawcard h4{margin:0 0 3px;font-size:17px;font-weight:900}
+.rawcard .fn{font-size:12.5px;color:#9a8f7a;margin-bottom:12px}
+.rawcard .meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.rawcard .meta span{font-size:12px;font-weight:700;color:#5b6b66;background:var(--teal-s);border-radius:99px;padding:4px 11px}
+.rawcard.b .meta span{color:#8a6d2f;background:var(--gold-s)}
+.rawcard ul{margin:6px 0 0;padding-left:18px}
+.rawcard li{font-size:13.2px;color:#4a453e;margin-bottom:4px}
+
+/* steps */
+.step{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px 24px;margin-bottom:16px;box-shadow:0 2px 12px rgba(60,40,20,.05)}
+.step .sh{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px}
+.step .num{flex-shrink:0;width:38px;height:38px;border-radius:11px;background:var(--violet);color:#fff;
+ font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center}
+.step .st{flex:1}
+.step .st h3{margin:0 0 2px;font-size:17.5px;font-weight:900;line-height:1.3}
+.step .st .why{margin:0;font-size:13px;color:var(--soft)}
+.prompt{position:relative;background:#f4f6f9;border:1px solid #e2e7ee;border-radius:13px;padding:15px 16px 15px;margin:12px 0 8px}
+.prompt .pl{font-size:11px;font-weight:800;letter-spacing:.05em;color:#8792a2;text-transform:uppercase;margin-bottom:8px;display:block}
+.prompt .ptxt{font-size:13.6px;color:var(--code);line-height:1.62;white-space:pre-wrap;font-family:'SF Mono','D2Coding',ui-monospace,Menlo,monospace}
+.prompt .copy{position:absolute;top:11px;right:11px;font-size:11.5px;font-weight:800;color:#5b6675;
+ background:#fff;border:1px solid #d3dae3;border-radius:8px;padding:5px 11px;cursor:pointer;transition:.15s}
+.prompt .copy:hover{background:var(--violet);color:#fff;border-color:var(--violet)}
+.prompt .copy.done{background:var(--teal);color:#fff;border-color:var(--teal)}
+.out{font-size:13px;color:#4a453e;background:var(--violet-s);border-radius:11px;padding:10px 14px;margin-top:6px}
+.out b{color:#5a4bb0}
+
+/* result gallery (preview-first) */
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.gcard{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 3px 14px rgba(60,40,20,.06)}
+.pv{height:158px;padding:15px 16px;position:relative;overflow:hidden}
+.pv-a{background:linear-gradient(160deg,#f3faf8,#eafaf6)}
+.pv-b{background:linear-gradient(160deg,#fff4ec,#ffeede)}
+.pv-c{background:linear-gradient(160deg,#f6f4ff,#efeafc)}
+.pvbar{font-size:11px;font-weight:800;color:#3a7a6f;margin-bottom:9px}
+.pv-c .pvbar{color:#5a4bb0}
+.pvpills{display:flex;gap:5px;margin-bottom:11px}
+.pvpills span{font-size:9.5px;font-weight:700;color:#5b6b66;background:#fff;border:1px solid #d6ece6;border-radius:99px;padding:2px 8px}
+.pvpills span.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.pvrow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.pvrow i{font-style:normal;font-size:10px;color:#5b6b66;width:58px;flex-shrink:0;text-align:right}
+.pvrow b{height:9px;border-radius:99px;background:linear-gradient(90deg,#2f9e8f,#5bc0b0);display:block}
+.pvquote{font-size:16px;font-weight:900;color:#8a3c26;line-height:1.35;letter-spacing:-.01em;margin-top:4px}
+.pvquote b{color:var(--coral)}
+.pvsub{font-size:11px;color:#b07a5e;margin:5px 0 14px}
+.pvheart{font-size:10.5px;font-weight:700;color:#fff;background:var(--coral);border-radius:99px;padding:5px 10px;display:inline-block}
+.pvth{font-size:9.5px;font-weight:800;color:#5a4bb0;letter-spacing:.03em;margin-bottom:7px;text-transform:uppercase}
+.pvtr{display:flex;font-size:10.5px;color:#4a453e;background:#fff;border:1px solid #e5ddf7;border-radius:7px;padding:5px 9px;margin-bottom:5px}
+.pvtr span{flex:1}.pvtr span:last-child{flex:0 0 32px;text-align:right;font-weight:800;color:#5a4bb0}
+.gcap{padding:15px 17px 17px}
+.gcap .em{font-size:20px}
+.gcap h4{margin:5px 0 5px;font-size:15px;font-weight:800}
+.gcap p{margin:0;font-size:12.5px;color:var(--soft);line-height:1.55}
+
+/* callout */
+.tipbox{background:var(--gold-s);border:1px solid #e6cf9a;border-radius:16px;padding:18px 22px;margin-top:8px}
+.tipbox h4{margin:0 0 10px;font-size:15px;color:#8a6d2f}
+.tipbox ul{margin:0;padding-left:20px}
+.tipbox li{font-size:13.4px;color:#5a4f3a;margin-bottom:7px}
+.tipbox li b{color:#8a6d2f}
+
+.foot{text-align:center;font-size:12px;color:#b3a893;padding:30px 0 60px;border-top:1px solid var(--line);margin-top:20px}
+.divider{height:1px;background:var(--line);margin:6px 0}
+@media(max-width:560px){.step{padding:18px 16px}.rawcard{padding:17px 16px}}
+</style></head>
+<body>
+
+<div class="hero"><div class="wrap">
+ <span class="kick">동료 교사용 · 제작 과정 그대로</span>
+ <h1>학생 설문을 <span class="u">살아있는 대시보드</span>로<br>바꾼 레시피</h1>
+ <p>구글 폼 응답 2개를 가지고, Claude(Cowork)에게 어떤 순서로 무엇을 요청해서 교사용 분석 대시보드와 학생 공유 대시보드를 만들었는지 — 실제 프롬프트까지 그대로 정리했어요. 아래 프롬프트는 <b>복사 버튼</b>으로 바로 가져다 쓸 수 있어요.</p>
+</div></div>
+
+<section><div class="wrap">
+ <div class="eyebrow">먼저 · 우리가 지킨 4가지</div>
+ <h2 class="stitle">이 원칙이 결과물의 성격을 정해요</h2>
+ <div class="concepts">
+  <div class="concept"><div class="em">🔁</div><h4>환류가 보이게</h4><p>학생 응답이 수업·시험으로 되돌아온다는 걸 눈으로 확인하게 만든다.</p></div>
+  <div class="concept"><div class="em">🗣️</div><h4>원문 그대로</h4><p>서술형은 절대 요약·미화하지 않는다. 학생 문장을 있는 그대로 인용.</p></div>
+  <div class="concept"><div class="em">🔒</div><h4>개인정보 제외</h4><p>학번·이름은 빼고, 반 단위로만 집계. 공유 가능한 형태로.</p></div>
+  <div class="concept"><div class="em">📄</div><h4>파일 하나로 완결</h4><p>외부 라이브러리·서버 없이 HTML 파일 하나. 더블클릭이면 열림.</p></div>
+ </div>
+</div></section>
+
+<section><div class="wrap">
+ <div class="eyebrow">결과물 · 먼저, 생김새부터</div>
+ <h2 class="stitle">완성되면 이런 게 나와요</h2>
+ <p class="lead">만드는 법보다 뭐가 나오는지가 먼저겠죠. 아래 셋이 결과물이에요. "나도 이런 거 만들고 싶다" 싶으면, 그때 아래 레시피를 펼쳐 보면 돼요.</p>
+ <div class="gallery">
+  <div class="gcard">
+   <div class="pv pv-a">
+    <div class="pvbar">📊 반별 분석</div>
+    <div class="pvpills"><span class="on">전체</span><span>1반</span><span>2반</span><span>3반</span></div>
+    <div class="pvrow"><i>도전·표현</i><b style="width:78%"></b></div>
+    <div class="pvrow"><i>참여</i><b style="width:88%"></b></div>
+    <div class="pvrow"><i>환류 인식</i><b style="width:71%"></b></div>
+    <div class="pvrow"><i>자기성찰</i><b style="width:64%"></b></div>
+   </div>
+   <div class="gcap"><div class="em">📊</div><h4>교사용 분석 대시보드</h4>
+    <p>반 선택 필터 · 정의적 영역별 막대 · 서술형 심층 분석 · 원문 모아보기 탭. 수업 성찰·기록용.</p></div>
+  </div>
+  <div class="gcard">
+   <div class="pv pv-b">
+    <div class="pvquote">"올해 영어 수업은<br><b>봄비</b> 같았다"</div>
+    <div class="pvsub">— 조용히 스며들어서</div>
+    <div class="pvheart">💗 37명 · "내 설문이 시험이 됐어"</div>
+   </div>
+   <div class="gcap"><div class="em">💌</div><h4>학생 공유 대시보드</h4>
+    <p>따뜻한 편지형 스크롤. 은유·성장·시험 환류·2학기 방향. 아이들에게 보여주는 용도.</p></div>
+  </div>
+  <div class="gcard">
+   <div class="pv pv-c">
+    <div class="pvth">반 · 영역 · 평균</div>
+    <div class="pvtr"><span>1반</span><span>참여</span><span>4.3</span></div>
+    <div class="pvtr"><span>2반</span><span>환류</span><span>4.0</span></div>
+    <div class="pvtr"><span>3반</span><span>도전</span><span>3.8</span></div>
+    <div class="pvtr"><span>…</span><span>개인정보 제외</span><span>✓</span></div>
+   </div>
+   <div class="gcap"><div class="em">📁</div><h4>정제 데이터</h4>
+    <p>학번·이름 뺀 반별 집계본. 다음 학기·다른 분석에 그대로 재활용 가능.</p></div>
+  </div>
+ </div>
+</div></section>
+
+<section><div class="wrap">
+ <div class="eyebrow">STEP 0 · 원자료</div>
+ <h2 class="stitle">시작은 구글 폼 응답 2개</h2>
+ <p class="lead">평소 수업에서 돌리던 구글 폼 응답이 그대로 원자료예요. 각 폼의 "응답" 시트를 <b>CSV로 내보내서</b>(파일 → 다운로드 → 쉼표로 구분된 값) Cowork에 연결한 폴더에 넣으면 준비 끝.</p>
+
+ <div class="rawcard a">
+  <span class="tag">정의적 설문</span>
+  <h4>영어 표현에 대한 나의 마음</h4>
+  <div class="fn">「2026학년도 영어 표현에 대한 나의 마음(응답)」 · 구글 폼</div>
+  <div class="meta"><span>응답 204명</span><span>척도 + 서술형</span></div>
+  <ul>
+   <li>리커트 척도 — A 도전·표현 / B 불안 / C 참여 / D 자기성찰 / E 환류 인식</li>
+   <li>서술형 S1 기억에 남는 장면 · S2 달라진 점 · S3 "올해 영어 수업은 ___ 같았다"(은유) · S4 이유 · S5 더 바라는 점</li>
+  </ul>
+ </div>
+
+ <div class="rawcard b">
+  <span class="tag">시험 성찰</span>
+  <h4>1학기 기말고사 시험 이야기</h4>
+  <div class="fn">「1학기 기말고사 시험 이야기(응답)」 · 구글 폼</div>
+  <div class="meta"><span>응답 69명</span><span>시험 후 성찰</span></div>
+  <ul>
+   <li>내 시험 점수 만족도 + 그 이유</li>
+   <li>제일 기억에 남는 문제 1개 + 기억나는 이유</li>
+   <li>수업활동이 기억나는 문제 3개 + 어떤 수업과 연결됐는지</li>
+  </ul>
+ </div>
+
+ <div class="prompt">
+  <span class="pl">프롬프트 · 폴더 연결 후 첫 요청</span>
+  <button class="copy">복사</button>
+  <div class="ptxt">이 폴더에 구글 폼 응답 CSV 두 개가 있어. 하나는 학기말 정의적 설문(영어 표현에 대한 나의 마음), 하나는 기말고사 시험 성찰(시험 이야기)이야. 먼저 각 파일이 어떤 문항으로 구성돼 있는지 파악해줘. 학번·이름 같은 개인정보는 빼고, 반 단위로만 집계할 거야.</div>
+ </div>
+</div></section>
+
+<section><div class="wrap">
+ <div class="eyebrow">STEP 1~6 · 프롬프트 레시피</div>
+ <h2 class="stitle">이 순서로 요청하면 똑같이 나와요</h2>
+ <p class="lead">한 번에 다 시키지 않고, 한 단계씩 결과를 보며 쌓아 올린 게 핵심이에요. 각 단계 프롬프트를 그대로 복사해서 쓰고, 나온 결과가 마음에 들면 다음 단계로 넘어가면 됩니다.</p>
+
+ <div class="step">
+  <div class="sh"><div class="num">1</div><div class="st"><h3>데이터 정제·집계</h3><p class="why">원자료를 분석 가능한 형태로 다듬기</p></div></div>
+  <div class="prompt"><span class="pl">프롬프트</span><button class="copy">복사</button>
+   <div class="ptxt">두 설문 원자료를 정제해줘. 정의적 설문은 리커트 척도 문항을 영역별(도전·표현/불안/참여/자기성찰/환류)로 평균 내고, 서술형 S1~S5는 반별로 모아줘. 시험 성찰 설문은 점수 만족도·기억에 남는 문제·수업활동 연결 문제를 반별로 정리해줘. 학번·이름은 제외하고 반 정보만 남겨줘.</div></div>
+  <div class="out">→ <b>정제된 집계 데이터</b>가 만들어짐. 이후 모든 대시보드가 이걸 재료로 사용.</div>
+ </div>
+
+ <div class="step">
+  <div class="sh"><div class="num">2</div><div class="st"><h3>교사용 대시보드 생성</h3><p class="why">한눈에 보는 분석 화면</p></div></div>
+  <div class="prompt"><span class="pl">프롬프트</span><button class="copy">복사</button>
+   <div class="ptxt">정제한 데이터로 자체 완결형 HTML 대시보드를 만들어줘. 상단에 반 선택 필터(전체 + 각 반)를 두고, 정의적 영역별 막대그래프와 시험 성찰 요약을 보여줘. 외부 라이브러리 없이 파일 하나로 열리게 해줘.</div></div>
+  <div class="out">→ 반별 필터가 되는 <b>교사용 분석 대시보드</b> 초안.</div>
+ </div>
+
+ <div class="step">
+  <div class="sh"><div class="num">3</div><div class="st"><h3>서술형 심층 분석 추가</h3><p class="why">숫자 뒤의 목소리 분류</p></div></div>
+  <div class="prompt"><span class="pl">프롬프트</span><button class="copy">복사</button>
+   <div class="ptxt">서술형 응답(S1~S5)을 주제별로 분류해서, 각 주제의 빈도와 대표 인용문을 보여주는 섹션을 추가해줘. 단, 학생 문장은 절대 요약하거나 다듬지 말고 원문 그대로 인용해줘.</div></div>
+  <div class="out">→ 주제별 빈도 + <b>원문 인용</b>이 붙은 심층 분석 섹션.</div>
+ </div>
+
+ <div class="step">
+  <div class="sh"><div class="num">4</div><div class="st"><h3>응답 원문 모아보기 탭</h3><p class="why">하나도 안 뭉갠 전체 열람</p></div></div>
+  <div class="prompt"><span class="pl">프롬프트</span><button class="copy">복사</button>
+   <div class="ptxt">서술형 전체를 하나도 안 뭉개고 그대로 볼 수 있는 탭을 추가해줘. 문항을 고르면 그 문항 응답만 나오고, 반 필터와 검색창을 넣어줘. 검색어는 응답 안에서 하이라이트되게 해줘.</div></div>
+  <div class="out">→ 문항 선택 + 반 필터 + 검색·하이라이트가 되는 <b>원문 열람 탭</b>.</div>
+ </div>
+
+ <div class="step">
+  <div class="sh"><div class="num">5</div><div class="st"><h3>학생 공유용 대시보드</h3><p class="why">아이들이 보는 따뜻한 버전</p></div></div>
+  <div class="prompt"><span class="pl">프롬프트</span><button class="copy">복사</button>
+   <div class="ptxt">이제 학생과 공유할 대시보드를 따로 만들어줘. 학생이 (1) 자기 설문이 수업으로 환류된다고 느끼고, (2) 유의미하다고 느끼고, (3) 2학기 방향을 선생님과 함께 구성하는 느낌이 들게 하고 싶어. 전체 학년 기준으로, 따뜻한 스크롤 편지 형식으로. 은유 응답, 성장 지표, 시험 환류, 2학기 방향을 담아줘. 학생 문장은 원문 그대로.</div></div>
+  <div class="out">→ 4단계 스크롤 내러티브의 <b>학생 공유 대시보드</b>(별도 파일).</div>
+ </div>
+
+ <div class="step">
+  <div class="sh"><div class="num">6</div><div class="st"><h3>다듬기 · 내 의도대로</h3><p class="why">한 문장이면 고쳐줌</p></div></div>
+  <p style="margin:0 0 4px;font-size:13.4px;color:#4a453e">완성 뒤에도 대화하듯 고치면 돼요. 실제로 이렇게 바꿨어요:</p>
+  <div class="prompt"><span class="pl">예시 A · 시험 환류 확장</span><button class="copy">복사</button>
+   <div class="ptxt">시험 환류 섹션이 26번만 강조돼 있는데, 학생들이 실제로는 다른 문항도 많이 골랐거든. 회화·문법·본문·추론·단어게임 등 다른 문항도 각자의 이유와 함께 누락 없이 살려줘.</div></div>
+  <div class="prompt"><span class="pl">예시 B · 부담 낮추기</span><button class="copy">복사</button>
+   <div class="ptxt">2학기 방향 파트는 더 이상 '선택'하게 하지 말자. 이미 설문한 것도 아이들 이야기였는데 또 고르라고 하면 피로해져. 대신 "여러분 목소리로 2학기를 이렇게 잡아가고 있다"고 알려주는 톤으로 바꿔줘. 카드를 눌러 친구들 목소리를 듣는 형태는 그대로 두고.</div></div>
+  <div class="out">→ 세세한 톤·구성까지 <b>내 수업 철학대로</b> 조정.</div>
+ </div>
+</div></section>
+
+<section><div class="wrap">
+ <div class="eyebrow">알아두면 좋은 점</div>
+ <h2 class="stitle">막힐 때 참고</h2>
+ <div class="tipbox">
+  <h4>💡 팁 & 주의</h4>
+  <ul>
+   <li><b>CSV 내보내기</b> — 구글 폼 자체가 아니라 "응답" 시트를 CSV로 내려받아 쓰면 가장 깔끔해요.</li>
+   <li><b>개인정보</b> — 첫 프롬프트에서 "학번·이름 제외, 반 단위 집계"를 명시하면 이후 산출물에 개인정보가 안 섞여요.</li>
+   <li><b>원문 보존</b> — "요약하지 말고 원문 그대로"를 꼭 넣어야 학생 목소리가 안 뭉개져요.</li>
+   <li><b>한 단계씩</b> — 처음부터 완성본을 시키기보다, 정제→분석→학생용 순으로 결과를 보며 쌓아야 원하는 게 나와요.</li>
+   <li><b>HTML 파일 vs 아티팩트</b> — 남한테 넘기거나 링크로 뿌릴 거면 <b>HTML 파일</b>, 내가 계속 사이드바에서 볼 거면 아티팩트. 공유용은 파일이 정답.</li>
+   <li><b>공개 링크</b> — 파일을 학생들에게 링크로 뿌리고 싶으면 "이 HTML을 공개 주소로 게시해줘"라고 하면 돼요.</li>
+  </ul>
+ </div>
+</div></section>
+
+<div class="foot">ECHO · 2학년 영어 학기말 설문 대시보드 제작 레시피 · 원자료: 구글 폼 응답 2종(정의적 204명 · 시험 성찰 69명) · 모든 서술형은 학생 원문 그대로</div>
+
+<script>
+document.querySelectorAll('.prompt').forEach(function(box){
+ var btn=box.querySelector('.copy');
+ var txt=box.querySelector('.ptxt').textContent;
+ btn.addEventListener('click',function(){
+  navigator.clipboard.writeText(txt).then(function(){
+   btn.textContent='복사됨 ✓';btn.classList.add('done');
+   setTimeout(function(){btn.textContent='복사';btn.classList.remove('done');},1600);
+  }).catch(function(){
+   var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);
+   ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);
+   btn.textContent='복사됨 ✓';btn.classList.add('done');
+   setTimeout(function(){btn.textContent='복사';btn.classList.remove('done');},1600);
+  });
+ });
+});
+</script>
+</body></html>
