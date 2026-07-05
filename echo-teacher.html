@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v8a-anon: 수업→배움 연결 지도 패널 포함 · rev 0805 -->
+<!-- v9-voices: 아이들의 시험 이야기 패널 추가 · 익명 · rev 0705 -->
 
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -49,6 +49,17 @@ h1{font-size:19px;margin:0 0 3px}
 .q.gold .qt{color:#8a6d2f}
 .legend{font-size:11px;color:#8a939c;margin-top:8px;line-height:1.7}
 .legend b{color:#3a4753}
+.stories{columns:2;column-gap:12px;margin-top:4px}
+@media(max-width:760px){.stories{columns:1}}
+.story{break-inside:avoid;margin:0 0 12px;padding:11px 14px;background:#f7f9fb;border:1px solid #eaeff4;border-left:4px solid #7aa8d0;border-radius:0 10px 10px 0;font-size:12.5px;color:#3a4753;line-height:1.62}
+.story .cc{font-size:10.5px;color:#8a939c;font-weight:700;float:right}
+.story .th{display:inline-block;font-size:10.5px;font-weight:800;color:#2f5d8a;background:#e7f0f8;border-radius:999px;padding:1px 9px;margin-bottom:7px}
+.story .th.growth{color:#1f7a44;background:#e3f2e8}
+.story .th.loop{color:#8a6d2f;background:#f5ecd6}
+.story .th.resolve{color:#b5652c;background:#fbeadd}
+.story.hi{background:#fdf8ee;border-left-color:#8a6d2f}
+.story.hi .th{color:#8a6d2f;background:#f5ecd6}
+.story.hi .qq{font-weight:600;color:#5a4a1f}
 .empty{display:flex;align-items:center;justify-content:center;height:150px;color:#9aa4ae;font-size:13px;border:1.5px dashed #d7dee5;border-radius:10px;text-align:center;padding:14px;background:#fbfcfd}
 .foot{margin-top:24px;font-size:11.5px;color:#8a939c;text-align:center;line-height:1.7}
 @media(max-width:760px){.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
@@ -118,6 +129,12 @@ h1{font-size:19px;margin:0 0 3px}
 <div class="quotes" id="qLearn" style="margin-top:12px"></div>
 <div class="insight" id="learnInsight"></div>
 </section>
+<section class="panel full">
+<div class="p-h"><span class="n gold">패널 9</span><h2>아이들의 시험 이야기 <span style="font-weight:500;font-size:12px;color:#69727d">숫자 뒤에 있던 목소리 — 그대로 읽기</span></h2></div>
+<div class="read">읽는 법 — 만족도·문항 빈도로는 안 잡히는 <b>학생이 직접 쓴 문장</b>. 성장·기쁨·아쉬움·다짐, 그리고 문제 하나가 남긴 순간들. 반 버튼으로 필터돼요. (이름은 원래 담기지 않은 문항)</div>
+<div class="stories" id="qStories"></div>
+<div class="insight" id="stInsight"></div>
+</section>
 </div>
 
 <div class="foot">
@@ -137,6 +154,24 @@ const LEARNMAP=[
  {cat:"단어 게임 (블루킷·클래스키드)",learn:"어휘 암기",all:11,by:{"2":3,"3":3,"6":5},quotes:[["3","학생3","7 클래스 키드에서 외운 단어"],["6","학생2","7 블루킷 · 19 인풋 아웃풋 활동"]]},
  {cat:"시험대비·모의고사",learn:"평가 적응",all:6,by:{"2":2,"3":3,"6":1},quotes:[["2","학생7","11 미니 모의고사"],["3","학생4","18 시험 대비 프린트"]]},
  {cat:"감정 어휘",learn:"감정 표현",all:3,by:{"2":0,"3":1,"6":2},quotes:[["6","학생3","18 감정 관련 수업"]]}
+];
+const STORIES=[
+ {c:"2",t:"성장",k:"growth",q:"저번엔 83점이었는데 이번엔 95점이 되었습니다!!"},
+ {c:"2",t:"성장",k:"growth",q:"약간의 어려움이 있었지만, 그 어려움을 이겨내고 100점을 받았기 때문이에요."},
+ {c:"2",t:"수업→시험",k:"loop",q:"26번 — 내가 설문했던 결과가 그대로 시험에 나와서 기억에 남았어요."},
+ {c:"2",t:"배움의 순간",q:"23번 — 영어 본문에서 교훈을 얻어내는 게 신기했어요."},
+ {c:"2",t:"배움의 순간",q:"19번 — 절대 아닐 거라고 생각한 번호가 정답이어서 강하게 남았어요."},
+ {c:"2",t:"다짐",k:"resolve",q:"영어는 자신 있었는데 기대 이하라, 내 부족한 부분을 느껴서 후회돼요."},
+ {c:"3",t:"선생님께",hi:true,q:"모든 문제에 대한 이유와 까닭을 알려주시는 게 너무 신기했어요. 많이 생각하신 것 같아서, 시험 볼 때 허무하게 보는 것 같지 않아 좋았어요."},
+ {c:"3",t:"성장",k:"growth",q:"중간고사를 36점 맞았는데 이번엔 53점이라서 (만족도 80%)."},
+ {c:"3",t:"배움의 순간",q:"23번 — 추론 문제가 되게 재미있었어요. 읽은 게 다가 아니라, 읽은 걸 풀어서 푸는 상황이 재미있었어요."},
+ {c:"3",t:"수업→시험",k:"loop",q:"26번 — 전에 우리가 했던 설문이 나와서 시험을 재미있게 풀 수 있었어요."},
+ {c:"3",t:"다짐",k:"resolve",q:"100점이긴 해도 헷갈렸던 문제가 있어서, 다음 시험엔 더 잘하고 싶어요."},
+ {c:"6",t:"성장",k:"growth",q:"중간고사보다 12점이 올라서 좋았어요. 공부한 보람이 있어서 기뻤어요."},
+ {c:"6",t:"배움의 순간",hi:true,q:"19번 — 몇 번을 읽다 보니 '현재시제는 특정 과거와 함께 못 쓴다'는 걸 스스로 깨닫고, 결국 맞은 게 가장 기뻤고 기억에 남았어요."},
+ {c:"6",t:"기쁨",k:"growth",q:"23번이 너무 어렵게 느껴졌지만 결국 맞춰서 행복했어요."},
+ {c:"6",t:"아쉬움",k:"resolve",q:"2문제 모두 빨리 푸느라 실수했어요. 집에서 다시 보니 풀기 쉬운 문제였어요.."},
+ {c:"6",t:"다짐",k:"resolve",q:"더 노력하면 점수를 잘 받을 수 있다고 생각해요."}
 ];
 const AFFN=DATA.aff.nTotal, EXN=DATA.exam.overall.n;
 const CON=['A','B','C','D','E'];
@@ -217,7 +252,8 @@ function renderExam(){
    grid.style.opacity=.35;destroy('sat');destroy('q');destroy('learn');
    document.getElementById('qLink').innerHTML='<div class="empty">해당 반 응답 없음</div>';
    document.getElementById('exInsight').innerHTML='';
-   document.getElementById('qLearn').innerHTML='';document.getElementById('learnInsight').innerHTML='';return;}
+   document.getElementById('qLearn').innerHTML='';document.getElementById('learnInsight').innerHTML='';
+   document.getElementById('qStories').innerHTML='<div class="empty">'+cur+'반은 「시험 이야기」 응답이 없어요 (2·3·6반만 실시)</div>';document.getElementById('stInsight').innerHTML='';return;}
  grid.style.opacity=1;
  kp.innerHTML=`
   <div class="kpi"><div class="v">${d.n}<small>명</small></div><div class="l">응답 인원</div></div>
@@ -241,6 +277,14 @@ function renderExam(){
  const t=topQ(d.q);
  document.getElementById('exInsight').innerHTML=`<b>환류의 증거</b> — 가장 많이 기억된 문항은 <b>${t}</b>. 특히 <b>26번(우리 반 설문조사 결과)</b>은 학생들이 직접 참여해 만든 데이터가 그대로 시험에 나온 문항으로, "내가 만든 표현이 수업·평가로 되돌아온다"는 ECHO 환류 구조를 학생들이 스스로 인식하고 있음을 보여줍니다.`;
  renderLearn();
+ renderStories();
+}
+function renderStories(){
+ const arr=STORIES.filter(s=>cur=='all'||s.c==cur);
+ const el=document.getElementById('qStories');
+ if(!arr.length){el.innerHTML='<div class="empty">이 반의 이야기가 아직 없어요</div>';document.getElementById('stInsight').innerHTML='';return;}
+ el.innerHTML=arr.map(s=>`<div class="story${s.hi?' hi':''}"><span class="cc">${s.c}반</span><span class="th ${s.k||''}">${s.t}</span><div class="qq">"${s.q}"</div></div>`).join('');
+ document.getElementById('stInsight').innerHTML=`<b>왜 이 패널을 남겼나</b> — 위 그래프들이 "몇 명이"를 말한다면, 이 목소리들은 "무엇을 느꼈나"를 말합니다. 한 아이는 <b>모든 문제에 이유와 까닭을 알려줘서 시험이 허무하지 않았다</b> 했고, 또 한 아이는 규칙을 <b>스스로 깨달은 순간</b>을 가장 기뻐했어요. 평균과 빈도 뒤에 이런 이야기가 있다는 걸 잊지 않으려고 둡니다.`;
 }
 function renderLearn(){
  const single=(cur=='2'||cur=='3'||cur=='6');
