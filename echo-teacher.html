@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- v8: 수업→배움 연결 지도 패널 포함 · rev 0805 -->
+
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ECHO 학기말 설문 대시보드</title>
@@ -109,6 +111,13 @@ h1{font-size:19px;margin:0 0 3px}
 <div class="quotes" id="qLink"></div>
 <div class="insight" id="exInsight"></div>
 </section>
+<section class="panel full">
+<div class="p-h"><span class="n gold">패널 8</span><h2>수업 → 배움 연결 지도 <span style="font-weight:500;font-size:12px;color:#69727d">내 수업의 어떤 활동이 배움으로 남았나</span></h2></div>
+<div class="read">읽는 법 — Q3 응답을 문항 번호가 아니라 <b>수업활동의 종류</b>로 묶어 셌습니다. 막대는 그 활동을 배움으로 기억한 학생 수. 오른쪽 라벨=그 활동이 키운 힘.</div>
+<div class="chartbox tall"><canvas id="cLearn"></canvas></div>
+<div class="quotes" id="qLearn" style="margin-top:12px"></div>
+<div class="insight" id="learnInsight"></div>
+</section>
 </div>
 
 <div class="foot">
@@ -120,6 +129,15 @@ h1{font-size:19px;margin:0 0 3px}
 <script>
 const DATA={"aff": {"overall": {"A": {"pre": 3.24, "post": 3.83}, "B": {"pre": 3.47, "post": 3.12}, "C": {"pre": 2.63, "post": 3.02}, "D": {"pre": 3.15, "post": 3.74}, "E": {"pre": null, "post": 3.6}}, "byClass": {"1": {"A": {"pre": 3.32, "post": 3.91}, "B": {"pre": 3.73, "post": 3.43}, "C": {"pre": 2.81, "post": 3.12}, "D": {"pre": 3.3, "post": 3.86}, "E": {"pre": null, "post": 3.89}}, "2": {"A": {"pre": 3.25, "post": 3.85}, "B": {"pre": 3.5, "post": 3.15}, "C": {"pre": 2.6, "post": 2.96}, "D": {"pre": 3.12, "post": 3.67}, "E": {"pre": null, "post": 3.52}}, "3": {"A": {"pre": 3.46, "post": 3.83}, "B": {"pre": 3.3, "post": 2.94}, "C": {"pre": 3.0, "post": 3.33}, "D": {"pre": 3.3, "post": 3.64}, "E": {"pre": null, "post": 3.84}}, "4": {"A": {"pre": 3.26, "post": 3.86}, "B": {"pre": 3.37, "post": 2.97}, "C": {"pre": 2.6, "post": 2.96}, "D": {"pre": 3.09, "post": 3.64}, "E": {"pre": null, "post": 3.62}}, "5": {"A": {"pre": 3.23, "post": 3.91}, "B": {"pre": 3.55, "post": 3.0}, "C": {"pre": 2.36, "post": 3.0}, "D": {"pre": 3.14, "post": 3.97}, "E": {"pre": null, "post": 3.45}}, "6": {"A": {"pre": 3.31, "post": 3.93}, "B": {"pre": 3.37, "post": 3.17}, "C": {"pre": 2.71, "post": 3.07}, "D": {"pre": 3.14, "post": 3.83}, "E": {"pre": null, "post": 3.45}}, "7": {"A": {"pre": 2.91, "post": 3.41}, "B": {"pre": 3.48, "post": 3.32}, "C": {"pre": 2.25, "post": 2.46}, "D": {"pre": 2.96, "post": 3.45}, "E": {"pre": null, "post": 3.39}}, "8": {"A": {"pre": 3.15, "post": 3.88}, "B": {"pre": 3.44, "post": 2.97}, "C": {"pre": 2.71, "post": 3.24}, "D": {"pre": 3.18, "post": 3.82}, "E": {"pre": null, "post": 3.62}}}, "n": {"1": 27, "2": 28, "3": 23, "4": 26, "5": 26, "6": 28, "7": 23, "8": 22}, "nTotal": 203}, "exam": {"overall": {"satMean": 76.9, "satMedian": 85.0, "dist": {"0-20": 3, "21-40": 4, "41-60": 11, "61-80": 14, "81-100": 35}, "q": {"25": 12, "19": 23, "7": 8, "18": 6, "13": 4, "26": 28, "1": 2, "2": 5, "21": 3, "4": 4, "23": 20, "11": 7, "17": 1, "3": 5, "8": 3, "24": 3, "5": 3, "20": 1, "14": 2, "6": 1, "12": 1, "22": 1}, "n": 68}, "byClass": {"2": {"satMean": 84.8, "dist": {"0-20": 0, "21-40": 0, "41-60": 3, "61-80": 6, "81-100": 12}, "q": {"25": 5, "19": 6, "7": 2, "18": 1, "13": 1, "26": 9, "1": 1, "2": 2, "21": 1, "4": 3, "23": 9, "11": 5, "17": 1, "3": 2, "8": 2}, "n": 22}, "3": {"satMean": 72.6, "dist": {"0-20": 2, "21-40": 2, "41-60": 3, "61-80": 3, "81-100": 11}, "q": {"26": 9, "19": 8, "24": 2, "23": 5, "3": 2, "5": 2, "25": 3, "18": 2, "8": 1, "7": 2, "21": 2, "4": 1, "11": 1}, "n": 21}, "6": {"satMean": 73.2, "dist": {"0-20": 1, "21-40": 2, "41-60": 5, "61-80": 5, "81-100": 11}, "q": {"26": 10, "25": 4, "20": 1, "13": 3, "14": 2, "5": 1, "23": 6, "18": 3, "24": 1, "6": 1, "1": 1, "2": 3, "7": 4, "19": 9, "12": 1, "22": 1, "3": 1, "11": 1}, "n": 24}}}};
 const QMETA=[[1, "열기구 같았다", "열기구가 천천히 하늘로 올라가는 것처럼 내 실력도 올라갔다"], [1, "광부 같았다", "땅 속에 묻힌 보석(영어)을 캐내면서 성장했다"], [1, "복권 같았다", "좋은 선생님을 만나 영어 실력이 늘었다"], [1, "아테네의 민회 같았다", "모두의 의견이 잘 반영되는 환경이었다"], [2, "풍선 같았다", "배워갈수록 영어라는 과목이 점점 부풀어 올랐다"], [2, "금 같은 시간", "내가 영어를 잘하게 되는 시간이었다"], [3, "리메이크된 글 같았다", "비슷해 보여도 결이 다른 수업이었다"], [3, "내 의견이 들어가는 언어", "지금까지 어떤 수업보다 기억에 남는다"], [3, "약과 같았다", "영어를 거의 모르던 나에게 의미 있는 수업이 되었다"]], QCHANGE=[[1, "3월엔 틀릴까 봐 말을 못했지만, 지금은 틀려도 다시 할 수 있다는 자신감이 생겼다"], [2, "문장을 더 튼실하게, 더 자세히 쓰도록 고치는 방법을 알게 되었다"], [2, "내 영어 실력에 더 확신을 가지고 자신 있게 말할 수 있다"], [3, "영어로 말하는 게 입에 더 잘 붙어서 종종 영어를 섞어 쓰게 되었다"], [3, "내가 표현한 것을 검토하는 것이 나아졌다"]], QLINK=[[2, "11번 선행사 보고 동사 고르는 수업 · 19번 현재완료 단어 수업 · 26번 우리가 설문조사한 것이 시험에 나와서"], [2, "1·2번 회화시간에 한 내용 · 26번 수업시간에 한 설문이 나와서"], [2, "11번 미니 모의고사 · 19번 현재완료 문법 수업 · 25번 원어민 회화 수업·활동"], [3, "동화중 학생들의 말하기 설문을 통해 잘한 점·못한 점을 알게 됨"], [3, "영어실에서 옥타비오 쌤이 발표시킬 때 — 회화 수업과 연결"], [6, "블루킷으로 많이 한 7번 · 선생님이 강조한 11번 · 우리가 설문한 26번"]], QLABEL={"26": "우리 반 설문조사 결과", "19": "현재완료 시제(문법)", "23": "추론", "25": "원어민 회화·길찾기", "7": "블루킷 단어게임", "11": "관계대명사·선행사", "18": "본문", "2": "회화", "3": "본문·회화", "13": "어휘", "4": "본문 접속사", "21": "문법", "8": "본문 빈칸", "24": "본문", "5": "본문"};
+const LEARNMAP=[
+ {cat:"우리 반 설문조사",learn:"학생 주도 탐구·데이터",all:24,by:{"2":7,"3":8,"6":9},quotes:[["2","이윤채","26 수빈이의 영국 여행 설문조사가 시험에 나옴"],["3","정은호","26 우리가 설문 조사한 것"],["3","윤록현","26 설문조사 한 게 시험에 나왔다"],["6","김도윤","26 학생 설문 결과"]]},
+ {cat:"본문 읽기·추론",learn:"독해·추론",all:21,by:{"2":10,"3":5,"6":6},quotes:[["2","이서후","8·23 본문 빈칸 채우기 본문 수업"],["2","정연우","26 런던 여행 본문"]]},
+ {cat:"원어민 회화·말하기",learn:"말하기·소통",all:19,by:{"2":9,"3":5,"6":5},quotes:[["2","서승아","25 옥타비오쌤이랑 어디 가고 싶은지 말하기"],["2","김우빈","25 회화시간 길을 묻고 답하는 수업"]]},
+ {cat:"문법 (현재완료·관계대명사)",learn:"문법 규칙",all:18,by:{"2":9,"3":3,"6":6},quotes:[["3","정은호","11 선행사를 보고 동사를 고르는 수업"],["2","류수현","11 관계대명사 · 19 현재완료"]]},
+ {cat:"단어 게임 (블루킷·클래스키드)",learn:"어휘 암기",all:11,by:{"2":3,"3":3,"6":5},quotes:[["3","신우찬","7 클래스 키드에서 외운 단어"],["6","양지원","7 블루킷 · 19 인풋 아웃풋 활동"]]},
+ {cat:"시험대비·모의고사",learn:"평가 적응",all:6,by:{"2":2,"3":3,"6":1},quotes:[["2","서연우","11 미니 모의고사"],["3","정보경","18 시험 대비 프린트"]]},
+ {cat:"감정 어휘",learn:"감정 표현",all:3,by:{"2":0,"3":1,"6":2},quotes:[["6","최은식","18 감정 관련 수업"]]}
+];
 const AFFN=DATA.aff.nTotal, EXN=DATA.exam.overall.n;
 const CON=['A','B','C','D','E'];
 const CONNAME={A:'A 표현 시도·자신감',B:'B 표현 불안',C:'C 표현 의욕·참여',D:'D 자기성찰·조절',E:'E 기여·공동구성'};
@@ -196,9 +214,10 @@ function fillQuotes(id,arr,fmt,mode){
 function renderExam(){
  const d=exData(), grid=document.getElementById('exGrid'), kp=document.getElementById('exKpis');
  if(!d){kp.innerHTML=`<div class="kpi" style="grid-column:1/-1"><div class="v">—</div><div class="l">${cur}반은 「시험 이야기」 설문 응답이 없어요 (2·3·6반만 실시)</div></div>`;
-   grid.style.opacity=.35;destroy('sat');destroy('q');
+   grid.style.opacity=.35;destroy('sat');destroy('q');destroy('learn');
    document.getElementById('qLink').innerHTML='<div class="empty">해당 반 응답 없음</div>';
-   document.getElementById('exInsight').innerHTML='';return;}
+   document.getElementById('exInsight').innerHTML='';
+   document.getElementById('qLearn').innerHTML='';document.getElementById('learnInsight').innerHTML='';return;}
  grid.style.opacity=1;
  kp.innerHTML=`
   <div class="kpi"><div class="v">${d.n}<small>명</small></div><div class="l">응답 인원</div></div>
@@ -221,6 +240,25 @@ function renderExam(){
  const l=document.getElementById('qLink');[...l.children].forEach(c=>c.classList.add('gold'));
  const t=topQ(d.q);
  document.getElementById('exInsight').innerHTML=`<b>환류의 증거</b> — 가장 많이 기억된 문항은 <b>${t}</b>. 특히 <b>26번(우리 반 설문조사 결과)</b>은 학생들이 직접 참여해 만든 데이터가 그대로 시험에 나온 문항으로, "내가 만든 표현이 수업·평가로 되돌아온다"는 ECHO 환류 구조를 학생들이 스스로 인식하고 있음을 보여줍니다.`;
+ renderLearn();
+}
+function renderLearn(){
+ const single=(cur=='2'||cur=='3'||cur=='6');
+ const val=(m)=>single?(m.by[cur]||0):m.all;
+ const rows=LEARNMAP.map(m=>({...m,c:val(m)})).filter(m=>m.c>0).sort((a,b)=>b.c-a.c);
+ destroy('learn');
+ charts.learn=new Chart(document.getElementById('cLearn'),{type:'bar',
+  data:{labels:rows.map(m=>m.cat+' · '+m.learn),datasets:[{data:rows.map(m=>m.c),
+   backgroundColor:rows.map(m=>m.cat=='우리 반 설문조사'?COL.gold:COL.post),borderRadius:5}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+   tooltip:{callbacks:{label:(it)=>it.raw+'명이 배움으로 기억'}}},scales:{x:{ticks:{stepSize:single?2:5}}}}});
+ const top=rows[0];
+ const qs=top.quotes.filter(q=>!single||q[0]==cur);
+ document.getElementById('qLearn').innerHTML = qs.length
+   ? qs.slice(0,4).map(q=>`<div class="q gold"><span class="cl">${q[0]}반 ${q[1]}</span>${q[2]}</div>`).join('')
+   : '<div class="empty">이 반의 대표 응답이 아직 없어요</div>';
+ const scope=single?cur+'반에서':'세 반 전체에서';
+ document.getElementById('learnInsight').innerHTML=`<b>가장 오래 남은 배움</b> — ${scope} 가장 많은 학생이 배움으로 꼽은 활동은 <b>${top.cat}</b>(${top.c}명, ${top.learn})이었습니다. 교사가 일방적으로 전달한 지식이 아니라 <b>아이들이 직접 만들고 참여한 수업</b>이 가장 깊게 남았다는 뜻입니다.`;
 }
 function topQ(q){const e=Object.entries(q).map(([k,v])=>[+k,v]).sort((a,b)=>b[1]-a[1]);return e.length?e[0][0]+'번':'—';}
 
