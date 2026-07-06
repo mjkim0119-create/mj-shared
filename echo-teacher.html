@@ -1,49 +1,73 @@
 <!DOCTYPE html>
-<!-- v9-voices: 아이들의 시험 이야기 패널 추가 · 익명 · rev 0705 -->
+<!-- v13: 패널5 클릭시 역량 근거+실제후기 펼침·패널6·7 범주별 전체목소리 아코디언·패널8 정서태그 탭 · rev 0706 -->
 
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ECHO 학기말 설문 대시보드</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js"></script>
 <style>
-:root{color-scheme:light;--bg:#f4f6f8;--card:#fff;--ink:#1f2933;--muted:#69727d;--accent:#2f5d8a;--line:#e7ecf1;
---l0:#dbe7f0;--l1:#7aa8d0;--l2:#5cbfa6;--l3:#f0c659;--l4:#ec8b43;--l5:#d1493a;}
+:root{color-scheme:light;--bg:#f3f4fb;--card:#fff;--ink:#242938;--muted:#6b7280;
+--accent:#6366f1;--accent-ink:#4f46e5;--accent-soft:#eef0fd;--accent-line:#dfe3fb;--line:#eceef5;}
 *{box-sizing:border-box}
-body{margin:0;font-family:'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
-.wrap{max-width:1180px;margin:0 auto;padding:20px 16px 50px}
-h1{font-size:19px;margin:0 0 3px}
-.sub{color:var(--muted);font-size:12.5px}
-.live{display:inline-block;margin-left:6px;background:#eef3f8;color:#2f5d8a;border:1px solid #cfe0ef;border-radius:999px;padding:1px 9px;font-size:11px;font-weight:700}
-.bar-ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0 4px}
-.bar-ctrl .lab{font-size:12px;color:var(--muted);margin-right:2px}
-.bar-ctrl button{font-size:12px;border:1px solid #cdd6df;background:#fff;border-radius:7px;padding:5px 12px;cursor:pointer;color:#3a4753}
-.bar-ctrl button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
-.filterhint{font-size:11.5px;color:#8a939c;margin:4px 0 2px}
-.sec-h{margin:20px 0 12px;padding:12px 16px;border-radius:11px;background:#eef3f8;border:1px solid #d9e3ec;color:#2f5d8a;font-weight:800;font-size:15px}
-.sec-h .s{font-weight:500;font-size:12px;color:#69727d;margin-left:8px}
-.sec-h.gold{background:#fffaef;border-color:#ece1c2;color:#8a6d2f}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 1px 2px rgba(20,40,60,.04)}
+body{margin:0;font-family:'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 24px 60px}
+/* top bar */
+.topbar{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 26px;display:flex;align-items:center;gap:16px;box-shadow:0 1px 3px rgba(30,30,60,.05)}
+.topbar .logo{flex:0 0 auto;width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#7c78f2,#5b57e0);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;box-shadow:0 3px 8px rgba(99,102,241,.32)}
+.topbar .tt{flex:1;min-width:0}
+h1{font-size:22px;letter-spacing:-.5px;margin:0 0 3px;font-weight:800}
+.sub{color:var(--muted);font-size:13px;line-height:1.5}
+.topbar .meta{flex:0 0 auto;display:flex;align-items:center;gap:14px;font-size:12.5px;color:#9aa1ad}
+.topbar .meta .sys{background:var(--accent-soft);color:var(--accent-ink);border:1px solid var(--accent-line);border-radius:999px;padding:5px 13px;font-weight:800;font-size:12px}
+/* tabs */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin:18px 2px 0;border-bottom:1.5px solid #e6e8f2}
+.tab{display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:700;color:#8a90a0;background:none;border:0;border-bottom:2.5px solid transparent;padding:11px 15px 12px;cursor:pointer;transition:all .14s;margin-bottom:-1.5px}
+.tab:hover{color:var(--accent-ink)}
+.tab.on{color:var(--accent-ink);border-bottom-color:var(--accent)}
+.tab svg{width:16px;height:16px;flex:0 0 auto}
+/* filter */
+.bar-ctrl{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin:20px 0 4px}
+.bar-ctrl .lab{font-size:12.5px;color:var(--muted);margin-right:2px;font-weight:700}
+.bar-ctrl button{font-size:13px;border:1px solid #d9dcec;background:#fff;border-radius:999px;padding:7px 15px;cursor:pointer;color:#4a5060;transition:all .15s}
+.bar-ctrl button:hover{border-color:var(--accent);color:var(--accent-ink)}
+.bar-ctrl button.on{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 6px rgba(99,102,241,.28)}
+.filterhint{font-size:12px;color:#9aa1ad;margin:8px 0 2px}
+/* tab panels */
+.tab-panel{display:none;animation:fade .22s ease}
+.tab-panel.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.sec-h{margin:26px 0 16px;padding:0 0 0 2px}
+.sec-h .kick{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.3px;color:var(--accent-ink);background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:999px;padding:3px 12px;margin-bottom:11px}
+.sec-h .ttl{font-size:21px;font-weight:800;letter-spacing:-.4px;color:#2b3040;line-height:1.25}
+.sec-h .s{display:block;font-weight:500;font-size:13.5px;color:#6b7280;margin-top:7px;max-width:840px;line-height:1.6}
+.sec-h.gold .kick{color:#8a6d2f;background:#fbf3df;border-color:#ece1c2}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 24px;box-shadow:0 1px 3px rgba(30,30,60,.05)}
 .panel.full{grid-column:1/-1}
-.p-h{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
-.p-h .n{font-size:11px;font-weight:700;color:#fff;background:var(--accent);border-radius:6px;padding:1px 7px}
-.p-h .n.gold{background:#8a6d2f}
-.p-h h2{font-size:15px;margin:0}
-.read{font-size:11.5px;color:var(--muted);margin:2px 0 12px}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.kpi{background:#f7f9fb;border:1px solid #eaeff4;border-radius:10px;padding:12px 10px;text-align:center}
-.kpi .v{font-size:21px;font-weight:800;color:var(--accent)}
-.kpi .v small{font-size:12px;font-weight:700}
-.kpi .v.up{color:#1f7a44}.kpi .v.down{color:#c0563c}.kpi .v.good{color:#1f7a44}
-.kpi .l{font-size:11px;color:var(--muted);margin-top:3px}
-.kpi .d{font-size:11px;margin-top:2px;font-weight:700}
-.chartbox{position:relative;height:250px}
-.chartbox.tall{height:300px}
-.insight{font-size:12px;color:#5a4a1f;background:#fffbef;border:1px solid #ece1c2;border-radius:9px;padding:10px 12px;margin:12px 0 0;line-height:1.6}
-.insight b{color:#8a6d2f}
-.quotes{display:flex;flex-direction:column;gap:8px}
-.q{padding:9px 12px;background:#f3f7fb;border-left:4px solid #2f5d8a;border-radius:0 9px 9px 0;font-size:12px;color:#3a4753;line-height:1.6}
-.q .qt{font-weight:700;color:#2f5d8a}
+.p-h{display:flex;align-items:baseline;gap:9px;margin-bottom:4px}
+.p-h .n{font-size:11px;font-weight:800;color:#fff;background:var(--accent);border-radius:7px;padding:2px 9px;letter-spacing:.2px}
+.p-h .n.gold{background:#c99a3a}
+.p-h h2{font-size:17px;margin:0;letter-spacing:-.3px;font-weight:800}
+.read{font-size:12.5px;color:var(--muted);margin:4px 0 16px;line-height:1.6}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 16px;text-align:center;box-shadow:0 1px 3px rgba(30,30,60,.04)}
+.kpi .v{font-size:34px;font-weight:800;color:var(--accent-ink);letter-spacing:-1px;line-height:1.05}
+.kpi .v small{font-size:15px;font-weight:700;letter-spacing:0}
+.kpi .v.up{color:#16a34a}.kpi .v.down{color:#dc2626}.kpi .v.good{color:#16a34a}
+.kpi .l{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.4}
+.kpi .d{font-size:11.5px;margin-top:3px;font-weight:700}
+.grouplab{font-size:12.5px;font-weight:800;color:#4a5060;margin:2px 2px 11px;display:flex;align-items:center;gap:8px}
+.grouplab::before{content:"";width:4px;height:15px;border-radius:3px;background:var(--accent)}
+.grouplab.gold::before{background:#c99a3a}
+.chartbox{position:relative;height:270px;margin-top:4px}
+.chartbox.tall{height:320px}
+.insight{font-size:13px;color:#3f3a5e;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:12px;padding:14px 16px;margin:16px 0 0;line-height:1.72}
+.insight b{color:var(--accent-ink)}
+.insight.gold{color:#5a4a1f;background:#fffbef;border-color:#ece1c2}
+.insight.gold b{color:#8a6d2f}
+.quotes{display:flex;flex-direction:column;gap:10px}
+.q{padding:11px 15px;background:#f5f6fe;border-left:4px solid var(--accent);border-radius:0 11px 11px 0;font-size:12.5px;color:#3a4050;line-height:1.66}
+.q .qt{font-weight:700;color:var(--accent-ink)}
 .q .cl{font-size:10.5px;color:#8a939c;font-weight:700;float:right}
 .q.gold{background:#fdf8ee;border-left-color:#8a6d2f}
 .q.gold .qt{color:#8a6d2f}
@@ -51,91 +75,212 @@ h1{font-size:19px;margin:0 0 3px}
 .legend b{color:#3a4753}
 .stories{columns:2;column-gap:12px;margin-top:4px}
 @media(max-width:760px){.stories{columns:1}}
-.story{break-inside:avoid;margin:0 0 12px;padding:11px 14px;background:#f7f9fb;border:1px solid #eaeff4;border-left:4px solid #7aa8d0;border-radius:0 10px 10px 0;font-size:12.5px;color:#3a4753;line-height:1.62}
-.story .cc{font-size:10.5px;color:#8a939c;font-weight:700;float:right}
-.story .th{display:inline-block;font-size:10.5px;font-weight:800;color:#2f5d8a;background:#e7f0f8;border-radius:999px;padding:1px 9px;margin-bottom:7px}
+.story{break-inside:avoid;margin:0 0 14px;padding:14px 16px;background:#f7f8fd;border:1px solid #eceef7;border-left:4px solid #a5abf5;border-radius:0 12px 12px 0;font-size:13px;color:#3a4050;line-height:1.66}
+.story .cc{font-size:10.5px;color:#9aa1ad;font-weight:700;float:right}
+.story .th{display:inline-block;font-size:10.5px;font-weight:800;color:var(--accent-ink);background:var(--accent-soft);border-radius:999px;padding:1px 9px;margin-bottom:7px}
 .story .th.growth{color:#1f7a44;background:#e3f2e8}
 .story .th.loop{color:#8a6d2f;background:#f5ecd6}
 .story .th.resolve{color:#b5652c;background:#fbeadd}
 .story.hi{background:#fdf8ee;border-left-color:#8a6d2f}
 .story.hi .th{color:#8a6d2f;background:#f5ecd6}
 .story.hi .qq{font-weight:600;color:#5a4a1f}
+.flowmap{margin-top:8px}
+.flowlist{display:flex;flex-direction:column;gap:9px}
+.frow{border:1px solid var(--line);border-radius:13px;padding:12px 15px 13px;background:#fff;transition:box-shadow .15s}
+.frow:hover{box-shadow:0 2px 10px rgba(30,30,60,.07)}
+.fhead{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px}
+.frank{flex:0 0 auto;width:21px;height:21px;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.fname{font-size:13.5px;font-weight:800;color:#2b3340;flex:1;min-width:120px;letter-spacing:-.2px}
+.farrow{color:#c2c8d4;font-size:12px;flex:0 0 auto}
+.fq{flex:0 0 auto;font-size:11px;font-weight:800;color:#8a6d2f;background:#fbf3df;border:1px solid #ece1c2;border-radius:7px;padding:2px 8px}
+.fcap{flex:0 0 auto;font-size:11.5px;font-weight:700;color:#3a4753;background:#fff;border:1.5px solid var(--bc);border-radius:999px;padding:2px 11px 3px}
+.fbarwrap{display:flex;align-items:center;gap:10px}
+.ftrack{flex:1;height:11px;background:#eef1f6;border-radius:999px;overflow:hidden}
+.fbar{height:100%;border-radius:999px;transition:width .35s}
+.fcount{flex:0 0 auto;font-size:12px;font-weight:800;color:#3a4753;min-width:38px;text-align:right}
+.fcaptotals{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+.fcaptotals .flt{font-size:11.5px;font-weight:800;color:#6b7280;margin-right:2px}
+.fcaptotals .fcap b{color:var(--accent-ink);margin-left:3px}
+.frow .fhead{cursor:pointer}
+.ftoggle{flex:0 0 auto;font-size:11px;font-weight:800;color:#8a90a0;background:#f2f3f8;border-radius:999px;padding:2px 9px;margin-left:auto;white-space:nowrap}
+.ftoggle i{font-style:normal;display:inline-block;transition:transform .2s}
+.frow.open .ftoggle{color:var(--accent-ink);background:var(--accent-soft)}
+.frow.open .ftoggle i{transform:rotate(180deg)}
+.fdrawer{display:none;margin-top:11px;padding-top:12px;border-top:1px dashed #e2e5ef}
+.frow.open .fdrawer{display:block;animation:fade .2s ease}
+.frat{font-size:12.5px;color:#4a5060;line-height:1.6;background:#f7f8fc;border:1px solid var(--line);border-radius:10px;padding:10px 13px}
+.frat .fratlab{display:block;font-size:10.5px;font-weight:800;color:var(--accent-ink);letter-spacing:.2px;margin-bottom:4px}
+.fqhd{font-size:11.5px;font-weight:800;color:#6b7280;margin:12px 2px 7px}
+.fquotes{display:flex;flex-direction:column;gap:6px;max-height:none}
+.fq2{font-size:12.5px;color:#39414f;line-height:1.55;background:#fff;border:1px solid var(--line);border-left:3px solid var(--accent-line);border-radius:8px;padding:7px 11px}
+.fq2 .cl{display:inline-block;font-size:10.5px;font-weight:800;color:var(--accent-ink);background:var(--accent-soft);border-radius:6px;padding:1px 7px;margin-right:7px;vertical-align:1px}
+.fnoq{font-size:12px;color:#9aa4ae;padding:8px 2px}
+/* voice accordion (패널 6·7) */
+.vgroups{display:flex;flex-direction:column;gap:8px}
+.vg{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.vg>.vgh{display:flex;align-items:center;gap:9px;cursor:pointer;padding:11px 15px;font-weight:800;font-size:13.5px;color:#2b3340;background:#fafbff;transition:background .15s}
+.vg>.vgh:hover{background:#f2f4fd}
+.vg>.vgh .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.vg>.vgh .vgc{font-size:11.5px;font-weight:800;color:#8a90a0;background:#eef0f6;border-radius:999px;padding:2px 9px}
+.vg>.vgh .vgar{margin-left:auto;color:#b6bccb;font-size:12px;transition:transform .2s}
+.vg.open>.vgh .vgar{transform:rotate(180deg)}
+.vg>.vgb{display:none;padding:6px 14px 14px}
+.vg.open>.vgb{display:block;animation:fade .2s ease}
+.vq{font-size:12.5px;color:#39414f;line-height:1.55;padding:8px 2px;border-bottom:1px solid #f0f2f7}
+.vq:last-child{border-bottom:0}
+.vq .cl{display:inline-block;font-size:10.5px;font-weight:800;color:#6b7280;background:#f0f2f7;border-radius:6px;padding:1px 7px;margin-right:7px;vertical-align:1px}
+.vq .why{display:block;font-size:11px;color:#9aa4ae;margin-top:2px;margin-left:2px}
+/* signal tag tabs (패널 8) */
+.sigtabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 12px}
+.sigtab{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:800;color:#6b7280;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:6px 13px;cursor:pointer;transition:all .14s}
+.sigtab:hover{border-color:var(--accent-line)}
+.sigtab.on{color:#fff;border-color:transparent}
+.sigtab .sc{font-weight:800;opacity:.85}
+.sigbody{display:flex;flex-direction:column;gap:7px}
+.sigq{font-size:13px;color:#37404e;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 13px;border-left:3px solid var(--sq,#ddd)}
+.sigq .cl{display:inline-block;font-size:10.5px;font-weight:800;color:#6b7280;background:#f0f2f7;border-radius:6px;padding:1px 7px;margin-right:8px;vertical-align:1px}
+.baro{margin:2px 0 4px}
+.baro .track{display:flex;height:32px;border-radius:9px;overflow:hidden;border:1px solid #e2e8ef}
+.baro .seg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;min-width:0;transition:flex .3s}
+.baro .seg.pos{background:#3f9d6a}.baro .seg.neu{background:#aab4bf}.baro .seg.neg{background:#e08b43}
+.baro .lg{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:#69727d;margin-top:8px}
+.baro .lg i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.baro .temp{font-size:12.5px;color:#3a4753;margin-top:9px;background:#f7f9fb;border:1px solid #eaeff4;border-radius:9px;padding:9px 12px;line-height:1.6}
+.baro .temp b{color:var(--accent-ink)}
+.grouphdr{font-size:12px;font-weight:800;color:#3a4753;margin:14px 0 8px;padding-bottom:5px;border-bottom:1.5px solid #eef2f6}
+.grouphdr .cnt{color:#8a939c;font-weight:700;font-size:11px;margin-left:6px}
 .empty{display:flex;align-items:center;justify-content:center;height:150px;color:#9aa4ae;font-size:13px;border:1.5px dashed #d7dee5;border-radius:10px;text-align:center;padding:14px;background:#fbfcfd}
+/* dumbbell */
+.dumbbell{margin-top:4px}
+.dumbbell svg{display:block;width:100%;height:auto}
+.dumbbell text{font-family:'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif}
+.dbleg{display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;color:#69727d;margin-top:4px}
+.dbleg i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.dbleg i.pre{background:#fff;border:2px solid #bcc7d2;width:10px;height:10px}
+.dbleg i.post{background:#6366f1}
+.dbleg i.gr{background:#2f8a55}
+/* question heatmap */
+.qheat{margin-top:6px}
+.qheatgrid{display:grid;grid-template-columns:repeat(13,1fr);gap:5px}
+.qheatgrid .cell{position:relative;aspect-ratio:1/1.05;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(20,40,60,.05);min-width:0}
+.qheatgrid .cell .qn{font-size:12.5px;font-weight:800;line-height:1}
+.qheatgrid .cell .qc{font-size:9.5px;font-weight:700;margin-top:2px;line-height:1}
+.qheatgrid .cell.gold{border:1px solid #d8a93a}
+.qheatgrid .cell .star{position:absolute;top:-7px;right:-4px;font-size:13px;color:#e0a53a;text-shadow:0 0 2px #fff}
+.qheatlg{display:flex;align-items:center;gap:7px;font-size:11px;color:#8a939c;margin-top:11px;flex-wrap:wrap}
+.qheatlg .sc{display:flex;gap:2px}
+.qheatlg .sc i,.qheatlg i.chip{width:14px;height:12px;border-radius:3px;display:inline-block;vertical-align:-1px}
+.qheatcap{font-size:12px;color:#69727d;margin-top:9px;line-height:1.7}
+.qheatcap b{color:#2f3a45}
+@media(max-width:760px){.qheatgrid{grid-template-columns:repeat(7,1fr)}}
+/* top-question summary cards */
+.qtop{display:flex;flex-direction:column;gap:11px;margin-top:2px}
+.qtrow{display:flex;align-items:center;gap:12px}
+.qtrow .qnum{flex:0 0 44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;background:var(--accent)}
+.qtrow.gold .qnum{background:#e0a53a}
+.qtrow .qbody{flex:1;min-width:0}
+.qtrow .qname{font-size:13px;font-weight:700;color:#2f3440;line-height:1.3}
+.qtrow .qbar{height:8px;border-radius:5px;background:#eef0f6;margin-top:6px;overflow:hidden}
+.qtrow .qbar span{display:block;height:100%;border-radius:5px;background:var(--accent)}
+.qtrow.gold .qbar span{background:#e0a53a}
+.qtrow .qval{flex:0 0 auto;font-size:12.5px;color:#69727d;font-weight:700}
 .foot{margin-top:24px;font-size:11.5px;color:#8a939c;text-align:center;line-height:1.7}
 @media(max-width:760px){.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
 </style></head>
 <body><div class="wrap">
-<header>
-<h1>ECHO 학기말 설문 대시보드<span class="live">2학년 · 1학기</span></h1>
-<div class="sub">「영어 표현에 대한 나의 마음」(사전·사후 정의적 변화) + 「기말고사 시험 이야기」(만족도·문항↔수업 환류) · 반별 필터</div>
+<header class="topbar">
+<div class="logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 1 8l11 5 9-4.1V15h2V8L12 3zM5 13.2V17c0 1.8 3.1 3 7 3s7-1.2 7-3v-3.8l-7 3.2-7-3.4z"/></svg></div>
+<div class="tt">
+<h1>영어 학습 성장 &amp; 정의적 특성 대시보드</h1>
+<div class="sub">2026학년도 동화중학교 2학년 1학기 · ECHO 학기말 설문 분석</div>
+</div>
+<div class="meta"><span class="sys">교사용 시스템</span><span>2026. 07. 05 기준</span></div>
 </header>
+
+<nav class="tabs" id="tabs">
+<button class="tab on" data-t="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>종합 리포트</button>
+<button class="tab" data-t="growth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg>표현력 성장 변화</button>
+<button class="tab" data-t="feedback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg>시험 환류 지도</button>
+<button class="tab" data-t="voices"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-11.7 7.9L3 21l1.6-6.3A8.5 8.5 0 1 1 21 11.5z"/></svg>학생 목소리</button>
+</nav>
 
 <div class="bar-ctrl" id="filter">
 <span class="lab">반</span>
 </div>
 <div class="filterhint" id="fhint"></div>
 
-<!-- ===== 정의적 변화 ===== -->
-<div class="sec-h">① 영어 표현에 대한 나의 마음 <span class="s">3월의 나 → 지금의 나 (4점 척도, 회상형 사전·사후)</span></div>
-<div class="kpis" id="affKpis" style="margin-bottom:16px"></div>
+<!-- ===== 종합 리포트 ===== -->
+<section class="tab-panel on" data-panel="overview">
+<div class="sec-h"><span class="kick">OVERVIEW</span><div class="ttl">종합 리포트</div><span class="s">정의적 성장과 시험 환류를 한눈에. 위의 반 버튼으로 필터하면 모든 탭이 함께 바뀝니다.</span></div>
+<div class="grouplab">정의적 성장 요약 — 영어 표현에 대한 나의 마음 (사전 3월 → 사후 지금)</div>
+<div class="kpis" id="affKpis" style="margin-bottom:24px"></div>
+<div class="grouplab gold">시험 환류 요약 — 기말고사 시험 이야기</div>
+<div class="kpis" id="exKpis"></div>
+</section>
+
+<!-- ===== 표현력 성장 변화 ===== -->
+<section class="tab-panel" data-panel="growth">
+<div class="sec-h"><span class="kick">SECTION · 정의적 변화</span><div class="ttl">표현력 성장 변화 <span style="font-weight:600;font-size:15px;color:#8a90a0">3월의 나 → 지금의 나</span></div><span class="s">회상형 사전·사후(4점 척도)로, 점수 뒤에 있는 마음의 변화를 구인별로 봅니다.</span></div>
 <div class="grid">
 <section class="panel full">
-<div class="p-h"><span class="n">패널 1</span><h2>구인별 사전 → 사후 변화</h2></div>
-<div class="read">읽는 법 — 연한 막대=3월, 진한 막대=지금. <b>B(표현 불안)은 낮을수록 좋음</b>이라 감소가 긍정 신호. A·C·D·E는 높을수록 좋음.</div>
-<div class="chartbox tall"><canvas id="cAff"></canvas></div>
-<div class="legend">A 표현 시도·자신감 · B 표현 불안(역방향) · C 표현 의욕·참여 · D 자기성찰·조절 · E 기여·공동구성(지금만 측정)</div>
-</section>
-<section class="panel">
-<div class="p-h"><span class="n">패널 2</span><h2>3월 → 지금 정서 프로필</h2></div>
-<div class="read">읽는 법 — 연한 선=3월, 진한 선=지금. 두 시점을 겹쳐 성장 폭을 봅니다. B는 '편안함'(5−불안)으로 변환해 높을수록 좋게 정렬. E(기여)는 지금만 측정.</div>
-<div class="chartbox"><canvas id="cRadar"></canvas></div>
-</section>
-<section class="panel">
-<div class="p-h"><span class="n">패널 3</span><h2>기억에 남는 은유</h2></div>
-<div class="read">읽는 법 — "나에게 올해 영어 수업은 ___ 같았다" 학생 응답.</div>
-<div class="quotes" id="qMeta"></div>
-</section>
-<section class="panel full">
-<div class="p-h"><span class="n">패널 4</span><h2>학생이 말하는 달라진 점</h2></div>
-<div class="read">읽는 법 — S2 "달라진 점" 자유응답 중 대표 사례.</div>
-<div class="quotes" id="qChange"></div>
+<div class="p-h"><span class="n">패널 1</span><h2>구인별 성장의 방향과 폭</h2></div>
+<div class="read">읽는 법 — 각 줄이 한 구인. <b>연한 점=3월, 진한 점=지금</b>, 잇는 선의 방향이 변화예요. 오른쪽으로 갈수록 점수가 높음. <b>B(표현 불안)만 낮을수록 좋아서</b> 왼쪽으로 가는 게 성장(초록). E는 지금만 측정.</div>
+<div id="affDumbbell"></div>
 </section>
 </div>
+</section>
 
-<!-- ===== 시험 이야기 ===== -->
-<div class="sec-h gold">② 기말고사 시험 이야기 <span class="s">점수 만족도 · 기억에 남는 문항 ↔ 수업활동 환류</span></div>
-<div class="kpis" id="exKpis" style="margin-bottom:16px"></div>
+<!-- ===== 시험 환류 지도 ===== -->
+<section class="tab-panel" data-panel="feedback">
+<div class="sec-h gold"><span class="kick">SECTION · 시험 환류</span><div class="ttl">시험 환류 지도</div><span class="s">점수에 대한 스스로의 만족도, 그리고 기억에 남은 문항이 어떤 수업활동으로 되돌아오는지.</span></div>
 <div class="grid" id="exGrid">
 <section class="panel">
-<div class="p-h"><span class="n gold">패널 5</span><h2>시험 점수 만족도 분포</h2></div>
+<div class="p-h"><span class="n gold">패널 2</span><h2>시험 점수 만족도 분포</h2></div>
 <div class="read">읽는 법 — 스스로 매긴 만족도(0~100%) 구간별 인원.</div>
 <div class="chartbox"><canvas id="cSat"></canvas></div>
 </section>
 <section class="panel">
-<div class="p-h"><span class="n gold">패널 6</span><h2>기억에 남는 문항 (언급 빈도)</h2></div>
-<div class="read">읽는 법 — Q2·Q3에서 학생들이 지목한 문항 번호. 옆 라벨=연결된 수업활동.</div>
-<div class="chartbox"><canvas id="cQ"></canvas></div>
+<div class="p-h"><span class="n gold">패널 3</span><h2>최다 언급 문항 <span style="font-weight:500;font-size:12px;color:#8a90a0">한눈에 보는 요약</span></h2></div>
+<div class="read">읽는 법 — 아래 히트맵의 상위 문항을 요약해 보여줍니다. 문항 번호와 연결된 수업활동.</div>
+<div id="qTop"></div>
 </section>
 <section class="panel full">
-<div class="p-h"><span class="n gold">패널 7</span><h2>시험 문항 ↔ 수업활동 연결 (환류의 증거)</h2></div>
-<div class="read">읽는 법 — Q3 "수업활동이 기억나는 문제 + 어떤 수업과 연결됐나" 자유응답.</div>
-<div class="quotes" id="qLink"></div>
-<div class="insight" id="exInsight"></div>
+<div class="p-h"><span class="n gold">패널 4</span><h2>기억에 남는 문항 지도 <span style="font-weight:500;font-size:12px;color:#8a90a0">1~26번 중 어디에 기억이 몰렸나</span></h2></div>
+<div class="read">읽는 법 — <b>26개 문항 격자</b>. 칸 색이 진할수록 그 문항을 기억에 남는다고 꼽은 학생이 많아요. <b>26번(우리 반 설문조사)은 금색으로 강조</b> — 학생이 만든 데이터가 그대로 시험에 나온 환류 문항. 반 버튼으로 필터돼요.</div>
+<div class="qheat" id="qHeat"></div>
 </section>
 <section class="panel full">
-<div class="p-h"><span class="n gold">패널 8</span><h2>수업 → 배움 연결 지도 <span style="font-weight:500;font-size:12px;color:#69727d">내 수업의 어떤 활동이 배움으로 남았나</span></h2></div>
-<div class="read">읽는 법 — Q3 응답을 문항 번호가 아니라 <b>수업활동의 종류</b>로 묶어 셌습니다. 막대는 그 활동을 배움으로 기억한 학생 수. 오른쪽 라벨=그 활동이 키운 힘.</div>
-<div class="chartbox tall"><canvas id="cLearn"></canvas></div>
-<div class="quotes" id="qLearn" style="margin-top:12px"></div>
+<div class="p-h"><span class="n gold">패널 5</span><h2>수업활동 → 역량 순위 <span style="font-weight:500;font-size:12px;color:#8a90a0">어떤 수업이 어떤 힘으로 남았나</span></h2></div>
+<div class="read">읽는 법 — 학생이 <b>배움으로 기억한 수업활동</b>을 많이 꼽힌 순서로 정렬. 각 줄은 <b>활동 → (시험 문항) → 키운 역량</b>. 막대 길이 = 그 활동을 꼽은 학생 수. <b>줄을 누르면</b> 왜 그 역량으로 묶었는지 근거와 <b>실제 학생 후기</b>가 펼쳐집니다. 맨 아래는 <b>역량별 합계</b>.</div>
+<div class="flowmap" id="flowmap"></div>
 <div class="insight" id="learnInsight"></div>
 </section>
+</div>
+</section>
+
+<!-- ===== 학생 목소리 ===== -->
+<section class="tab-panel" data-panel="voices">
+<div class="sec-h"><span class="kick">SECTION · 학생 목소리</span><div class="ttl">학생 목소리</div><span class="s">숫자 뒤에 있던 문장들 — 은유, 달라진 점, 그리고 시험 이야기의 정서 신호.</span></div>
+<div class="grid">
+<section class="panel">
+<div class="p-h"><span class="n">패널 6</span><h2>기억에 남는 은유 <span style="font-weight:500;font-size:12px;color:#8a90a0">은유의 결로 묶은 전체 응답</span></h2></div>
+<div class="read">읽는 법 — "나에게 올해 영어 수업은 ___ 같았다" 응답을 <b>은유의 결</b>(성장·재미·도전·가치·어려움…)로 묶었어요. 범주를 <b>누르면</b> 그 결의 <b>모든 목소리</b>가 강한 순서로 펼쳐집니다.</div>
+<div id="qMeta"></div>
+</section>
+<section class="panel">
+<div class="p-h"><span class="n">패널 7</span><h2>학생이 말하는 달라진 점 <span style="font-weight:500;font-size:12px;color:#8a90a0">영역별로 묶은 전체 응답</span></h2></div>
+<div class="read">읽는 법 — S2 "달라진 점" 자유응답을 <b>영역별</b>(자신감·말하기·문법·독해·어휘…)로 묶었어요. 범주를 <b>누르면</b> 해당 영역의 <b>모든 목소리</b>가 펼쳐집니다.</div>
+<div id="qChange"></div>
+</section>
 <section class="panel full">
-<div class="p-h"><span class="n gold">패널 9</span><h2>아이들의 시험 이야기 <span style="font-weight:500;font-size:12px;color:#69727d">숫자 뒤에 있던 목소리 — 그대로 읽기</span></h2></div>
-<div class="read">읽는 법 — 만족도·문항 빈도로는 안 잡히는 <b>학생이 직접 쓴 문장</b>. 성장·기쁨·아쉬움·다짐, 그리고 문제 하나가 남긴 순간들. 반 버튼으로 필터돼요. (이름은 원래 담기지 않은 문항)</div>
-<div class="stories" id="qStories"></div>
-<div class="insight" id="stInsight"></div>
+<div class="p-h"><span class="n gold">패널 8</span><h2>아이들의 시험 이야기 <span style="font-weight:500;font-size:12px;color:#8a90a0">숫자 뒤에 있던 목소리 — 신호로 읽기</span></h2></div>
+<div class="read">읽는 법 — 68개 응답을 정서로 나눈 <b>바로미터</b>, 반복 신호를 뽑은 <b>교사를 위한 종합</b>, 그리고 <b>정서 태그별 탭</b> — 탭을 누르면 그 정서의 <b>모든 목소리</b>가 강한 순서로 담깁니다. 반 버튼으로 필터돼요. (이름은 담기지 않은 문항 · 언급된 이름은 ○○ 처리)</div>
+<div class="baro" id="emoBaro"></div>
+<div class="insight" id="signalInsight"></div>
+<div class="stories" id="qStories" style="margin-top:12px"></div>
 </section>
 </div>
+</section>
 
 <div class="foot">
 데이터 출처 — Google Forms 응답 2건 · 「영어 표현에 대한 나의 마음」 n=203(8개 반) · 「기말고사 시험 이야기」 n=68(2·3·6반)<br>
@@ -155,6 +300,23 @@ const LEARNMAP=[
  {cat:"시험대비·모의고사",learn:"평가 적응",all:6,by:{"2":2,"3":3,"6":1},quotes:[["2","학생7","11 미니 모의고사"],["3","학생4","18 시험 대비 프린트"]]},
  {cat:"감정 어휘",learn:"감정 표현",all:3,by:{"2":0,"3":1,"6":2},quotes:[["6","학생3","18 감정 관련 수업"]]}
 ];
+const BUCKET={
+ tam:{name:"탐구 주도성",emoji:"🔎",col:"#e0a53a"},
+ dok:{name:"독해·추론",emoji:"📖",col:"#5cbfa6"},
+ exp:{name:"표현·소통",emoji:"💬",col:"#7aa8d0"},
+ acc:{name:"언어 정확성",emoji:"📐",col:"#c077b0"},
+ eva:{name:"평가 적응",emoji:"📝",col:"#9aa4ae"}
+};
+const CATMETA={
+ "우리 반 설문조사":{short:"우리 반 설문조사",q:"26번",b:"tam"},
+ "본문 읽기·추론":{short:"본문 읽기·추론",q:"23번",b:"dok"},
+ "원어민 회화·말하기":{short:"원어민 회화·말하기",q:"25번",b:"exp"},
+ "문법 (현재완료·관계대명사)":{short:"문법 (현재완료·관계대명사)",q:"19·11번",b:"acc"},
+ "단어 게임 (블루킷·클래스키드)":{short:"단어 게임 (블루킷)",q:"7번",b:"acc"},
+ "시험대비·모의고사":{short:"시험대비·모의고사",q:"—",b:"eva"},
+ "감정 어휘":{short:"감정 어휘",q:"18번",b:"exp"}
+};
+const EMO={all:{pos:31,neu:17,neg:20},"2":{pos:13,neu:5,neg:4},"3":{pos:10,neu:5,neg:6},"6":{pos:7,neu:7,neg:10}};
 const STORIES=[
  {c:"2",t:"성장",k:"growth",q:"저번엔 83점이었는데 이번엔 95점이 되었습니다!!"},
  {c:"2",t:"성장",k:"growth",q:"약간의 어려움이 있었지만, 그 어려움을 이겨내고 100점을 받았기 때문이에요."},
@@ -176,10 +338,58 @@ const STORIES=[
 const AFFN=DATA.aff.nTotal, EXN=DATA.exam.overall.n;
 const CON=['A','B','C','D','E'];
 const CONNAME={A:'A 표현 시도·자신감',B:'B 표현 불안',C:'C 표현 의욕·참여',D:'D 자기성찰·조절',E:'E 기여·공동구성'};
-const COL={pre:'#bcd0e2',post:'#2f5d8a',gold:'#e0a53a',good:'#5cbfa6',bad:'#d1493a'};
+const COL={pre:'#c7cffb',post:'#6366f1',gold:'#e0a53a',good:'#5cbfa6',bad:'#d1493a'};
+const VOICE={"s3": [{"c": "1", "t": "열기구 같았다. 왜냐하면 열기구가 점점 천천히 하늘로 올라가는 것처럼 내 실력도 올라갔기 때문이다", "th": "growth", "w": 7, "why": "영어 수업, 친구"}, {"c": "1", "t": "새로운 도전인 것 같았다. 왜냐하면 1학년 때와 수업 방식이 완전히 달랐기 때문이다", "th": "challenge", "w": 7, "why": "스스로 노력"}, {"c": "1", "t": "해석이였던 것 같다 왜냐햐면 난이도가 올라가면서 해석의 난이도가 엄청 어려워졌기 때문이다", "th": "growth", "w": 7, "why": "영어 수업"}, {"c": "1", "t": "나의 올해 수업은 파도 같았다. 왜냐하면 어느 때는 집중이 잘되서 잘했는데 어느 때는 집중을 잘못해서 선생님 말씀을 못듣기고 했기 때문이다", "th": "challenge", "w": 7, "why": "영어 수업, 학원·과외"}, {"c": "1", "t": "아테네의 민회같았다. 왜냐하면 아테네는 직접민주주의이었고 간접민주주의가 아닌 직접민주주의로 참여하지 못하는 사람이 있었으나 참여하는 사람의 의견이 직접적으로 크게 반영되었다. 그 이유는 지금우리사회가 규모가 더커져 간접 민주주의로 변", "th": "value", "w": 7, "why": "영어 수업"}, {"c": "2", "t": "영어에 대한 자신감을 키워주는 수업같았다, 왜냐하면 막연 포기하고 있었던 영어가 조금 읽히기 시작했기 때문이다", "th": "value", "w": 7, "why": "영어 수업, 스스로 노력"}, {"c": "2", "t": "풍선 같았다. 왜냐하면 하루하루 배워갈수록 점점 더 영어라는 과목이 부풀어 오르는 느낌이 들었기 때문이다", "th": "growth", "w": 7, "why": "영어 수업, 친구"}, {"c": "3", "t": "리메이크된 글 같았다. 왜냐하면 지금까지 영어수업과 비슷한듯 보여도 결이 다른 수업이었다. 원래 있던 글의 내용은 변하지 않았지만, 세부사항이 바뀌어서 다른 것처럼 느껴지는 것 처럼 말이다", "th": "value", "w": 7, "why": "영어 수업, 외국 지인."}, {"c": "3", "t": "태어나서 처음해본 형태의 영어 수업이지만 지금까지 했던 어떤 수업보다 기억에 남는다 왜냐면 보통 수업은 선생님께서 준비해 주신 자료를 그냥 외우거나 주체적이지 않게 진행을 한다. 그래서 영어가 내 의견이 들어가는 언어같은 과목이라고 ", "th": "value", "w": 7, "why": "영어 수업, 스스로 노력, 친구"}, {"c": "5", "t": "새로운과목을 배우는 것 같았다 왜냐하면 수업방식이 아예 달라서 더 도움되는것 같았다", "th": "challenge", "w": 7, "why": "영어 수업, 스스로 노력"}, {"c": "5", "t": "유익했던것같다.왜냐면 전에는 학교에서 단원마다 나오는 영어 단어를 신경을 별로 안쓴것같은데 블루킷같은 단어활동을해서 영어 점수도 잘나오고 다양한단어를 알게된것같기때문이다", "th": "value", "w": 7, "why": "영어 수업, 스스로 노력"}, {"c": "5", "t": "제일 유익한 시간인 것 같았다. 왜냐하면 태블릿으로 많은 활동을 하면서 이해 가는게 제일 빨랐다", "th": "value", "w": 7, "why": "영어 수업, 학원·과외"}, {"c": "8", "t": "흥미로운 수업 같았다 왜냐하면 예전에 하던 영어 수업하고 다르다고 생각이 들었고 더 기억에 남는 수업들이 많았었기 때문이다", "th": "challenge", "w": 7, "why": "달라지지 않음"}, {"c": "8", "t": "새로운 활동 같았다. 왜냐하면 다양한 방법으로 수업을 해서 평소의 영어 수업과는 다르게 느껴졌기 때문이다", "th": "challenge", "w": 7, "why": "영어 수업"}, {"c": "1", "t": "복권 같았다 왜냐하면 좋은 선생님을 만나서 영어실력이 늘었기 때문이다", "th": "value", "w": 6, "why": "선생님이 잘 알려주셨기 때문에"}, {"c": "2", "t": "나무같았다 왜냐하면 겉으론 필요하지 않아보여도 없어지면 막상 엄청 필요하기때문이다", "th": "growth", "w": 6, "why": "영어 수업, 학원·과외"}, {"c": "4", "t": "영화 같았다. 왜냐하면 성장 해가는 모습이 마치 영화의 한 장면 같아서", "th": "growth", "w": 6, "why": "영어 수업, 친구"}, {"c": "5", "t": "좋던거같다 왜냐하면 단어게임도 하고 아주 유익한 수업이됀거같아서이다", "th": "value", "w": 6, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "5", "t": "퀘스트 같았다 하나씩 알아가고 배워가며 성장했기 때문이다", "th": "growth", "w": 6, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "5", "t": "열쇠 같았다.왜냐하면 나의 영어를 열어줬기 때문이다", "th": "value", "w": 6, "why": "스스로 노력, 친구"}, {"c": "6", "t": "새로운 수업 같았다. 왜냐하면 이전과는 다른 방식의 수업이었기 때문이다", "th": "challenge", "w": 6, "why": "영어 수업, 스스로 노력"}, {"c": "6", "t": "나에게 올해 수업은 성장같았다. 왜냐하면 영어를 더욱 잘 활용하게 됬기 때문이다", "th": "growth", "w": 6, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "6", "t": "나에게 올해 수업은 시계같다.왜냐하면 영어 실력이 점점 좋아지고 있기 때문이다", "th": "growth", "w": 6, "why": "스스로 노력"}, {"c": "7", "t": "퍼즐같았다.왜냐하면 여러 개념을을 서로 연관지어 가며 알려주셨기 때문이다", "th": "challenge", "w": 6, "why": "학원·과외"}, {"c": "8", "t": "에이아이같았다 왜냐하면 새로운 지식을 계속 쌓았기 때문이다", "th": "challenge", "w": 6, "why": "영어 수업"}, {"c": "1", "t": "신비로웠다. 왜냐하면 언제는 재밌고 언제는 힘들고 헷갈리는 항상 느낌이 드는 수업이였기 때문이다", "th": "challenge", "w": 5, "why": "친구"}, {"c": "1", "t": "조금 더 많은걸 이해하고 배울 수 있었던 시간같다", "th": "value", "w": 5, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "1", "t": "나는 올해 영어 수업이 재미있었던것 같았다. 왜냐면 여러 영어 활동을 패드를 사용해서 재미있게 했기 때문이다", "th": "fun", "w": 5, "why": "영어 수업, 학원·과외"}, {"c": "2", "t": "노는거 같았다 왜냐하면 친구들과 할동 하는것도 많았고 게임을 하면서 공부해서 재밌었다", "th": "fun", "w": 5, "why": "영어 수업, 학원·과외"}, {"c": "2", "t": "금같은 시간이었다, 내가 영어를 잘하게되는 시간이어서", "th": "value", "w": 5, "why": "영어 수업, 학원·과외"}, {"c": "2", "t": "쫌 어렵기도 하고 어쩌다 몇개는 쉬웠던것 같다. 왜냐하면 영어에 쫌 약한것(?) 같다", "th": "plain", "w": 5, "why": "모르겠음"}, {"c": "2", "t": "조금 색달랐다. 왜냐하면 조금 더 많이 소통하는 영어 시간이었던 것 ㄱ,ㅌ기 때문이다", "th": "value", "w": 5, "why": "스스로 노력"}, {"c": "2", "t": "게임같았다 왜냐하면 게임 하는 방식으로 단어를 외우고 테스트를 하는게 재미있었기 때문이다", "th": "fun", "w": 5, "why": "영어 수업"}, {"c": "2", "t": "재밋고 배운것이 많앗다 왜냐하면 단어같은것도 게임을하며 배우니까 재밋고 기억에 오래남는다", "th": "fun", "w": 5, "why": "영어 수업, 학원·과외"}, {"c": "2", "t": "계시판 같았다. 왜냐하면 친구들과 자기 자신만의 이야기를 발표하며 전달했기 때문이다", "th": "plain", "w": 5, "why": "영어 수업"}, {"c": "3", "t": "신기한것 같았다. 왜냐하면 작년 영어 수업은 평범 했는데 활동이 많이 늘어서 영어 실력이 매우 좋아진 것 같아서 좋았다", "th": "plain", "w": 5, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "3", "t": "의미 있었던 것 같았다. 왜냐하면 진짜 쓸 수 있는 영어를 배우는 느낌이었기 때문이다", "th": "plain", "w": 5, "why": "영어 수업"}, {"c": "3", "t": "참신했어서 기억에 더 잘 들어온 것 같았다. 왜냐하면 기존에 했던 영어 수업은 교과서와 프린트 위주의 수업이였는데 몇몇 통계자료도 보고 단어 외울때 퀴즈로 외우는 것이 머리속에 잘들어왔기 때문이다", "th": "plain", "w": 5, "why": "영어 수업, 스스로 노력"}, {"c": "3", "t": "약과 같았다. 왜냐하면 학기초에 영어를 거의 모르는 나에게 의미있고 좋은 수업이 되었다고 생각하기 때문이다", "th": "plain", "w": 5, "why": "영어 수업"}, {"c": "4", "t": "발전이었다. 왜냐하면 지금까지 학교에서 해준적 없는 수업이었고 표현이 늘고,시험분석하기 까지하면서 고등학교까지 연결될수 있는 시험문제를 풀어서 좋았더", "th": "growth", "w": 5, "why": "영어 수업"}, {"c": "4", "t": "나에게 올해 수업은 새로웠다. 왜냐하면 클래스룸, ai, 설문조사 등 많이 새로운 것을 수업에 활용해봤기 때문이다", "th": "challenge", "w": 5, "why": "달라지지 않음"}, {"c": "5", "t": "나에게 도움이 된 것 같았다. 왜냐하면 작년까지 90점대였던 영어시험 점수가 올해 처음으로 100점을 맞았기 때문이다", "th": "plain", "w": 5, "why": "영어 수업, 학원·과외"}, {"c": "5", "t": "영어를 언어로 받아들이게 되는 시간 같았다. 왜냐하면 1학년 때 배웠던 내신 느낌의 암기하는 과목에서 다양한 활동을 하며 재미있는 언어로 느껴졌기 때문이다", "th": "fun", "w": 5, "why": "영어 수업, 스스로 노력, 친구"}, {"c": "5", "t": "의미있는 경험같앗다. 말 그대로 나에게 유익하고 의미잇는 경험이라서였다", "th": "value", "w": 5, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "5", "t": "교육이였다. 왜냐하면 더 많고 새로운 가르침과 나에게 자신감을 좀더 심어주었기 때문이다", "th": "challenge", "w": 5, "why": "영어 수업"}, {"c": "5", "t": "나에게 올해 수업은 재미있던거 같다. 왜냐하면 활동도 많았고 수업시간 활동이 시험에 외부자문으로 나오기 때문이다", "th": "fun", "w": 5, "why": "영어 수업, 학원·과외"}, {"c": "5", "t": "싷험실 같았다. 왜냐하면 수업에서 무언갈 새로 시도해 보려는 수업이 많았기 때문이다", "th": "plain", "w": 5, "why": "달라지지 않음"}, {"c": "6", "t": "혼자서 공부했을 때는 이해가되지 않았던 문법을 이해시켜주는 문법 도우미 같았다. 왜냐하면 문법 설명을 규칙을 찾고 일정 단어만 외우는 것이 한국의 전형적인 아법인데, 그게 아닌 이해 중심으로 하는 수업이 좋았다", "th": "plain", "w": 5, "why": "영어 수업"}, {"c": "6", "t": "게임 같았다. 왜냐하면 학습지 수업만 하는게 아니라 여러 다른 활동을 같이 했기 때문이다", "th": "fun", "w": 5, "why": "영어 수업, 학원·과외"}, {"c": "6", "t": "확실히 실력이 늘은 것 같았다. 왜냐하면 몰랐던 문장구조들을 자세히 다 알아봤기 때문이다", "th": "plain", "w": 5, "why": "영어 수업, 스스로 노력"}, {"c": "6", "t": "새로운 경험이었다. 왜냐하면 여태껏 영어수업을 해오면서 이런 영어수업은 처음이었기 때문이다", "th": "challenge", "w": 5, "why": "달라지지 않음"}, {"c": "6", "t": "올해 영어 수업은 의미 있었던 것 같았다. 왜냐하면 4과 학습지 중에서 본문에 있는 정보들을 카테고리로 나누어서 했던게 있었는데 이렇게 본문 수업을 할 수 있다는 생각이 들었기 때문이다", "th": "plain", "w": 5, "why": "스스로 노력"}, {"c": "7", "t": "긴장됐다. 왜냐하면 다른 아이들은 쉽게 쉽게 하는 것 같은데 나만 뒤처지는 것 같았기 때문이다", "th": "plain", "w": 5, "why": "영어 수업"}, {"c": "7", "t": "나데게 올해 영어 수업은 수업 같았다. 왜냐하면 다른 수업이랑 좀 다르고 재밌어도 수업은 수업이다", "th": "fun", "w": 5, "why": "사춘기"}, {"c": "7", "t": "선물같았다. 이렇게 의미있고 기다려지는 영어수업은 처음이였다", "th": "value", "w": 5, "why": "영어 수업"}, {"c": "7", "t": "체험학습 같았다. 왜냐하면 직접 말하고 쓰면서 게임으로 단어 등을 배울 수 있었다 직접 체험하는(?)것 같았기 때문이다", "th": "fun", "w": 5, "why": "영어 수업, 스스로 노력"}, {"c": "7", "t": "학원 수업이랑 비슷했다. 왜냐하면 내 영어 학원도 문법을 주로 다루지 않고 단어랑 영어 뉴스 말하기를 시키는데 학교 수업이랑 비슷 했던 것 같기 때문", "th": "plain", "w": 5, "why": "달라지지 않음"}, {"c": "7", "t": "저에게 이번 년도 영어 수업은 괜찮았던 것같습니다. 왜냐하면 수업 자체가 즐거워서 괜찮았습니다", "th": "fun", "w": 5, "why": "달라지지 않음"}, {"c": "8", "t": "색다른 수업 같았다. 왜냐하면 작년에는 패드를 쓰지 않고 프린트로만 수업했는데 패드로 수업을 하니 색다르고 재미있었다", "th": "fun", "w": 5, "why": "영어 수업"}, {"c": "8", "t": "미래를 향한 징검다리 같았다. 왜냐하면 앞으로 영어 쓸 일이 많아질 것 같고 앞으로의 영어에 대한 자신감을 많이 키운것 같기 때문이다", "th": "plain", "w": 5, "why": "영어 수업, 학원·과외"}, {"c": "8", "t": "불붙일때 장작 같았다. 왜냐하면 불이 붙지않다가 불을 붙이니까 빛을 내며 활활잘타서 .”", "th": "plain", "w": 5, "why": "영어 수업, 학원·과외"}, {"c": "8", "t": "동아리 활동 같았다.왜냐하면 다양한 참여형 활동과 자유로운 분위기,재미있는 수업이 마치 동아리 활동 하는것 같았다", "th": "fun", "w": 5, "why": "시험성적"}, {"c": "1", "t": "그럭저럭인 것 같았다. 왜냐하면 그럭저럭 하기 때문에", "th": "plain", "w": 4, "why": "영어 수업, 스스로 노력"}, {"c": "1", "t": "행복같앗다 왜냐하면 영어시간마다 재밋잇는 게임 수업을 하기때문이다", "th": "fun", "w": 4, "why": "영어 수업, 학원·과외"}, {"c": "1", "t": "광부 땅 속에 묻혀있어서 보이지 않는 보석(영어)을 캐내면서 성장했기 때문이다", "th": "growth", "w": 4, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "1", "t": "흥미가 느껴졌다. 왜냐하면 클래스 카드처럼 게임으로 하는 활동이 재밌었다", "th": "fun", "w": 4, "why": "영어 수업, 학원·과외"}, {"c": "1", "t": "풀 같았다.왜냐하면 선생님의 수업내용이해가 풀처럼 딱 되었기때문", "th": "plain", "w": 4, "why": "영어 수업, 학원·과외"}, {"c": "1", "t": "재밌었던 것 같다. 왜냐하면 수업 내용이 재밌었기 때문이다", "th": "fun", "w": 4, "why": "학원·과외"}, {"c": "1", "t": "잘한거 같다 왜냐하면 나는 어릴때 부터 영어를 잘해서", "th": "plain", "w": 4, "why": "영어 수업"}, {"c": "2", "t": "자유같았다 여러 활동을 하며 다른시간과 다르ㄴ 수업이라고느껴졌기 때문이다", "th": "plain", "w": 4, "why": "스스로 노력"}, {"c": "2", "t": "주옥같다. 유익해서", "th": "value", "w": 4, "why": "달라지지 않음"}, {"c": "2", "t": "좋았던것같다 왜냐하면 다양한 활동을 하면서 영어 실력이 늘었기 때문이다", "th": "plain", "w": 4, "why": "달라지지 않음"}, {"c": "3", "t": "재밋었던 것 같았다. 왜냐면 블루켓 같은 게임을 많이 했으니까", "th": "fun", "w": 4, "why": "영어 수업, 스스로 노력"}, {"c": "3", "t": "쉬웠던 것 같았다. 왜냐하면 문제가 잘 풀리기 때문이다", "th": "plain", "w": 4, "why": "영어 수업, 학원·과외"}, {"c": "4", "t": "꿈같았다 왜냐하면 영어를 배우는게 꿈 같았기 때문이다", "th": "plain", "w": 4, "why": "영어 수업"}, {"c": "4", "t": "선풍기같았다. 어려운게 많았지만 선생님덕분에 쌩하고 바람처럼 지나갔기때문에", "th": "hard", "w": 4, "why": "스스로 노력"}, {"c": "4", "t": "나에게 영어수어은 재밌었던것 같다 왜냐하면 작년보다 수업이 집중되기 때문이다", "th": "fun", "w": 4, "why": "영어 수업, 학원·과외"}, {"c": "4", "t": "신기술 같았따. 왜냐하면 영어가 하면 할수록 어려워지는게 마치 신기술 개발과같았다", "th": "hard", "w": 4, "why": "영어 수업, 학원·과외"}, {"c": "4", "t": "좋은경험 같았다. 왜냐하면 재미있는 영어수업을 통해 많은걸 배웠기 때문이다", "th": "fun", "w": 4, "why": "영어 수업, 친구"}, {"c": "5", "t": "소중한 시간 같았다 왜냐하면 영어의 중요성과 흥미를 알았음", "th": "fun", "w": 4, "why": "영어 수업"}, {"c": "5", "t": "게임 같았다. 실제로 단어를 배우기 위해 게임을 했기 때문이다", "th": "fun", "w": 4, "why": "달라지지 않음"}, {"c": "6", "t": "흥미로웠다. 왜냐하면 지금까지 받아본적 없는 수업 방식이였기 때문이다", "th": "value", "w": 4, "why": "영어 수업, 학원·과외"}, {"c": "6", "t": "올해 영어 수업은 괜찮은것 같았다 왜냐하면 수업이 괜찮았기 때문이다", "th": "plain", "w": 4, "why": "영어 수업, 학원·과외"}, {"c": "6", "t": "영양제같았다. 영어 실력이 더 좋아지게 해줬기 때문이다", "th": "plain", "w": 4, "why": "달라지지 않음"}, {"c": "7", "t": "“나에게 올해 영어 수업은 게임 같았다. 왜냐하면 재밌었다.”", "th": "fun", "w": 4, "why": "영어 수업, 학원·과외"}, {"c": "7", "t": "어려울것 같았다왜냐하면 영어가 처음부터 계속 어려웠기 때문이다", "th": "hard", "w": 4, "why": "영어 수업, 학원·과외"}, {"c": "7", "t": "한결같았다. 왜냐하면 예전처럼 열심히 들었기 때문이다", "th": "plain", "w": 4, "why": "학원·과외, 스스로 노력"}, {"c": "8", "t": "자신감 같았다 왜냐하면 자신있게 영어를 말 할 수 있게 되었기 때문이다", "th": "plain", "w": 4, "why": "영어 수업, 학원·과외"}, {"c": "8", "t": "좋았다 왜냐하면 다양한 활동으로 인해 더 배울 수 있던 것 같다", "th": "plain", "w": 4, "why": "달라지지 않음"}, {"c": "8", "t": "나에게 영어 시험은 도장깨기 같았다 매일 다른 활동을 했기 때문이다", "th": "plain", "w": 4, "why": "영어 수업"}, {"c": "2", "t": "똑같았다. 왜냐하면 나한테 달라진게 없기 때문이다", "th": "plain", "w": 4, "why": "달라지지 않음"}, {"c": "1", "t": "흥미로웠다 왜냐면 새로운 활동을 많이해서", "th": "challenge", "w": 3, "why": ""}, {"c": "1", "t": "게임같았다 왜냐면 너무 어렵기때문에", "th": "fun", "w": 3, "why": "영어 수업"}, {"c": "1", "t": "도전적이였다 매앨 무언가를 새로하기 때문이다", "th": "challenge", "w": 3, "why": "스스로 노력"}, {"c": "2", "t": "신기했다 왜냐하면 1학년때는 딱 시험중심으로만 수업을 했다면 올해는 다양한 활동으로 시험준비를 했기 때문이다", "th": "plain", "w": 3, "why": "달라지지 않음"}, {"c": "2", "t": "작년과는 완전히 다른 방식이었다. 왜냐하면 작년에는 문법을 더 중요시 했다면 올해는 본문을 더 중요시했기 때문이다", "th": "plain", "w": 3, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "2", "t": "영어수업은 창의적이게 느껴졌다, 왜냐하면 다른 수업들이랑 다르게 직접 경험을통해 학습을 할수있어서 재미있었다", "th": "fun", "w": 3, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "2", "t": "재미있었다. 왜냐하면 새로운 활동을 많이해서", "th": "challenge", "w": 3, "why": "달라지지 않음"}, {"c": "4", "t": "올해 영어 수업은 전과는 다르게 만히 특별했다. 왜냐하면 작년에는 진도 나가는것에 집중적으로 해서 색다른 경험을 해보지 못했기 때문이다", "th": "plain", "w": 3, "why": "달라지지 않음"}, {"c": "4", "t": "영어 수업은 새로웠다. 왜냐하면 전에는 해보지 못한 다양한 여어 활동을 해봤기 때문이다", "th": "plain", "w": 3, "why": "영어 수업"}, {"c": "4", "t": "평소 같았다 왜냐하면 그냥 그랬기 때문이다", "th": "plain", "w": 3, "why": "스스로 노력"}, {"c": "5", "t": "나에세 올해 영어수업은 즐거웠다. 왜냐하면 친구들과 선생님이 재밌게 수업 분위기를 만들어줬기 때문이다", "th": "fun", "w": 3, "why": "영어 수업, 스스로 노력, 친구"}, {"c": "6", "t": "나에게 올해 수업은 재미있었다 다양한 게임과 쪽지시험을 통해 재미있게 수업했기 때문이다", "th": "fun", "w": 3, "why": "영어 수업, 학원·과외"}, {"c": "6", "t": "게임 같았다 왜냐하면 게임을 많이했기 때문에", "th": "fun", "w": 3, "why": "달라지지 않음"}, {"c": "6", "t": "유용한 영어들도 있었지만 조금 쉬운문제들이 많았다", "th": "value", "w": 3, "why": ""}, {"c": "6", "t": "새로웠다.이전까지와는 다르게 유동적으로 받아들일 수 있는 수업 같았다", "th": "plain", "w": 3, "why": "영어 수업, 학원·과외"}, {"c": "7", "t": "시험 같았다. 왜냐하면 어려워서", "th": "hard", "w": 3, "why": "달라지지 않음"}, {"c": "1", "t": "올해 수업은 재밌었다 왜냐하면 다양한 홯동들로 했기 때문이다", "th": "fun", "w": 2, "why": "영어 수업, 스스로 노력"}, {"c": "1", "t": "재미있었다.왜냐하면 영어 수업하는 동안 많은 재미있는 활동들을 많이 했기 때문이다", "th": "fun", "w": 2, "why": "영어 수업"}, {"c": "2", "t": "힘들었다.왜냐하면 관계대명사가 너무 어려웠기 때문이다", "th": "hard", "w": 2, "why": "달라지지 않음"}, {"c": "2", "t": "꿈이다,왜냐하면 영어를 잘봐야 예술고등학교에 갈수 있어서", "th": "plain", "w": 2, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "4", "t": "영어 수업은 재미있었다 왜냐하면 영어 시간에 패드로 한 퀴즈가 재미있기 때문이다", "th": "fun", "w": 2, "why": "영어 수업"}, {"c": "4", "t": "재밌어5다, 퀴즈랑 게임 같은거도 해서!!", "th": "fun", "w": 2, "why": "영어 수업, 학원·과외"}, {"c": "4", "t": "그래도 즐거웠다 여전히 영어를 못하긴하지맘 수업이나 내용이 학생이 집중할 수 있고 직접 참여할 수 있기에 잠도 안오고 재미있게 수업할 수 잇던점가다", "th": "fun", "w": 2, "why": "영어 수업, 학원·과외"}, {"c": "4", "t": "재밌었고 새로웠다. 선생님의 수업 방식이 처음 보는 방식이기 때문이다", "th": "fun", "w": 2, "why": "영어 수업"}, {"c": "4", "t": "신선했다. 원래 영어는 내신을 위한 것이라고 생각했었는데 이번 년도 수업을 들으면서 영어를 언어로서 처음 느끼게 되어서 신선하다고 느꼈다", "th": "plain", "w": 2, "why": "영어 수업, 스스로 노력"}, {"c": "5", "t": "음식 / 여러 활동을하면서 그 활동을 재밌게 느끼고 기다리는 과정이있었기때문이다", "th": "fun", "w": 2, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "5", "t": "좋았다, 왜냐하면 선생님이 수업을재 미있게 해 주셨기 때문이다", "th": "plain", "w": 2, "why": "달라지지 않음"}, {"c": "6", "t": "좋았다, 왜냐하면 선생님의 수업방식이 공부가 잘되었기 때문이다", "th": "plain", "w": 2, "why": "스스로 노력"}, {"c": "6", "t": "새로운 활동을 많이 해서 재미있었다", "th": "challenge", "w": 2, "why": "영어 수업"}, {"c": "7", "t": "재미있었다 왜냐하면 다양한 활동들을 많이 했기때문이다", "th": "fun", "w": 2, "why": "영어 수업"}, {"c": "8", "t": "영어 시간은 조금 재미있었습니다", "th": "value", "w": 2, "why": "학원·과외"}, {"c": "8", "t": "너무 좋았다 왜냐면 영어에 대해서 자신감이 생기고 재미가 있어졌기 때문이다", "th": "fun", "w": 2, "why": "영어 수업, 학원·과외"}, {"c": "8", "t": "올해 영어 수업은 좋았다 왜냐하면 평소와는 다른 방식의 수업이었기 때문", "th": "plain", "w": 2, "why": ""}, {"c": "8", "t": "한줄기의빛이자짙은어둠 재미있는 영어수업이라 한줄기에빛 질문을하는환경이나이런게 저에게맞지않는 짙은어둠", "th": "fun", "w": 2, "why": "영어 수업"}, {"c": "8", "t": "특별했다. 왜냐하면 패드를 사용하며 영어수업을 한것은 처음이기 때문이다", "th": "plain", "w": 2, "why": "영어 수업, 학원·과외"}, {"c": "8", "t": "새로웠다 왜냐하면 전에 받던 수업과는 다른 방식 으로 받았기 때문에 새로웠다", "th": "plain", "w": 2, "why": "영어 수업, 학원·과외"}, {"c": "8", "t": "새로웠다. 왜냐하면 패드로 수업을 하는게 신기했기 때문이다", "th": "plain", "w": 2, "why": "영어 수업"}, {"c": "3", "t": "별로 차이가 없던것 같다", "th": "plain", "w": 2, "why": "달라지지 않음"}, {"c": "1", "t": "어려웠다. 왜냐하면 어렵기 때문이다", "th": "hard", "w": 1, "why": "학원·과외"}, {"c": "1", "t": "재밌다 왜냐면 게임 해서", "th": "fun", "w": 1, "why": "스스로 노력"}, {"c": "1", "t": "재미있었다 왜냐하면 많은 활동을 해서이다", "th": "fun", "w": 1, "why": "영어 수업, 학원·과외"}, {"c": "2", "t": "특이했다. 다른 쌤들이랑 수업 방식이 달라서 새로움", "th": "plain", "w": 1, "why": ""}, {"c": "2", "t": "평범했다 왜냐하면 평범했기 때문이다", "th": "plain", "w": 1, "why": "영어 수업"}, {"c": "2", "t": "재미썼다 왜냐하면 블루킷이 재미있었다", "th": "fun", "w": 1, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "3", "t": "즐거웠다. 왜냐하면 블루캣 덕분이다", "th": "fun", "w": 1, "why": "영어 수업, 학원·과외"}, {"c": "3", "t": "전환점, 작년과 달리 실전 영어와 회화, 다채로운 수업이 있어서 신기했다", "th": "plain", "w": 1, "why": "영어 수업, 국제교류부"}, {"c": "4", "t": "나에게 영어수업은 별로 노력하지 않아서 실력이 안늘은 것 걑다", "th": "plain", "w": 1, "why": "학원·과외, 스스로 노력"}, {"c": "5", "t": "재미 잇엇다 왜냐한면 여러 게을 해서", "th": "fun", "w": 1, "why": "영어 수업, 학원·과외, 친구"}, {"c": "6", "t": "재미있었다 시험준비를 바탕으로 하면서 이해도 잘되는부분이 많았다", "th": "fun", "w": 1, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "7", "t": "좋았다 왜냐하면 게임도 했기 때문이다", "th": "fun", "w": 1, "why": "영어 수업, 학원·과외"}, {"c": "7", "t": "좋았다. 왜냐하면 수업이 재미있었기 때문", "th": "fun", "w": 1, "why": "영어 수업, 학원·과외"}, {"c": "7", "t": "작년,영어는 늘 지루한 과목이기 때문이다", "th": "plain", "w": 1, "why": "달라지지 않음"}, {"c": "7", "t": "회화나 토킹보다는 문법위주로 진행되는 느낌이어서 아쉬웠다", "th": "plain", "w": 1, "why": "달라지지 않음"}, {"c": "8", "t": "혜성, 재밌는 것들이 많았기 때문이다", "th": "fun", "w": 1, "why": "학원·과외"}, {"c": "8", "t": "올해 영어 수업은 샌개하고 특이하지만 나름 재미있었다", "th": "fun", "w": 1, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "1", "t": "영어 점수를 올린 계기가 되었다", "th": "plain", "w": 0, "why": "학원·과외"}, {"c": "3", "t": "잘 모르겠습니다", "th": "plain", "w": 0, "why": "스스로 노력"}, {"c": "3", "t": "별로 의미 없음", "th": "plain", "w": 0, "why": "달라지지 않음"}, {"c": "4", "t": "좋았다. 이유는 언제나 재밌게 해서", "th": "fun", "w": 0, "why": "영어 수업, 학원·과외"}, {"c": "4", "t": "모르겠다", "th": "plain", "w": 0, "why": "영어 수업, 학원·과외, 스스로 노력, 친구"}, {"c": "4", "t": "영어싫다", "th": "hard", "w": 0, "why": "달라지지 않음"}, {"c": "4", "t": "특이했다. 교과서를 많이 안써서", "th": "plain", "w": 0, "why": "진로"}, {"c": "5", "t": "도움이 되었다", "th": "plain", "w": 0, "why": "영어 수업, 학원·과외"}, {"c": "5", "t": "모르겠다", "th": "plain", "w": 0, "why": "영어 수업"}, {"c": "5", "t": "재미있는것,인상깊은게 많았음", "th": "fun", "w": 0, "why": "영어 수업, 학원·과외"}, {"c": "5", "t": "별로 의미가 없다", "th": "plain", "w": 0, "why": "달라지지 않음"}, {"c": "5", "t": "그럭저럭했었던, 흥미를 못느꼈다", "th": "fun", "w": 0, "why": ""}, {"c": "6", "t": "재밌었다", "th": "fun", "w": 0, "why": "영어 수업"}, {"c": "6", "t": "수업이 이해하기 편하고 재미있었다!!!!", "th": "fun", "w": 0, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "6", "t": "모르는걸 이해하고 나아가는것", "th": "plain", "w": 0, "why": "스스로 노력, 성장해야 된다는 생각"}, {"c": "6", "t": "단어와 문법 실력을 더 높여주는 수업이다", "th": "plain", "w": 0, "why": "영어 수업, 학원·과외, 스스로 노력"}, {"c": "7", "t": "별로 의미가 없었다", "th": "plain", "w": 0, "why": "영어 수업"}, {"c": "7", "t": "게임(블루킷) 게임이 가장 생각이 잘 나서", "th": "fun", "w": 0, "why": "영어 수업, 스스로 노력"}, {"c": "7", "t": "게임 / 게임을 많이해서", "th": "fun", "w": 0, "why": "영어 수업, 학원·과외"}, {"c": "7", "t": "새로웠다", "th": "plain", "w": 0, "why": "영어 수업"}, {"c": "2", "t": "의미 있었다", "th": "plain", "w": 0, "why": "친구"}, {"c": "6", "t": "모르는걸 배우고 알아가는 과정", "th": "plain", "w": 0, "why": "영어 수업, 학원·과외, 가족"}], "s2": [{"c": "1", "t": "3월에는 틀릴까봐 두려워서 영어로 말을 못했지만 지금은 틀려도 다시 할수있다는 자신감이 생겼다", "dm": "confidence", "w": 5}, {"c": "4", "t": "예전에는 내가 영어로 말하고 틀린 것이 있다고 느껴도 고치기 싫었는데, 고치는 과정을 겪으면서 영어 실력이 더 향상된 것 같다", "dm": "speaking", "w": 5}, {"c": "8", "t": "3월에는 영어로 내 자신을 표현하는 것이 뭔가 어색한 느낌이 있었는데 계속 영어를 쓰다보니 자신감이 생긴것 같다", "dm": "speaking", "w": 5}, {"c": "1", "t": "3월:영어 싫다 지금: 완전 싫다.근데 시험 잘 봤어서 좋았다 (애증 관계?)", "dm": "confidence", "w": 4}, {"c": "2", "t": "3월에는 have p.p를 학원에서 가르쳐주어도 잘하지못햇는데 선생님의 수업을 들으니 잘하게 되엇다", "dm": "achieve", "w": 4}, {"c": "3", "t": "3월에는 영어에 대해 좀 거부감이 들었었지만 현재는 딱히 그런 생각은 들지 않고 편안하게 수업을 듣고 있는 것 같다", "dm": "etc", "w": 4}, {"c": "4", "t": "전에는 어떻게든 안틀리고 정확하게 말할려고 했지만 직금은 틀리든 말든 알아들었으면 됐다는 마인드로 말한다", "dm": "etc", "w": 4}, {"c": "5", "t": "영어에 대해 크게 중요성을 못느꼈던 것 같은데 지금은 얼마나 중요한지 깨달음", "dm": "etc", "w": 4}, {"c": "2", "t": "옛날에는 막상 영어로 말하면 너무 떨렸는데 이제는 떨리지 않고 자신감이 생겼다", "dm": "speaking", "w": 3}, {"c": "2", "t": "영어가 어법적으로 멀게 느껴졌는데 지금은 조금 편해진거같다", "dm": "grammar", "w": 3}, {"c": "3", "t": "영어로 표현하는 방법에 대해 많이 알게 되어서 영어로 표현하는 것에 조금 자신감이 생긴거 같다", "dm": "speaking", "w": 3}, {"c": "4", "t": "3월에는 영어 수업을 원래 좋아하지 않았는데 이제는 영어가 재미가 있다", "dm": "achieve", "w": 3}, {"c": "4", "t": "3월보다 표현하는게 자연스러워 진것같다", "dm": "speaking", "w": 3}, {"c": "5", "t": "3월에는 방표도 잘 못했는데 지금은 어느정도 발표를 할수있다", "dm": "speaking", "w": 3}, {"c": "5", "t": "3월보다 영어에 대한 이해가 깊어진 것 같다", "dm": "reading", "w": 3}, {"c": "6", "t": "전에는 영어가 어려웠는데 지금은 전보다 덜 어렵다", "dm": "etc", "w": 3}, {"c": "2", "t": "그전에는 영어가하기싫었는데 이제는 영어가 재밌어졌다", "dm": "confidence", "w": 3}, {"c": "2", "t": "영어 문장을 쓸 때 문장을 더 튼실하게 만들고 더 자세히 쓰도록 고치는 방법을 알게되었다", "dm": "etc", "w": 2}, {"c": "2", "t": "영어로 표현할 때 조금 더 다양하고 구체적인 표현을 사용할 수 있게 된 것 같다", "dm": "speaking", "w": 2}, {"c": "3", "t": "영어로 말하는것에대한 자신감이생겼다", "dm": "speaking", "w": 2}, {"c": "3", "t": "아주 조금 자신감을 키우게 되었다(국제교류부 포함)", "dm": "confidence", "w": 2}, {"c": "3", "t": "영어로 말하는게 생각보다 입에 더 잘 붙는 거 같아서 종종 영어를 섞어쓰게 되었다", "dm": "speaking", "w": 2}, {"c": "3", "t": "영어를 말할때 좀더 자신감이 생겼다", "dm": "confidence", "w": 2}, {"c": "4", "t": "영어로 몰하기를 할때 좀 더 자신감이 생겼다", "dm": "confidence", "w": 2}, {"c": "4", "t": "영어를 쓰려고 할때 더 자신감이 생겼다", "dm": "confidence", "w": 2}, {"c": "6", "t": "영어로 표현할 때 자신감이 생겨 더욱 다양한 표현들을 사용함", "dm": "speaking", "w": 2}, {"c": "6", "t": "영어를 써서 말할 때 이게 문법적으로 맞나? 라고 되돌아보게 되는 습관이 생겼다", "dm": "grammar", "w": 2}, {"c": "6", "t": "영어로 표현하는게 심적?부덤이 커지긴 했는데 문법상으로는 맞는 문장을 뱉을 수 있게되었다! 영어실력이 더 는 것 같다", "dm": "grammar", "w": 2}, {"c": "6", "t": "영어로 내가 하고 싶은 말을 하는데 좀 더 자신감이 생긴 것 같다", "dm": "confidence", "w": 2}, {"c": "7", "t": "내가 한국어로 생각하고 있는 것을 영어로 표현하고 싶은 마음은 생긴 것 같다", "dm": "speaking", "w": 2}, {"c": "8", "t": "원래는 그냥 과목 중 하나 혹은 그보다 조금 이상이라고 생각했었는데 이제는 여러 사람을 연결해주는 열쇠라고 생각되었다", "dm": "etc", "w": 2}, {"c": "1", "t": "영어에 대한 자신감이 조금 생겼다", "dm": "confidence", "w": 1}, {"c": "1", "t": "조금 더 자신감이 생겼다", "dm": "confidence", "w": 1}, {"c": "1", "t": "영어에 대한 개념을 더 잘알게되었다", "dm": "etc", "w": 1}, {"c": "1", "t": "조금 영어 말하때 자신감이 늘었다", "dm": "speaking", "w": 1}, {"c": "1", "t": "영어로 표현 할수 있는 능력이 오른거 같다", "dm": "speaking", "w": 1}, {"c": "1", "t": "자신감이 생겼다", "dm": "confidence", "w": 1}, {"c": "1", "t": "자신감이 더 생겼다", "dm": "confidence", "w": 1}, {"c": "1", "t": "영어 문장 쓰는것에 자신감이 생김", "dm": "confidence", "w": 1}, {"c": "1", "t": "영어가 더 영어로(?) 받아들여졌다", "dm": "etc", "w": 1}, {"c": "1", "t": "영어로 말하는것이 좀 더 괜찮아졌다", "dm": "speaking", "w": 1}, {"c": "2", "t": "조금 더 자신감이 생겼다", "dm": "confidence", "w": 1}, {"c": "2", "t": "자신감이 조금 더 붙었다", "dm": "confidence", "w": 1}, {"c": "2", "t": "조금 더 구체적이게 표현하게된것 같다", "dm": "speaking", "w": 1}, {"c": "2", "t": "내 영어 실력에 더 확신을 가지고 더 자신있게 말할 수 있다", "dm": "confidence", "w": 1}, {"c": "3", "t": "영어로 표현할 때 문법적인 면에서 올바른지 머릿속으로 조금 더 점검해본다", "dm": "grammar", "w": 1}, {"c": "3", "t": "내 생각을 검토 하는 것이 나아 진 것 같다", "dm": "etc", "w": 1}, {"c": "3", "t": "더 자신감이 생겼다", "dm": "confidence", "w": 1}, {"c": "3", "t": "자신감이 높아진 것 같습니다", "dm": "confidence", "w": 1}, {"c": "4", "t": "영어표현을 익힐 수 있었고, 표현하는게 편해졌다", "dm": "speaking", "w": 1}, {"c": "4", "t": "다양한 활동을 해본 덕분에 어떻게 영어를 공부해야 될지 알게됨", "dm": "etc", "w": 1}, {"c": "4", "t": "여러단어를 읽고 뜻을 말할 수 있다", "dm": "reading", "w": 1}, {"c": "5", "t": "영어를 해석할때 줄줄이 해석할수있게됐다", "dm": "reading", "w": 1}, {"c": "5", "t": "공부를 할때 단어를 익히는게 중요하다는 생각을했다", "dm": "vocab", "w": 1}, {"c": "5", "t": "영어를 좀 더 잘하고 싶어졌고 영어가 중요하다고 생각이 들었다", "dm": "achieve", "w": 1}, {"c": "5", "t": "문법을 더 신경써서 표현하는것같습니다", "dm": "grammar", "w": 1}, {"c": "5", "t": "조금더 자신감이 생겼다", "dm": "confidence", "w": 1}, {"c": "5", "t": "복합적인 단어와 문장 표현을 더욱 더 잘 하게 되었어요", "dm": "vocab", "w": 1}, {"c": "5", "t": "문법이랑 단어가 잘 안됐는데 이젠 이해가 좀 되긴해요", "dm": "grammar", "w": 1}, {"c": "5", "t": "좀더 자신감을 얻었다", "dm": "confidence", "w": 1}, {"c": "5", "t": "더욱 자신감 있게 말 할수있다", "dm": "speaking", "w": 1}, {"c": "5", "t": "그래도 영어로 표현을 해보려고 노력을 한다", "dm": "speaking", "w": 1}, {"c": "5", "t": "영어에대한 자신감이 생겼다", "dm": "confidence", "w": 1}, {"c": "6", "t": "배운 문법을 입력하는 법과 출력하고 활용하는 법을 알게 되었다", "dm": "grammar", "w": 1}, {"c": "6", "t": "영어를 대하는 태도가 더 긍정적으로 변했다", "dm": "etc", "w": 1}, {"c": "6", "t": "전보다 자신감이 생겼다", "dm": "confidence", "w": 1}, {"c": "6", "t": "영어로 말하는 것을 좀 더 조심히 하게된 것 같다", "dm": "speaking", "w": 1}, {"c": "6", "t": "내가 어려워 하던 문법을 더 자세하게 알 수 있었다", "dm": "grammar", "w": 1}, {"c": "6", "t": "영어를 언어로 받아들이는 느낌을 받았다", "dm": "etc", "w": 1}, {"c": "7", "t": "영어로 말을 하기 전 문법을 고려하며 생각 할 수 있게되었다", "dm": "grammar", "w": 1}, {"c": "7", "t": "영어로 말하는 것에 대한 부담이 줄어들었다", "dm": "speaking", "w": 1}, {"c": "7", "t": "조금 더 영어에 자신감이 생겼다?", "dm": "confidence", "w": 1}, {"c": "7", "t": "조금 더 자신감을 가졌다", "dm": "confidence", "w": 1}, {"c": "7", "t": "자신감이 생김", "dm": "confidence", "w": 1}, {"c": "8", "t": "이제는 영어를 좀 더 잘하게 되었다", "dm": "achieve", "w": 1}, {"c": "8", "t": "자신감이 생김", "dm": "confidence", "w": 1}, {"c": "8", "t": "조금 더 자신감이 생겼다", "dm": "confidence", "w": 1}, {"c": "8", "t": "자신감있게 말할수있게 된것같다", "dm": "confidence", "w": 1}, {"c": "8", "t": "더 자신있게 말할 수 있게 된 것 같다", "dm": "confidence", "w": 1}, {"c": "8", "t": "자신감이 생겼다", "dm": "confidence", "w": 1}, {"c": "8", "t": "살짝의 자신감..?", "dm": "confidence", "w": 1}, {"c": "6", "t": "더 자신감 있어졌다", "dm": "confidence", "w": 1}, {"c": "1", "t": "영어가 쉬워졌다", "dm": "achieve", "w": 0}, {"c": "1", "t": "영어 발음 실력", "dm": "vocab", "w": 0}, {"c": "1", "t": "영어의 단어와 문장의해석", "dm": "reading", "w": 0}, {"c": "1", "t": "영어실력이 더 좋아졌다", "dm": "confidence", "w": 0}, {"c": "1", "t": "영어의 대한 문법이 더 늘었다", "dm": "grammar", "w": 0}, {"c": "2", "t": "문법 독해능력이 높아진것같다", "dm": "grammar", "w": 0}, {"c": "2", "t": "그럭저럭", "dm": "etc", "w": 0}, {"c": "2", "t": "문법만 공부하는 것이 줄었다", "dm": "grammar", "w": 0}, {"c": "2", "t": "영어를 약간 더잘한다", "dm": "etc", "w": 0}, {"c": "2", "t": "말하기,쓰기가 더 나아진것같다", "dm": "speaking", "w": 0}, {"c": "2", "t": "문법에 대해 더 믾이 알게 되었다", "dm": "grammar", "w": 0}, {"c": "2", "t": "영어로 표현하는 것이 더편해졌다", "dm": "speaking", "w": 0}, {"c": "3", "t": "더 잘해졌다", "dm": "etc", "w": 0}, {"c": "3", "t": "영어로 말하는 회화실력이 는것같다", "dm": "speaking", "w": 0}, {"c": "3", "t": "영어로 말을 더 많이 하게 되엇다", "dm": "etc", "w": 0}, {"c": "4", "t": "영어문장을 좀더 잘 쓸수있게됨", "dm": "etc", "w": 0}, {"c": "4", "t": "더 흥미롭고 자신 있어졌다", "dm": "confidence", "w": 0}, {"c": "4", "t": "영어를 더 못해짐", "dm": "etc", "w": 0}, {"c": "5", "t": "공부를 해야겠다", "dm": "etc", "w": 0}, {"c": "5", "t": "처음엔 영어를 제일 못해서 자신감이없었는데 지금은 괜찮아진것같다", "dm": "none", "w": 0}, {"c": "5", "t": "영어가 좀더 자연스러워 졌다", "dm": "etc", "w": 0}, {"c": "5", "t": "더 적극적으로", "dm": "confidence", "w": 0}, {"c": "5", "t": "업5음", "dm": "etc", "w": 0}, {"c": "6", "t": "전보다 문장을 쓰는게 수월해졌다", "dm": "etc", "w": 0}, {"c": "6", "t": "더 잘해졋다", "dm": "etc", "w": 0}, {"c": "6", "t": "조금 더 노력할려한다", "dm": "etc", "w": 0}, {"c": "6", "t": "조금더 문법에 자신이 생긴거같다", "dm": "grammar", "w": 0}, {"c": "6", "t": "조금이나마 더 자신 있어 진거같다", "dm": "confidence", "w": 0}, {"c": "6", "t": "학기 초에는 살짝 꺼려지는 것도 없지않아 있었는데 지금은 훨씬 편해진 것 같다", "dm": "none", "w": 0}, {"c": "6", "t": "좀더 열심히 하게 되었다", "dm": "etc", "w": 0}, {"c": "7", "t": "틀리는걸 조금덜 무서워함", "dm": "etc", "w": 0}, {"c": "7", "t": "더 소심해짐", "dm": "etc", "w": 0}, {"c": "7", "t": "아주 조금 나아짐", "dm": "etc", "w": 0}, {"c": "7", "t": "조금 틀리더라도 말한다", "dm": "etc", "w": 0}, {"c": "7", "t": "영어로 말하는것이 더 좋아졌다", "dm": "speaking", "w": 0}, {"c": "7", "t": "영어를 더 열심히 한다", "dm": "etc", "w": 0}, {"c": "8", "t": "영어를 잘 할수 있게 되었다", "dm": "etc", "w": 0}, {"c": "8", "t": "좀 더 자신이 늘었다", "dm": "confidence", "w": 0}, {"c": "8", "t": "X", "dm": "etc", "w": 0}, {"c": "8", "t": "영어실력이 늘었음", "dm": "achieve", "w": 0}, {"c": "2", "t": "달라지지 않음", "dm": "etc", "w": 0}, {"c": "6", "t": "영어에 대한 지식이 별로 없었는데 선생님께서 게임으로 영어 연습을 시켜주셔서 그것때문에 지식이 더 많아 진것 같다", "dm": "none", "w": -2}, {"c": "8", "t": "영어로 표현할 때 문법을 틀리는 것에 조금 두려움이 없어졌다", "dm": "none", "w": -3}, {"c": "1", "t": "모르겠다", "dm": "none", "w": -4}, {"c": "1", "t": "없음", "dm": "none", "w": -4}, {"c": "1", "t": "없음", "dm": "none", "w": -4}, {"c": "1", "t": "없음", "dm": "none", "w": -4}, {"c": "1", "t": "없음", "dm": "none", "w": -4}, {"c": "1", "t": "없음", "dm": "none", "w": -4}, {"c": "1", "t": "크게 달라진거없는것같다", "dm": "none", "w": -4}, {"c": "1", "t": "없음", "dm": "none", "w": -4}, {"c": "1", "t": "없음", "dm": "none", "w": -4}, {"c": "1", "t": "없음", "dm": "none", "w": -4}, {"c": "2", "t": "없는거같다", "dm": "none", "w": -4}, {"c": "2", "t": "없음", "dm": "none", "w": -4}, {"c": "2", "t": "영어에는 없었던 압박감이 생겼다", "dm": "none", "w": -4}, {"c": "2", "t": "없", "dm": "none", "w": -4}, {"c": "2", "t": "없음", "dm": "none", "w": -4}, {"c": "2", "t": "없음", "dm": "none", "w": -4}, {"c": "3", "t": "모르겠다", "dm": "none", "w": -4}, {"c": "3", "t": "없다", "dm": "none", "w": -4}, {"c": "4", "t": "없음", "dm": "none", "w": -4}, {"c": "4", "t": "없음", "dm": "none", "w": -4}, {"c": "4", "t": "없음", "dm": "none", "w": -4}, {"c": "4", "t": "없음", "dm": "none", "w": -4}, {"c": "4", "t": "없다", "dm": "none", "w": -4}, {"c": "4", "t": "없읍", "dm": "none", "w": -4}, {"c": "4", "t": "없음", "dm": "none", "w": -4}, {"c": "4", "t": "없음", "dm": "none", "w": -4}, {"c": "4", "t": "없음", "dm": "none", "w": -4}, {"c": "4", "t": "없음", "dm": "none", "w": -4}, {"c": "4", "t": "없음", "dm": "none", "w": -4}, {"c": "5", "t": "없음", "dm": "none", "w": -4}, {"c": "5", "t": "없음", "dm": "none", "w": -4}, {"c": "5", "t": "없음", "dm": "none", "w": -4}, {"c": "5", "t": "없음", "dm": "none", "w": -4}, {"c": "5", "t": "없음", "dm": "none", "w": -4}, {"c": "5", "t": "없음", "dm": "none", "w": -4}, {"c": "6", "t": "없음", "dm": "none", "w": -4}, {"c": "6", "t": "없음", "dm": "none", "w": -4}, {"c": "6", "t": "없음", "dm": "none", "w": -4}, {"c": "6", "t": "없음", "dm": "none", "w": -4}, {"c": "6", "t": "없음", "dm": "none", "w": -4}, {"c": "6", "t": "없다", "dm": "none", "w": -4}, {"c": "7", "t": "없음", "dm": "none", "w": -4}, {"c": "7", "t": "없음", "dm": "none", "w": -4}, {"c": "7", "t": "전보다는 자신이 없어진것 같다", "dm": "none", "w": -4}, {"c": "7", "t": "없음", "dm": "none", "w": -4}, {"c": "7", "t": "없음", "dm": "none", "w": -4}, {"c": "7", "t": "없음", "dm": "none", "w": -4}, {"c": "7", "t": "없음", "dm": "none", "w": -4}, {"c": "7", "t": "없음", "dm": "none", "w": -4}, {"c": "7", "t": "없음", "dm": "none", "w": -4}, {"c": "7", "t": "없습니다", "dm": "none", "w": -4}, {"c": "8", "t": "없음", "dm": "none", "w": -4}, {"c": "8", "t": "없음", "dm": "none", "w": -4}, {"c": "8", "t": "없음", "dm": "none", "w": -4}, {"c": "8", "t": "없음", "dm": "none", "w": -4}, {"c": "8", "t": "없다", "dm": "none", "w": -4}, {"c": "8", "t": "없음", "dm": "none", "w": -4}, {"c": "2", "t": "없음", "dm": "none", "w": -4}, {"c": "2", "t": "없음", "dm": "none", "w": -4}, {"c": "3", "t": "변화 없음", "dm": "none", "w": -4}], "s3themes": [["growth", "성장·상승"], ["value", "가치·자산"], ["challenge", "도전·모험"], ["fun", "재미·놀이"], ["hard", "어려움·부담"], ["plain", "평범·기타"]], "s2doms": [["none", "변화 없음"], ["grammar", "문법"], ["reading", "독해·해석"], ["vocab", "어휘·발음"], ["speaking", "말하기·표현"], ["confidence", "자신감·태도"], ["achieve", "실력·성적 향상"], ["etc", "기타"]], "act": {"우리 반 설문조사": [{"c": "3", "t": "전에 우리가 했던 설문에 대한 거 였기도하고 중간때에도 이런 유형의 문제가 있었는데 이번에도 있어서 좋았고 시험을 재미있게 풀 수있었다"}, {"c": "2", "t": "25.옥타비오쌤이랑 한명씩 돌아가면서 어디가고싶은지 말하는거 26뉴욕관련 본문 설문했던거 잘 모르겟다"}, {"c": "6", "t": "18: 수업시간에 배웠던 문제여서 11: 배운 문법이 생각나서 26: 조사했던 내용이 생각나서"}, {"c": "2", "t": "26번: 4단원 본문을 읽고 어떤 이야기가 가장재미있었는지 투표한게 생각나서"}, {"c": "2", "t": "26번/학생 수가 200명이 아닌 101명이어서 가장 혼란스러웠고"}, {"c": "2", "t": "26. 마지막문젠데 우리가 설문했던걸로 해서 기억이 남았다"}, {"c": "6", "t": "26번은 우리가 지문에 대해 설문을 한 것과 관련이 있었다"}, {"c": "2", "t": "26. ○○이의 영국 여행에서 신기햇던 점 설문조사"}, {"c": "2", "t": "26번 우리가 설문한 것으로 사험 문제가 나와서"}, {"c": "2", "t": "26. 우리가 설문 조사한 것이 시험에 나와서"}, {"c": "6", "t": "26번 / 학생이 설문한 결과가 문제에 나와서"}, {"c": "2", "t": "26번/수업에서 한 설문이 문제에 적용 되서"}, {"c": "6", "t": "26번. 지문을 읽느라 문제를 잊어서 틀렸다"}, {"c": "6", "t": "26번! 수업시간에 설문했던게샟각났다!"}, {"c": "3", "t": "26. 우리가 설문조사한 것이 나와서"}, {"c": "3", "t": "26번. 설문조사 한게 시험에 나왔다"}, {"c": "2", "t": "26번/수업시간에 한 설문이 나와서"}, {"c": "3", "t": "26.수업 내용에 관련된 자료이다"}, {"c": "6", "t": "26-본문에서 흥미로운 부분 설문"}, {"c": "6", "t": "26번 / 학생이 설문한 결과여서"}, {"c": "3", "t": "26번 - 우리가 했던 설문조사"}, {"c": "2", "t": "내가 설문했던 결과가 나와서"}, {"c": "3", "t": "26번(설문조사 했던 것)"}, {"c": "6", "t": "26번. 설문조사가 기억남"}, {"c": "6", "t": "학생들이 설문한게 나와서"}, {"c": "3", "t": "26번-4과 본문 설문"}, {"c": "3", "t": "26번 수업에관한내용"}, {"c": "6", "t": "26번 설문조사"}, {"c": "3", "t": "26 - 설문"}, {"c": "2", "t": "26번 설문"}, {"c": "3", "t": "26번:설문"}], "원어민 회화·말하기": [{"c": "2", "t": "25.옥타비오쌤이랑 한명씩 돌아가면서 어디가고싶은지 말하는거 26뉴욕관련 본문 설문했던거 잘 모르겟다"}, {"c": "2", "t": "25번인가..? 왜냐하면 길 찾기? 그거 회화 시간에 많이 해봐서"}, {"c": "2", "t": "25번: 회화시간에 길을 묻고 답하는 수업이 기억났음"}, {"c": "3", "t": "25번 - 원어민 선생님과 한 수업과 비슷하다"}, {"c": "6", "t": "25번 / 회화 수업할때 풀어본 문제여서"}, {"c": "6", "t": "25번 문제는 서비스 문제인데 틀려서"}, {"c": "3", "t": "25. 회화쌤과 한 수업이 생각났다"}, {"c": "2", "t": "1번/회화시간에 한 내용이 나와서"}, {"c": "2", "t": "2번/회화시간에 한 내용이 나와서"}, {"c": "2", "t": "1 회화 시간과 본문 내용 읽기"}, {"c": "2", "t": "회화시간 원어민 선생님과의 수업"}, {"c": "3", "t": "25번-옥타비오 쌤 미니게임"}, {"c": "2", "t": "25번 정말쉬었기때문에"}, {"c": "2", "t": "현재완료 문법수업 25"}, {"c": "3", "t": "25번(회화시간 게임)"}, {"c": "6", "t": "25 말하기 활동"}, {"c": "2", "t": "25번 쉬웠다"}, {"c": "2", "t": "25번 길찾기"}, {"c": "2", "t": "길찾는 수업"}, {"c": "3", "t": "2=회화수업"}, {"c": "6", "t": "2번은 회화"}], "본문 읽기·추론": [{"c": "3", "t": "23번. 추론 문제가 되게 재미있었다. 내가 읽는게 다가 아니라 내가 읽은것을 풀어서 푸는 상황이 재미있었다"}, {"c": "2", "t": "25.옥타비오쌤이랑 한명씩 돌아가면서 어디가고싶은지 말하는거 26뉴욕관련 본문 설문했던거 잘 모르겟다"}, {"c": "2", "t": "26번: 4단원 본문을 읽고 어떤 이야기가 가장재미있었는지 투표한게 생각나서"}, {"c": "2", "t": "위장술이 우리에게 주는 교훈에 대한 문제는 시험대비를 하면서도"}, {"c": "2", "t": "런던 여행 본문을 할 때 했던 것이 문제로 나왔기 때문이다"}, {"c": "2", "t": "23번- 영어 본문에서 교훈을 얻어내는 것이 신기했었어서"}, {"c": "2", "t": "23번 지난번보다 문장의 수준과 내용이더 어려워진거같다"}, {"c": "2", "t": "본문 빈칸 채우기 문제여서 본문 수업한 내용이 기억났다"}, {"c": "3", "t": "빈칸 추론 문제 선생님께서 강조하신 단어가 떠올랏다"}, {"c": "3", "t": "23번 / 처음보는 문제였고 가장 헷갈렸던 문제라서"}, {"c": "2", "t": "8번: 3단원 본문을 시험 전날 공부한게 생각나서"}, {"c": "6", "t": "위장술을 사용하는 여러 동물들의 특징 살펴보기"}, {"c": "3", "t": "23번인다 부엉이의 능력을 말하는 문제"}, {"c": "3", "t": "23.결론을 도출하는 것이 참신헸다"}, {"c": "3", "t": "4번 - 본문을 읽은 기억이 있다"}, {"c": "6", "t": "26-본문에서 흥미로운 부분 설문"}, {"c": "2", "t": "4번- 본문에서 접속사 세모치기"}, {"c": "2", "t": "1 회화 시간과 본문 내용 읽기"}, {"c": "3", "t": "8번-동물 설명해야하는 수행"}, {"c": "6", "t": "23번 중간고사때 안나와서"}, {"c": "6", "t": "14번은 본문을 읽었었고"}, {"c": "3", "t": "26번-4과 본문 설문"}, {"c": "2", "t": "23번/3과 본문"}, {"c": "2", "t": "23번 어려워서"}, {"c": "6", "t": "12번 글 읽기"}, {"c": "2", "t": "17번 본문"}, {"c": "6", "t": "본문전치사!"}], "문법 (현재완료·관계대명사)": [{"c": "6", "t": "19번. 처음 읽었을때는 다 맞는 것 같아서 많이 헷갈렸었다 그렇게 몇번을 읽다보니 현재시제는 특정과거를 지칭하는 것과 함께 쓰일수 없다는 것을 스스로 깨닿고 결국"}, {"c": "6", "t": "18: 수업시간에 배웠던 문제여서 11: 배운 문법이 생각나서 26: 조사했던 내용이 생각나서"}, {"c": "3", "t": "19번/아는 문제인데 글을 제대로 보지 않았기도 했고 많이 풀어봤던 문제인데 틀린거 같아서"}, {"c": "3", "t": "19. 선생님이 중요하다고 말한 현재진행형이 안돼는 것이 나와서"}, {"c": "3", "t": "19번 이유:문법을 못한 나에게 실망했던 문제이기 때문이다"}, {"c": "6", "t": "19번 글씨를 제대로 안읽어서 틀릴뻔했늩데 고쳐서 맞았다!"}, {"c": "3", "t": "19. 꼼꼼히 보지 않아서 틀렸던 문제라서 기억에 남는다"}, {"c": "2", "t": "19.현재완료라는 것을 알 수 있는 단어 수업을 해서"}, {"c": "2", "t": "11 .선행사를 보고 동사를 고르는 수업을 해서"}, {"c": "6", "t": "19번. 문장 앞부분을 확인할 생각을 안했어서"}, {"c": "3", "t": "11번- 수업시간에 단어를 블루킷으로 외웠다"}, {"c": "6", "t": "19번은 문법을 배운 수업과 관련되어 있고"}, {"c": "2", "t": "11번 선생님이 강조하셨던 문제가 나와서"}, {"c": "6", "t": "19번 인풋 아웃풋했던 활동이 생각났다!"}, {"c": "6", "t": "현재완료와 관계대명사 등 여러 문법 수업"}, {"c": "3", "t": "19번(현재완료를 쓸때 쓰지 못하는것"}, {"c": "2", "t": "11. 수행때틀렷던 선행사 s맞추기"}, {"c": "3", "t": "19번 - 현재완료랑 과거시제 비교"}, {"c": "2", "t": "11번- 관계대명사 수일치 수업"}, {"c": "3", "t": "19. 문법이 어렵게 나와서"}, {"c": "2", "t": "19번 마지막까지 고민하다"}, {"c": "3", "t": "19번 / 문제가 햇갈려서"}, {"c": "6", "t": "19번. 문법수업이 기억남"}, {"c": "2", "t": "19번-현재완료시제 수업"}, {"c": "3", "t": "19번 어이 없이 틀려서"}, {"c": "2", "t": "과거시제가 들어간 문제"}, {"c": "2", "t": "현재완료 문법수업 25"}, {"c": "2", "t": "미니 모의고사 19"}, {"c": "2", "t": "11번/ 관계대명사"}, {"c": "6", "t": "19번은 문법수업때"}, {"c": "3", "t": "19번:4과 어법"}, {"c": "2", "t": "19 문법 수업"}, {"c": "2", "t": "19번/현재완료"}, {"c": "3", "t": "19번 틀려서"}, {"c": "6", "t": "14번. 11"}, {"c": "2", "t": "현재완료 등"}], "단어 게임 (블루킷·클래스키드)": [{"c": "2", "t": "19.현재완료라는 것을 알 수 있는 단어 수업을 해서"}, {"c": "3", "t": "빈칸 추론 문제 선생님께서 강조하신 단어가 떠올랏다"}, {"c": "3", "t": "11번- 수업시간에 단어를 블루킷으로 외웠다"}, {"c": "3", "t": "18번- 지난 중간고사에 감정 단어를 외웠다"}, {"c": "3", "t": "7. 클래스 키드에서 외운 단어가 나와서"}, {"c": "6", "t": "19번 인풋 아웃풋했던 활동이 생각났다!"}, {"c": "3", "t": "7번. 블루킷에서 나온 문제가 나왔다"}, {"c": "6", "t": "7번 블루킷했던게 생각이 났다!"}, {"c": "2", "t": "7번 블루킷으로 많이 해서"}, {"c": "2", "t": "6. 블루킷 영영풀이 단어"}, {"c": "3", "t": "7번 - 영어퀴즈 문제"}, {"c": "2", "t": "수업시간에 외운 단어"}, {"c": "6", "t": "5~6 수업..?"}, {"c": "6", "t": "7번은 블루킷"}, {"c": "6", "t": "7번 블루킷"}], "시험대비·모의고사": [{"c": "2", "t": "위장술이 우리에게 주는 교훈에 대한 문제는 시험대비를 하면서도"}, {"c": "3", "t": "18 - 시험 보기 전에 했던 대비 프린트"}, {"c": "6", "t": "22번 프린트로 5형식 공부"}, {"c": "3", "t": "22.=모의고사 문제"}, {"c": "2", "t": "미니 모의고사 19"}], "감정 어휘": [{"c": "6", "t": "18: 수업시간에 배웠던 문제여서 11: 배운 문법이 생각나서 26: 조사했던 내용이 생각나서"}, {"c": "3", "t": "18번- 지난 중간고사에 감정 단어를 외웠다"}, {"c": "3", "t": "18 - 시험 보기 전에 했던 대비 프린트"}, {"c": "6", "t": "18번은 감정과 관련하여 수업을 했고"}, {"c": "6", "t": "18번 감정태그 붙히기"}]}, "sig": {"achieve": [{"c": "6", "t": "50%, 시험기간에 항상 영어는 꾸준히 해서 100점을 맞으려고 노력하는데, 중간고사때는 100점을 쉽게 맞았는데, 이번에는 하나를 틀리게 되어서 기분이 나쁜건 아니지만, 많이 아쉽다... 그리고, 가장 중요한 사실은 영어학원 원장선생님이 100점 맞은 친구들끼리 놀러", "w": 9}, {"c": "6", "t": "중간때와 마찬가지로 100을 맞아서 98정도 만족한다. 중간보다는 조금 더 어렵게 느껴졌지만 내가 그정도로 열심히 해서 맞은거라고 생각해서 기분이 좋았다 나머지 2퍼는 내가 문법에 약해서 11번, 19번에서 살짝 헷갈렸었던 게 아쉬웠다", "w": 7}, {"c": "6", "t": "100점, 90% 중간때 영어 시험을 치며 어렵다고 생각이 들어서 이번에는 쉽게 풀 수 있기를 바라며 열심히 영어 공부를했는데 여전히 헷갈리는 문제가 많았던 것 같아서 좀 아쉽다... 그래도 점수가 잘 나와서 기분이 좋다!", "w": 6}, {"c": "2", "t": "100/굉장히 만족함/약간의 어려움이 있었지만, 그 어려움을 이겨내고 100점을 받았기 때문이다", "w": 5}, {"c": "3", "t": "100%. 모든 문제네 대한 이유와 까닭을 알려주시는 것이 너무 신기했다. 많이 생각 하신것 같아서 시험 볼때 허무하게 시험보는것 같지 않아서 좋았다.", "w": 5}, {"c": "3", "t": "26번,전에 우리가 했던 설문에 대한 거 였기도하고 중간때에도 이런 유형의 문제가 있었는데 이번에도 있어서 좋았고 시험을 재미있게 풀 수있었다", "w": 5}, {"c": "2", "t": "100% 왜냐하면 내가받아본 영어 시험 점수증에서 가장 높았기때문에", "w": 4}, {"c": "2", "t": "90.134%, 내가 두 문제만 더 맞추어도 100점일 수 있었기 때문이다.", "w": 4}, {"c": "3", "t": "90% / 100점이긴해도 푸는동안 헷갈렸던 문제들이 있어서 다음 시험에는 더 잘하고 싶다", "w": 4}, {"c": "6", "t": "100 , 96점이면 잘본거라 생각하기 때문이다", "w": 4}, {"c": "6", "t": "25프로 점수가 낮아서 정말 만족하지못하고......점수가 저번보다 오르길 바랬는데 낮아져서 너무 속상했다", "w": 4}, {"c": "6", "t": "95, 헷갈리던 문제를 틀려서 틀린문제에 대한 아쉬움은 없지만 그래도 이번에 열심히 했기에 기대했는데 100을 못받아서 아쉽다.", "w": 4}, {"c": "6", "t": "시험 점수 100점. 만족도 100%. 23번이 너무 어렵게 느껴졌지만 결국 맞춰서 행복했다.", "w": 4}, {"c": "2", "t": "100%!!!!저번에 83점이었는데 95점이 되었습니다!!", "w": 3}, {"c": "2", "t": "100%: 문제 종류가 다양하고 난이도가 적당했다", "w": 3}, {"c": "2", "t": "100% 내가 공부한 만큼 시험 결과가 좋은 것 같아서.", "w": 3}, {"c": "2", "t": "79점, 90%, 지금까지 영어 시험을 본 점수중 가장 높은 점수이기 때문에, 다만 높은점수는 아니기에", "w": 3}, {"c": "3", "t": "100(열심히 공부를 해 시험을 봐 100점을 받아서)", "w": 3}, {"c": "3", "t": "40%/ 다 맞을 수 있었는데 아쉽게 아는 문제 2문제를 틀렸기 때문에 딱히 만족하지는 않는다.", "w": 3}, {"c": "6", "t": "0,20번 문제를 2번에서 1번으로 고치지만 않았으면 100점인데 고쳐서 만족하지 못한다", "w": 3}, {"c": "6", "t": "만족도: 75 / 쫌.. 틀렸다 100점 맞으려 했는데 아쉬웠다.", "w": 3}, {"c": "2", "t": "100% 100점이라서", "w": 2}, {"c": "2", "t": "100, 100점을 맞아서 만족한다", "w": 2}, {"c": "2", "t": "100%, 100점을 맞아서", "w": 2}, {"c": "3", "t": "100 재밋어서", "w": 2}, {"c": "3", "t": "100% 다 맞아서", "w": 2}, {"c": "3", "t": "점수 : 53점 / 만족도 : 80% / 이유: 중간고사를 36점을 맞았는데 이번에는 53점 이라서", "w": 2}, {"c": "6", "t": "95점이고 50%. 이유는 중간고사처럼 문법을 또 틀려서 실망스러웠지만 아주매우엄청나게 어려웠던 23번을 맞춰서 나름대로 만족스럽다.", "w": 2}, {"c": "6", "t": "100%,100점이라서", "w": 2}, {"c": "6", "t": "87%, 중간고사 때보다는 점수가 올랐지만 실수를 조금 했기 때문이다", "w": 2}, {"c": "2", "t": "80 생각보다 5점 짜리 문제도 많이 맞췄고, 중간 때보다 점수가 많이 올라서 만족스럽다", "w": 1}, {"c": "2", "t": "98% 다 맞긴 했는데 중간에 고민을 많이 한게 있었음.", "w": 1}, {"c": "6", "t": "85%..? 중간고사 보다 12점이 올라서 좋았다. 공부한 보람이있어서 행복? 기뻤다.", "w": 1}, {"c": "6", "t": "80, 문제를 풀면서 난이도가 높지 않아도 확신을 가지기 힘들었다.", "w": 1}, {"c": "2", "t": "99,1개 틀려서", "w": 0}, {"c": "2", "t": "저번보다 더 많이 맞았고 영어가 젤 높음..", "w": 0}, {"c": "2", "t": "95, 2,3점짜리 문제 틀려서ㅠㅠ", "w": 0}, {"c": "3", "t": "중간보다 잘봤어용 만족도 90%", "w": 0}], "loop": [{"c": "3", "t": "26번,전에 우리가 했던 설문에 대한 거 였기도하고 중간때에도 이런 유형의 문제가 있었는데 이번에도 있어서 좋았고 시험을 재미있게 풀 수있었다", "w": 5}, {"c": "2", "t": "26. 마지막문젠데 우리가 설문했던걸로 해서 기억이 남았다", "w": 3}, {"c": "2", "t": "26번/학생 수가 200명이 아닌 101명이어서 가장 혼란스러웠고, 푸는데 오래결렸기 때문이다", "w": 3}, {"c": "6", "t": "26번 / 학생이 설문한 결과가 문제에 나와서", "w": 3}, {"c": "2", "t": "26번/수업에서 한 설문이 문제에 적용 되서", "w": 2}, {"c": "2", "t": "길문제? 25번인가..? 왜냐하면 길 찾기? 그거 회화 시간에 많이 해봐서", "w": 2}, {"c": "2", "t": "26번, 내가 설문했던 결과가 나와서", "w": 2}, {"c": "2", "t": "26번, 런던 여행 본문을 할 때 했던 것이 문제로 나왔기 때문이다", "w": 2}, {"c": "6", "t": "26번, 학생들이 설문한게 나와서", "w": 2}, {"c": "6", "t": "26번. 지문을 읽느라 문제를 잊어서 틀렸다.", "w": 1}, {"c": "3", "t": "26번 수업에관한내용", "w": 0}], "challenge": [{"c": "6", "t": "중간때와 마찬가지로 100을 맞아서 98정도 만족한다. 중간보다는 조금 더 어렵게 느껴졌지만 내가 그정도로 열심히 해서 맞은거라고 생각해서 기분이 좋았다 나머지 2퍼는 내가 문법에 약해서 11번, 19번에서 살짝 헷갈렸었던 게 아쉬웠다", "w": 7}, {"c": "2", "t": "23번, 위장술이 우리에게 주는 교훈에 대한 문제는 시험대비를 하면서도, 지금까지 시험을 보면서도 처음 봐서 처음에는 당황을 했다가 생각보다 쉬어서 쉽게 풀고 넘어갔기 때문이다", "w": 6}, {"c": "6", "t": "19번. 처음 읽었을때는 다 맞는 것 같아서 많이 헷갈렸었다 그렇게 몇번을 읽다보니 현재시제는 특정과거를 지칭하는 것과 함께 쓰일수 없다는 것을 스스로 깨닿고 결국 3번으로 맞은게 가장 기뻤고 기억에 남았다", "w": 6}, {"c": "6", "t": "100점, 90% 중간때 영어 시험을 치며 어렵다고 생각이 들어서 이번에는 쉽게 풀 수 있기를 바라며 열심히 영어 공부를했는데 여전히 헷갈리는 문제가 많았던 것 같아서 좀 아쉽다... 그래도 점수가 잘 나와서 기분이 좋다!", "w": 6}, {"c": "2", "t": "100/굉장히 만족함/약간의 어려움이 있었지만, 그 어려움을 이겨내고 100점을 받았기 때문이다", "w": 5}, {"c": "3", "t": "100%. 모든 문제네 대한 이유와 까닭을 알려주시는 것이 너무 신기했다. 많이 생각 하신것 같아서 시험 볼때 허무하게 시험보는것 같지 않아서 좋았다.", "w": 5}, {"c": "3", "t": "90% / 100점이긴해도 푸는동안 헷갈렸던 문제들이 있어서 다음 시험에는 더 잘하고 싶다", "w": 4}, {"c": "6", "t": "95, 헷갈리던 문제를 틀려서 틀린문제에 대한 아쉬움은 없지만 그래도 이번에 열심히 했기에 기대했는데 100을 못받아서 아쉽다.", "w": 4}, {"c": "2", "t": "23번- 영어 본문에서 교훈을 얻어내는 것이 신기했었어서", "w": 3}, {"c": "3", "t": "23번, 처음보는 문제 유형이었고 문제들 중에 가장 어려운 문제였던 것 같아서", "w": 3}, {"c": "3", "t": "23번 / 처음보는 문제였고 가장 헷갈렸던 문제라서", "w": 3}, {"c": "6", "t": "95점이고 50%. 이유는 중간고사처럼 문법을 또 틀려서 실망스러웠지만 아주매우엄청나게 어려웠던 23번을 맞춰서 나름대로 만족스럽다.", "w": 2}, {"c": "6", "t": "23번, 처음해보는 어려운 유형이어서", "w": 2}, {"c": "6", "t": "22 처음 나오는 형식이여서", "w": 2}, {"c": "2", "t": "23번 지난번보다 문장의 수준과 내용이더 어려워진거같다.", "w": 1}, {"c": "2", "t": "98% 다 맞긴 했는데 중간에 고민을 많이 한게 있었음.", "w": 1}, {"c": "2", "t": "23번, 가장 많이 안 풀어본 유형이라서 헷갈렸다", "w": 1}, {"c": "2", "t": "19번 마지막까지 고민하다 4번에서 3번으로 바꿧는데 맞췃당", "w": 1}, {"c": "3", "t": "90, 다 맞았긴 했는데 헷갈리는 문제가 있어서", "w": 1}, {"c": "6", "t": "80 풀때느 조금 어려웠는데 점수가 괜찮게 나와서", "w": 1}, {"c": "2", "t": "적절한말고르기 ,헷갈려서", "w": 0}, {"c": "2", "t": "23번 어려워서", "w": 0}, {"c": "2", "t": "19번, 어려워서", "w": 0}, {"c": "2", "t": "3번: 고민을 가장 오래함", "w": 0}, {"c": "3", "t": "3번. 5번 보기가 헷갈렸다.", "w": 0}, {"c": "6", "t": "23번, 너무 어려웠당", "w": 0}], "regret": [{"c": "6", "t": "50%, 시험기간에 항상 영어는 꾸준히 해서 100점을 맞으려고 노력하는데, 중간고사때는 100점을 쉽게 맞았는데, 이번에는 하나를 틀리게 되어서 기분이 나쁜건 아니지만, 많이 아쉽다... 그리고, 가장 중요한 사실은 영어학원 원장선생님이 100점 맞은 친구들끼리 놀러", "w": 9}, {"c": "6", "t": "100점, 90% 중간때 영어 시험을 치며 어렵다고 생각이 들어서 이번에는 쉽게 풀 수 있기를 바라며 열심히 영어 공부를했는데 여전히 헷갈리는 문제가 많았던 것 같아서 좀 아쉽다... 그래도 점수가 잘 나와서 기분이 좋다!", "w": 6}, {"c": "6", "t": "25프로 점수가 낮아서 정말 만족하지못하고......점수가 저번보다 오르길 바랬는데 낮아져서 너무 속상했다", "w": 4}, {"c": "6", "t": "95, 헷갈리던 문제를 틀려서 틀린문제에 대한 아쉬움은 없지만 그래도 이번에 열심히 했기에 기대했는데 100을 못받아서 아쉽다.", "w": 4}, {"c": "2", "t": "45, 공부 했던만큼 나오지 않아서 속상했는데 또 내가 그만큼 하지 않아서 그런거같다", "w": 3}, {"c": "3", "t": "40%/ 다 맞을 수 있었는데 아쉽게 아는 문제 2문제를 틀렸기 때문에 딱히 만족하지는 않는다.", "w": 3}, {"c": "3", "t": "19번 이유:문법을 못한 나에게 실망했던 문제이기 때문이다.", "w": 2}, {"c": "6", "t": "95점이고 50%. 이유는 중간고사처럼 문법을 또 틀려서 실망스러웠지만 아주매우엄청나게 어려웠던 23번을 맞춰서 나름대로 만족스럽다.", "w": 2}, {"c": "2", "t": "65 영어는 자신이 있었는데 너무 기대 이하이고 내 부족한부분을 느껴서 너무 후회된다.", "w": 1}, {"c": "2", "t": "70% 이번엔 정말 백점 맞을줄 알았는데 조금 아쉬웠다 ㅠㅠ", "w": 1}, {"c": "2", "t": "95, 2,3점짜리 문제 틀려서ㅠㅠ", "w": 0}, {"c": "6", "t": "60% 70점이 않니와서 아쉽다", "w": 0}, {"c": "6", "t": "23번 중간고사때 안나와서", "w": 0}, {"c": "6", "t": "23번, 틀려서. (ㅠㅠ..)", "w": 0}]}, "sigmeta": [["achieve", "성취·뿌듯", "🌟"], ["loop", "환류 인식", "🔁"], ["challenge", "도전·깨달음", "🧩"], ["regret", "아쉬움·후회", "💧"]]};
+const RATIONALE={
+ "우리 반 설문조사":"학생이 직접 질문을 만들고 데이터를 모아 <b>26번</b> 시험 문항으로 돌아왔어요. 스스로 묻고 파고든 경험이라 <b>탐구 주도성</b>으로 묶었습니다.",
+ "본문 읽기·추론":"본문에서 교훈·빈칸·접속사를 스스로 풀어내는 활동. 글을 읽고 숨은 의미를 <b>추론</b>하는 힘이라 <b>독해·추론</b>으로 봤어요.",
+ "원어민 회화·말하기":"옥타비오쌤과 길 묻기·말하기 활동. 실제로 입을 열어 영어로 <b>표현하고 소통</b>한 경험이라 <b>표현·소통</b>으로 묶었습니다.",
+ "문법 (현재완료·관계대명사)":"관계대명사·현재완료를 여러 번 만나며 규칙을 스스로 깨달음. 정확하게 쓰는 힘이라 <b>언어 정확성</b>으로 봤어요.",
+ "단어 게임 (블루킷·클래스키드)":"블루킷·클래스키드로 어휘를 반복 암기. 정확히 기억해 꺼내 쓰는 힘이라 <b>언어 정확성</b>으로 묶었습니다.",
+ "시험대비·모의고사":"미니 모의고사·프린트로 평가 형식에 익숙해진 경험. 시험 상황에 적응하는 힘이라 <b>평가 적응</b>으로 봤어요.",
+ "감정 어휘":"감정을 영어로 표현하는 어휘 수업. 자기 마음을 언어로 꺼내는 <b>표현·소통</b>으로 묶었습니다."
+};
 let cur='all';
 let charts={};
 function destroy(k){if(charts[k]){charts[k].destroy();delete charts[k];}}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+const VGCOL={growth:'#5cbfa6',value:'#e0a53a',challenge:'#7aa8d0',fun:'#8b7ff0',hard:'#d1493a',plain:'#aab4bf',
+ confidence:'#6366f1',speaking:'#7aa8d0',grammar:'#c077b0',reading:'#5cbfa6',vocab:'#e0a53a',achieve:'#3f9d6a',none:'#aab4bf',etc:'#aab4bf'};
+const SIGCOL={achieve:'#3f9d6a',loop:'#6366f1',challenge:'#7aa8d0',regret:'#e08b43'};
+// 패널 6·7 — 범주별 아코디언(모든 목소리, 강한 순서)
+function renderVoiceGroups(id,data,defs,key,showWhy){
+ const el=document.getElementById(id); if(!el)return;
+ const single=(cur!='all');
+ const arr=single?data.filter(x=>x.c==cur):data;
+ if(!arr.length){el.innerHTML='<div class="empty">이 반의 응답이 아직 없어요</div>';return;}
+ let html='<div class="vgroups">',first=true;
+ defs.forEach(([k,label])=>{
+  const items=arr.filter(x=>x[key]==k); if(!items.length)return;
+  const col=VGCOL[k]||'#aab4bf', open=first?' open':''; first=false;
+  html+=`<div class="vg${open}"><div class="vgh"><span class="dot" style="background:${col}"></span>${label}<span class="vgc">${items.length}</span><span class="vgar">▾</span></div><div class="vgb">`
+   +items.map(x=>`<div class="vq"><span class="cl">${x.c}반</span>${esc(x.t)}${(showWhy&&x.why&&x.why!=='')?`<span class="why">이유: ${esc(x.why)}</span>`:''}</div>`).join('')
+   +`</div></div>`;
+ });
+ html+='</div>'; el.innerHTML=html;
+ el.querySelectorAll('.vg .vgh').forEach(h=>{h.onclick=()=>h.parentElement.classList.toggle('open');});
+}
+// 패널 8 — 정서 태그 탭(각 탭에 최대한 많은 목소리, 강한 순서)
+function renderSignals(){
+ const single=(cur=='2'||cur=='3'||cur=='6');
+ const el=document.getElementById('qStories'); if(!el)return;
+ const groups=VOICE.sigmeta.map(([k,label,emoji])=>{
+  let items=VOICE.sig[k]||[]; if(single)items=items.filter(x=>x.c==cur);
+  return {k,label,emoji,items,col:SIGCOL[k]||'#999'};
+ }).filter(g=>g.items.length);
+ if(!groups.length){el.innerHTML='<div class="empty">이 반의 시험 이야기가 아직 없어요</div>';return;}
+ let h='<div class="sigtabs">';
+ groups.forEach((g,i)=>{h+=`<button class="sigtab${i==0?' on':''}" data-k="${g.k}" style="--sq:${g.col};${i==0?'background:'+g.col:''}">${g.emoji} ${g.label} <span class="sc">${g.items.length}</span></button>`;});
+ h+='</div><div class="sigbody" id="sigBody"></div>'; el.innerHTML=h;
+ const body=el.querySelector('#sigBody');
+ const show=(k)=>{const g=groups.find(x=>x.k==k);body.innerHTML=g.items.map(x=>`<div class="sigq" style="--sq:${g.col}"><span class="cl">${x.c}반</span>${esc(x.t)}</div>`).join('');};
+ el.querySelectorAll('.sigtab').forEach(t=>{t.onclick=()=>{el.querySelectorAll('.sigtab').forEach(x=>{const on=x===t;x.classList.toggle('on',on);x.style.background=on?x.style.getPropertyValue('--sq'):'';});show(t.dataset.k);};});
+ show(groups[0].k);
+}
 
 // build filter buttons
 const affClasses=Object.keys(DATA.aff.n).map(Number).sort((a,b)=>a-b);
@@ -214,30 +424,10 @@ function renderAff(){
  <div class="kpi"><div class="v up">${A.post}</div><div class="l">A 표현 자신감 (지금)</div><div class="d" style="color:#1f7a44">${arrow(A.diff)} ${A.pre}→${A.post}</div></div>
  <div class="kpi"><div class="v good">${B.post}</div><div class="l">B 표현 불안 (낮을수록 ↑)</div><div class="d" style="color:${B.diff<0?'#1f7a44':'#c0563c'}">${arrow(B.diff)} ${B.pre}→${B.post}</div></div>
  <div class="kpi"><div class="v up">${C.post}</div><div class="l">C 표현 의욕 (지금)</div><div class="d" style="color:#1f7a44">${arrow(C.diff)} ${C.pre}→${C.post}</div></div>`;
- // grouped bar
- destroy('aff');
- const labels=CON.map(k=>CONNAME[k]);
- const pre=CON.map(k=>d[k]?d[k].pre:null);
- const post=CON.map(k=>d[k]?d[k].post:null);
- charts.aff=new Chart(document.getElementById('cAff'),{type:'bar',
-  data:{labels,datasets:[
-   {label:'3월의 나',data:pre,backgroundColor:COL.pre,borderRadius:5},
-   {label:'지금의 나',data:post,backgroundColor:CON.map(k=>k=='B'?COL.good:COL.post),borderRadius:5}]},
-  options:{responsive:true,maintainAspectRatio:false,scales:{y:{min:1,max:4,ticks:{stepSize:1}}},
-   plugins:{legend:{position:'top'},tooltip:{callbacks:{afterBody:(it)=>it[0].label.startsWith('B')?'※ 낮을수록 좋음(불안 감소)':''}}}}});
- // radar (pre vs post, B->5-B comfort)
- destroy('radar');
- const rlab=['자신감(A)','편안함(5−B)','참여의욕(C)','자기성찰(D)','기여(E)'];
- const rpre=[d.A&&d.A.pre!=null?d.A.pre:null, d.B&&d.B.pre!=null?+(5-d.B.pre).toFixed(2):null, d.C&&d.C.pre!=null?d.C.pre:null, d.D&&d.D.pre!=null?d.D.pre:null, d.E&&d.E.pre!=null?d.E.pre:null];
- const rv=[d.A?d.A.post:null, d.B?+(5-d.B.post).toFixed(2):null, d.C?d.C.post:null, d.D?d.D.post:null, d.E?d.E.post:null];
- charts.radar=new Chart(document.getElementById('cRadar'),{type:'radar',
-  data:{labels:rlab,datasets:[
-   {label:'3월의 나',data:rpre,backgroundColor:'rgba(188,208,226,.25)',borderColor:COL.pre,pointBackgroundColor:COL.pre,borderWidth:2,spanGaps:true},
-   {label:'지금의 나',data:rv,backgroundColor:'rgba(47,93,138,.15)',borderColor:COL.post,pointBackgroundColor:COL.post,borderWidth:2}]},
-  options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:1,max:4,ticks:{stepSize:1,font:{size:9}}}},plugins:{legend:{display:true,position:'top'}}}});
- // quotes filtered
- fillQuotes('qMeta',QMETA.filter(q=>cur=='all'||q[0]==cur),q=>`<span class="cl">${q[0]}반</span><span class="qt">"${q[1]}"</span> — ${q[2]}`,'metaphor');
- fillQuotes('qChange',QCHANGE.filter(q=>cur=='all'||q[0]==cur),q=>`<span class="cl">${q[0]}반</span>${q[1]}`);
+ drawDumbbell(d);
+ // 은유(S3) — 테마별 · 달라진점(S2) — 영역별, 모든 목소리
+ renderVoiceGroups('qMeta', VOICE.s3, VOICE.s3themes, 'th', true);
+ renderVoiceGroups('qChange', VOICE.s2, VOICE.s2doms, 'dm', false);
 }
 
 function fillQuotes(id,arr,fmt,mode){
@@ -249,11 +439,12 @@ function fillQuotes(id,arr,fmt,mode){
 function renderExam(){
  const d=exData(), grid=document.getElementById('exGrid'), kp=document.getElementById('exKpis');
  if(!d){kp.innerHTML=`<div class="kpi" style="grid-column:1/-1"><div class="v">—</div><div class="l">${cur}반은 「시험 이야기」 설문 응답이 없어요 (2·3·6반만 실시)</div></div>`;
-   grid.style.opacity=.35;destroy('sat');destroy('q');destroy('learn');
-   document.getElementById('qLink').innerHTML='<div class="empty">해당 반 응답 없음</div>';
-   document.getElementById('exInsight').innerHTML='';
-   document.getElementById('qLearn').innerHTML='';document.getElementById('learnInsight').innerHTML='';
-   document.getElementById('qStories').innerHTML='<div class="empty">'+cur+'반은 「시험 이야기」 응답이 없어요 (2·3·6반만 실시)</div>';document.getElementById('stInsight').innerHTML='';return;}
+   grid.style.opacity=.35;destroy('sat');
+   document.getElementById('qHeat').innerHTML='';document.getElementById('qTop').innerHTML='';
+   document.getElementById('flowmap').innerHTML='<div class="empty">해당 반 응답 없음</div>';
+   document.getElementById('learnInsight').innerHTML='';
+   document.getElementById('emoBaro').innerHTML='';document.getElementById('signalInsight').innerHTML='';
+   document.getElementById('qStories').innerHTML='<div class="empty">'+cur+'반은 「시험 이야기」 응답이 없어요 (2·3·6반만 실시)</div>';return;}
  grid.style.opacity=1;
  kp.innerHTML=`
   <div class="kpi"><div class="v">${d.n}<small>명</small></div><div class="l">응답 인원</div></div>
@@ -266,46 +457,165 @@ function renderExam(){
   data:{labels:order.map(x=>x+'%'),datasets:[{data:order.map(k=>d.dist[k]||0),
    backgroundColor:['#d1493a','#ec8b43','#f0c659','#7aa8d0','#2f8a55'],borderRadius:5}]},
   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{stepSize:2}}}}});
- destroy('q');
- const qs=Object.entries(d.q).map(([k,v])=>[+k,v]).sort((a,b)=>b[1]-a[1]).slice(0,8);
- charts.q=new Chart(document.getElementById('cQ'),{type:'bar',
-  data:{labels:qs.map(([k])=>k+'번 '+(QLABEL[k]||'')),datasets:[{data:qs.map(([,v])=>v),
-   backgroundColor:qs.map(([k])=>k==26?COL.gold:COL.post),borderRadius:5}]},
-  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{stepSize:5}}}}});
- fillQuotes('qLink',QLINK.filter(q=>cur=='all'||q[0]==cur),q=>`<span class="cl">${q[0]}반</span>${q[1]}`,'link');
- const l=document.getElementById('qLink');[...l.children].forEach(c=>c.classList.add('gold'));
- const t=topQ(d.q);
- document.getElementById('exInsight').innerHTML=`<b>환류의 증거</b> — 가장 많이 기억된 문항은 <b>${t}</b>. 특히 <b>26번(우리 반 설문조사 결과)</b>은 학생들이 직접 참여해 만든 데이터가 그대로 시험에 나온 문항으로, "내가 만든 표현이 수업·평가로 되돌아온다"는 ECHO 환류 구조를 학생들이 스스로 인식하고 있음을 보여줍니다.`;
+ drawQHeat(d.q);
+ fillQTop(d.q);
  renderLearn();
  renderStories();
 }
 function renderStories(){
- const arr=STORIES.filter(s=>cur=='all'||s.c==cur);
- const el=document.getElementById('qStories');
- if(!arr.length){el.innerHTML='<div class="empty">이 반의 이야기가 아직 없어요</div>';document.getElementById('stInsight').innerHTML='';return;}
- el.innerHTML=arr.map(s=>`<div class="story${s.hi?' hi':''}"><span class="cc">${s.c}반</span><span class="th ${s.k||''}">${s.t}</span><div class="qq">"${s.q}"</div></div>`).join('');
- document.getElementById('stInsight').innerHTML=`<b>왜 이 패널을 남겼나</b> — 위 그래프들이 "몇 명이"를 말한다면, 이 목소리들은 "무엇을 느꼈나"를 말합니다. 한 아이는 <b>모든 문제에 이유와 까닭을 알려줘서 시험이 허무하지 않았다</b> 했고, 또 한 아이는 규칙을 <b>스스로 깨달은 순간</b>을 가장 기뻐했어요. 평균과 빈도 뒤에 이런 이야기가 있다는 걸 잊지 않으려고 둡니다.`;
+ const single=(cur=='2'||cur=='3'||cur=='6');
+ const e=EMO[single?cur:'all'], tot=e.pos+e.neu+e.neg;
+ const pc=(n)=>Math.round(n/tot*100);
+ const baro=document.getElementById('emoBaro');
+ baro.innerHTML=`<div class="track">
+   <div class="seg pos" style="flex:${e.pos}">${e.pos>=3?pc(e.pos)+'%':''}</div>
+   <div class="seg neu" style="flex:${e.neu}">${e.neu>=3?pc(e.neu)+'%':''}</div>
+   <div class="seg neg" style="flex:${e.neg}">${e.neg>=3?pc(e.neg)+'%':''}</div></div>
+   <div class="lg"><span><i style="background:#3f9d6a"></i>성장·기쁨·보람 ${e.pos}명</span><span><i style="background:#aab4bf"></i>담담·중립 ${e.neu}명</span><span><i style="background:#e08b43"></i>아쉬움·다짐 ${e.neg}명</span></div>`;
+ // 반별 온도 코멘트
+ const temp=single
+  ? ({"2":`<b>2반</b>은 <b>성장·기쁨</b>(${EMO['2'].pos}명)이 아쉬움(${EMO['2'].neg}명)을 크게 앞섭니다. "이번엔 95점", "100점 받았어요" 같은 <b>도달의 기쁨</b>이 주된 정서예요.`,
+      "3":`<b>3반</b>은 성장(${EMO['3'].pos}명)과 아쉬움(${EMO['3'].neg}명)이 <b>팽팽</b>합니다. "36→53점"의 뿌듯함과 "헷갈린 문제, 다음엔 더"라는 <b>다짐</b>이 함께 흐르는 반이에요.`,
+      "6":`<b>6반</b>은 <b>아쉬움·다짐</b>(${EMO['6'].neg}명)이 성장(${EMO['6'].pos}명)보다 우세합니다. 실력이 없어서가 아니라 "빨리 푸느라 실수", "더 노력하면 잘할 수 있다"처럼 <b>스스로에게 높은 기준</b>을 대는 정서 — 격려가 가장 필요한 반.`})[cur]
+  : `세 반 전체 정서는 <b>성장·기쁨 ${EMO.all.pos}명 vs 아쉬움·다짐 ${EMO.all.neg}명</b>으로 긍정이 우세하되, 5명 중 1명 이상이 아쉬움을 남겼습니다. 특히 <b>6반은 아쉬움이 성장을 앞서</b> — 같은 시험도 반마다 온도가 달라요.`;
+ baro.innerHTML+=`<div class="temp">${temp}</div>`;
+
+ renderSignals();
+
+ document.getElementById('signalInsight').innerHTML=`<b>교사를 위한 신호</b> — 아이들이 "기억에 남는다"며 되짚은 문항은 세 갈래로 모입니다. ①<b>26번(우리 반 설문조사)</b>: "내가 한 설문이 그대로 시험에 나왔다" — 내 수업이 평가로 <b>환류</b>한 순간을 아이들이 알아챘어요. ②<b>19번(문법)</b>: "여러 번 읽다 스스로 규칙을 깨달았다" — 정답보다 <b>깨달음의 과정</b>을 기뻐한 신호. ③<b>23번(추론)</b>: "읽은 게 다가 아니라 풀어내는 게 재미있었다" — <b>사고의 도전</b>을 즐긴 흔적. 숫자는 "몇 명"을 말하지만, 이 문장들은 <b>무엇이 아이 안에 남았는지</b>를 말합니다.`;
 }
 function renderLearn(){
  const single=(cur=='2'||cur=='3'||cur=='6');
  const val=(m)=>single?(m.by[cur]||0):m.all;
- const rows=LEARNMAP.map(m=>({...m,c:val(m)})).filter(m=>m.c>0).sort((a,b)=>b.c-a.c);
- destroy('learn');
- charts.learn=new Chart(document.getElementById('cLearn'),{type:'bar',
-  data:{labels:rows.map(m=>m.cat+' · '+m.learn),datasets:[{data:rows.map(m=>m.c),
-   backgroundColor:rows.map(m=>m.cat=='우리 반 설문조사'?COL.gold:COL.post),borderRadius:5}]},
-  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
-   tooltip:{callbacks:{label:(it)=>it.raw+'명이 배움으로 기억'}}},scales:{x:{ticks:{stepSize:single?2:5}}}}});
- const top=rows[0];
- const qs=top.quotes.filter(q=>!single||q[0]==cur);
- document.getElementById('qLearn').innerHTML = qs.length
-   ? qs.slice(0,4).map(q=>`<div class="q gold"><span class="cl">${q[0]}반 ${q[1]}</span>${q[2]}</div>`).join('')
-   : '<div class="empty">이 반의 대표 응답이 아직 없어요</div>';
+ const items=LEARNMAP.map(m=>({...m,c:val(m),meta:CATMETA[m.cat]})).filter(m=>m.c>0).sort((a,b)=>b.c-a.c);
+ drawFlow(items);
+ const top=items[0];
+ const bAgg={}; items.forEach(m=>{const b=m.meta.b;bAgg[b]=(bAgg[b]||0)+m.c;});
+ const topB=Object.entries(bAgg).sort((a,b)=>b[1]-a[1])[0];
  const scope=single?cur+'반에서':'세 반 전체에서';
- document.getElementById('learnInsight').innerHTML=`<b>가장 오래 남은 배움</b> — ${scope} 가장 많은 학생이 배움으로 꼽은 활동은 <b>${top.cat}</b>(${top.c}명, ${top.learn})이었습니다. 교사가 일방적으로 전달한 지식이 아니라 <b>아이들이 직접 만들고 참여한 수업</b>이 가장 깊게 남았다는 뜻입니다.`;
+ document.getElementById('learnInsight').innerHTML=`<b>가장 크게 남은 배움</b> — ${scope} 가장 많은 학생이 배움으로 꼽은 활동은 <b>${top.cat}</b>(${top.c}명). 여러 활동이 모여 <b>${BUCKET[topB[0]].emoji} ${BUCKET[topB[0]].name}</b>(${topB[1]}명)이라는 힘으로 가장 크게 쌓입니다. 특히 <b>26번(우리 반 설문조사)</b>은 학생이 만든 데이터가 그대로 시험으로 돌아온 문항 — 교사의 일방 전달이 아니라 <b>아이들이 만든 수업이 평가로 환류</b>했다는 증거예요.`;
+}
+function drawFlow(items){
+ const el=document.getElementById('flowmap');
+ if(!items.length){el.innerHTML='<div class="empty">응답 없음</div>';return;}
+ const esc=(s)=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+ const max=Math.max(...items.map(m=>m.c));
+ const single=(cur=='2'||cur=='3'||cur=='6');
+ let s='<div class="flowlist">';
+ items.forEach((m,i)=>{
+  const B=BUCKET[m.meta.b], pct=Math.max(6,Math.round(m.c/max*100));
+  const q=m.meta.q&&m.meta.q!=='—'?`<span class="fq">${esc(m.meta.q)}</span>`:'';
+  let qs=(VOICE.act[m.cat]||[]);
+  if(single) qs=qs.filter(x=>x.c==cur);
+  const drawer=`<div class="fdrawer">
+     <div class="frat"><span class="fratlab">왜 이 역량으로 묶었나</span>${RATIONALE[m.cat]||''}</div>
+     ${qs.length?('<div class="fqhd">학생 후기 '+qs.length+'개</div><div class="fquotes">'+qs.map(x=>`<div class="fq2"><span class="cl">${x.c}반</span>${esc(x.t)}</div>`).join('')+'</div>')
+       :'<div class="fnoq">이 반의 관련 후기가 아직 없어요</div>'}
+   </div>`;
+  s+=`<div class="frow">
+   <div class="fhead">
+     <span class="frank">${i+1}</span>
+     <span class="fname">${esc(m.meta.short)}</span>
+     ${q}<span class="farrow">→</span>
+     <span class="fcap" style="--bc:${B.col}">${B.emoji} ${esc(B.name)}</span>
+     <span class="ftoggle">후기 ${qs.length} <i>▾</i></span>
+   </div>
+   <div class="fbarwrap">
+     <div class="ftrack"><div class="fbar" style="width:${pct}%;background:${B.col}"></div></div>
+     <span class="fcount">${m.c}명</span>
+   </div>
+   ${drawer}
+  </div>`;
+ });
+ s+='</div>';
+ const bAgg={}; items.forEach(m=>{const b=m.meta.b;bAgg[b]=(bAgg[b]||0)+m.c;});
+ const order=Object.keys(BUCKET).filter(k=>bAgg[k]).sort((a,b)=>bAgg[b]-bAgg[a]);
+ s+='<div class="fcaptotals"><span class="flt">역량별 합계</span>';
+ order.forEach(k=>{const B=BUCKET[k];s+=`<span class="fcap" style="--bc:${B.col}">${B.emoji} ${esc(B.name)} <b>${bAgg[k]}명</b></span>`;});
+ s+='</div>';
+ el.innerHTML=s;
+ el.querySelectorAll('.frow').forEach(r=>{const h=r.querySelector('.fhead');h.onclick=()=>r.classList.toggle('open');});
 }
 function topQ(q){const e=Object.entries(q).map(([k,v])=>[+k,v]).sort((a,b)=>b[1]-a[1]);return e.length?e[0][0]+'번':'—';}
 
+// ── 사전→사후 덤벨(슬로프) ──
+function drawDumbbell(d){
+ const el=document.getElementById('affDumbbell');
+ const rows=['A','C','D','B','E'];
+ const W=680,rowH=56,padT=34,padB=14,labW=158,axL=176,axR=W-70;
+ const sx=(v)=>axL+(v-1)/(4-1)*(axR-axL);
+ const H=padT+rows.length*rowH+padB;
+ let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="height:auto">`;
+ for(let v=1;v<=4;v++){const x=sx(v);
+  s+=`<line x1="${x}" y1="${padT-4}" x2="${x}" y2="${padT+rows.length*rowH-12}" stroke="#eef2f6"/>`;
+  s+=`<text x="${x}" y="${padT-13}" text-anchor="middle" font-size="10.5" fill="#aab4bf">${v}점</text>`;}
+ rows.forEach((k,i)=>{
+  const o=d[k],cy=padT+i*rowH+rowH/2,name=CONNAME[k],reversed=(k=='B');
+  s+=`<text x="6" y="${cy-2}" font-size="12" font-weight="700" fill="#2f3a45">${name}</text>`;
+  if(!o||o.post==null)return;
+  if(o.pre==null){const xp=sx(o.post);
+   s+=`<text x="6" y="${cy+14}" font-size="10" fill="#9aa4ae">지금만 측정</text>`;
+   s+=`<circle cx="${xp}" cy="${cy}" r="8" fill="${COL.post}"/>`;
+   s+=`<text x="${xp}" y="${cy-14}" text-anchor="middle" font-size="11.5" font-weight="800" fill="#4f46e5">${o.post}</text>`;
+   s+=`<text x="${axR+10}" y="${cy+4}" font-size="10.5" font-weight="700" fill="#4f46e5">신규</text>`;return;}
+  const xpre=sx(o.pre),xpost=sx(o.post),diff=o.post-o.pre;
+  const good=reversed?diff<0:diff>0,col=good?'#2f8a55':(diff==0?'#aab4bf':'#c0563c');
+  if(reversed)s+=`<text x="6" y="${cy+14}" font-size="10" fill="#9aa4ae">낮을수록 성장</text>`;
+  s+=`<line x1="${xpre}" y1="${cy}" x2="${xpost}" y2="${cy}" stroke="${col}" stroke-width="3.4"/>`;
+  s+=`<circle cx="${xpre}" cy="${cy}" r="7" fill="#fff" stroke="#bcc7d2" stroke-width="2.2"/>`;
+  s+=`<circle cx="${xpost}" cy="${cy}" r="8.5" fill="${col}"/>`;
+  s+=`<text x="${xpre}" y="${cy-13}" text-anchor="middle" font-size="10.5" fill="#9aa4ae">${o.pre}</text>`;
+  s+=`<text x="${xpost}" y="${cy-14}" text-anchor="middle" font-size="12" font-weight="800" fill="${col}">${o.post}</text>`;
+  s+=`<text x="${axR+10}" y="${cy+4}" font-size="10.5" font-weight="700" fill="${col}">${diff>0?'+':''}${diff.toFixed(2)}</text>`;
+ });
+ s+='</svg>';
+ el.innerHTML=s+`<div class="dbleg"><span><i class="pre"></i>3월의 나</span><span><i class="post"></i>지금의 나</span><span><i class="gr"></i>성장 방향(초록)</span></div>`;
+}
+
+// ── 문항 히트맵 격자(1~26) ──
+function drawQHeat(qmap){
+ const el=document.getElementById('qHeat');
+ let max=1; for(let i=1;i<=25;i++)max=Math.max(max,qmap[i]||0);
+ const lerp=(a,b,t)=>Math.round(a+(b-a)*t);
+ const heat=(c)=>{if(!c)return{bg:'#f2f3fb',fg:'#b8bcce'};
+  const t=Math.min(1,c/max);
+  return{bg:`rgb(${lerp(238,67,t)},${lerp(240,56,t)},${lerp(253,202,t)})`,fg:t>0.5?'#fff':'#2f3440'};};
+ let cells='';
+ for(let i=1;i<=26;i++){
+  const c=qmap[i]||0,lab=QLABEL[i]?' · '+QLABEL[i]:'';
+  if(i==26){cells+=`<div class="cell gold" title="26번${lab} · ${c}명" style="background:linear-gradient(135deg,#f3cf6a,#e0a53a);color:#5a4409"><span class="star">★</span><span class="qn">26</span><span class="qc">${c||''}</span></div>`;continue;}
+  const h=heat(c);
+  cells+=`<div class="cell" title="${i}번${lab} · ${c}명" style="background:${h.bg};color:${h.fg}"><span class="qn">${i}</span><span class="qc">${c||''}</span></div>`;
+ }
+ const top=Object.entries(qmap).map(([k,v])=>[+k,v]).sort((a,b)=>b[1]-a[1]).slice(0,3)
+   .map(([q,v])=>`<b>${q}번</b>${QLABEL[q]?'('+QLABEL[q]+')':''} ${v}명`).join(' · ');
+ el.innerHTML=`<div class="qheatgrid">${cells}</div>`
+  +`<div class="qheatlg"><span>적음</span><span class="sc"><i style="background:#f2f3fb"></i><i style="background:#c7cffb"></i><i style="background:#8b93f0"></i><i style="background:#4338ca"></i></span><span>많음</span>`
+  +`<span style="margin-left:12px"><i class="chip" style="background:linear-gradient(135deg,#f3cf6a,#e0a53a)"></i> ★ 26번 = 학생 설문이 그대로 나온 환류 문항</span></div>`
+  +`<div class="qheatcap">가장 많이 기억된 문항 — ${top}</div>`;
+}
+
+// ── 최다 언급 문항 요약 카드 ──
+function fillQTop(qmap){
+ const el=document.getElementById('qTop');
+ const top=Object.entries(qmap).map(([k,v])=>[+k,v]).sort((a,b)=>b[1]-a[1]).slice(0,5);
+ if(!top.length){el.innerHTML='<div class="empty">응답 없음</div>';return;}
+ const max=top[0][1];
+ el.innerHTML='<div class="qtop">'+top.map(([q,v])=>{
+  const gold=q==26?' gold':'',name=QLABEL[q]||('문항 '+q+'번');
+  return `<div class="qtrow${gold}"><div class="qnum">${q}</div><div class="qbody"><div class="qname">${name}</div><div class="qbar"><span style="width:${Math.round(v/max*100)}%"></span></div></div><div class="qval">${v}명</div></div>`;
+ }).join('')+'</div>';
+}
+
 render();
+
+// ── 탭 전환 ──
+document.querySelectorAll('#tabs .tab').forEach(t=>{t.onclick=()=>{
+ const id=t.dataset.t;
+ document.querySelectorAll('#tabs .tab').forEach(x=>x.classList.toggle('on',x===t));
+ document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('on',p.dataset.panel===id));
+ if(charts.sat){try{charts.sat.resize();}catch(e){}}
+ window.scrollTo({top:0,behavior:'smooth'});
+};});
 </script>
 </body></html>
