@@ -1,0 +1,1308 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lesson 5 어휘 연습 — Love, Act, Save!</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+     background:#eef1f5;color:#16181d;line-height:1.55;padding-bottom:70px}
+.wrap{max-width:660px;margin:0 auto;padding:14px}
+header{background:#1f6feb;color:#fff;padding:14px}
+header .t{font-size:18px;font-weight:700}
+header .who{font-size:12.5px;margin-top:3px;background:rgba(255,255,255,.18);
+            border-radius:6px;padding:4px 9px;display:inline-block;cursor:pointer}
+
+.steps{display:flex;gap:5px;margin:12px 0 6px;overflow-x:auto;padding-bottom:2px;position:relative}
+.step{flex:1;min-width:70px;min-height:44px;padding:8px 4px;border-radius:9px;background:#fff;
+      color:#4b5563;font-size:12.5px;font-weight:600;border:1px solid #dfe3e9;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;font-family:inherit;white-space:nowrap}
+.step.on{background:#1f6feb;color:#fff;border-color:#1f6feb}
+.step.ok{background:#e9f8f0;color:#0d6b3c;border-color:#a8dcc0}
+.step.ok::before{content:"✓ "}
+.step.lock{background:#f4f6f9;color:#8a91a0}
+.step.lock::before{content:"🔒 "}
+.navhint{font-size:12px;color:#4b5563;margin-bottom:12px}
+
+.card{background:#fff;border:1px solid #dfe3e9;border-radius:12px;padding:16px;margin-bottom:12px}
+.card h2{font-size:15.5px;margin:0 0 10px;color:#2b3440}
+.muted{color:#5b6371;font-size:13px}
+label{display:block;font-size:13px;font-weight:600;margin:10px 0 5px;color:#374151}
+input[type=text]{width:100%;padding:12px;border:1px solid #cbd2db;border-radius:9px;font-size:16px;font-family:inherit}
+select{width:100%;padding:12px;border:1px solid #cbd2db;border-radius:9px;font-size:16px;
+       font-family:inherit;background:#fff}
+input:focus,select:focus,textarea:focus{outline:2px solid #1f6feb;outline-offset:-1px}
+textarea{width:100%;min-height:92px;padding:12px;border:1px solid #cbd2db;border-radius:9px;
+         font-family:inherit;font-size:15px;line-height:1.6;resize:vertical}
+.row{display:flex;gap:8px}.row>*{flex:1}
+
+button.b{width:100%;padding:14px;border:none;border-radius:10px;background:#1f6feb;color:#fff;
+         font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px}
+button.b:disabled{background:#b6c2d2;cursor:not-allowed}
+button.g{background:#fff;color:#1f6feb;border:1.5px solid #1f6feb}
+button.danger{background:#fff;color:#a41e1e;border:1.5px solid #e3b3b3}
+button.sm{padding:12px;font-size:13.5px}
+
+.flash{background:#fff;border:1px solid #dfe3e9;border-radius:14px;padding:26px 18px;text-align:center;
+       min-height:200px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;
+       width:100%;font-family:inherit;color:inherit}
+.flash .w{font-size:30px;font-weight:700}
+.flash .p{font-size:11.5px;color:#fff;background:#5b6371;border-radius:4px;padding:2px 8px;display:inline-block;margin-top:8px}
+.flash .ko{font-size:22px;font-weight:700;color:#1f6feb}
+.flash .def{font-size:14px;color:#3f4855;margin-top:8px}
+.flash .ex{font-size:13.5px;color:#0b5ea8;font-style:italic;margin-top:8px}
+.flash .hint{font-size:13px;color:#5b6371;margin-top:13px}
+
+.prog{height:8px;background:#dde2e9;border-radius:4px;overflow:hidden;margin:10px 0}
+.prog>i{display:block;height:100%;background:#1f6feb;transition:width .25s}
+.count{font-size:12.5px;color:#4b5563;text-align:center}
+
+.q{font-size:17px;font-weight:600;margin-bottom:13px;line-height:1.55}
+.q b{color:#1f6feb}
+.opt{display:block;width:100%;text-align:left;padding:14px;margin-bottom:8px;border:1.5px solid #d5dbe3;
+     border-radius:10px;background:#fff;font-size:15.5px;cursor:pointer;font-family:inherit;color:#16181d}
+.opt.ok{border-color:#128a4e;background:#e9f8f0;color:#0d6b3c;font-weight:700}
+.opt.ok::before{content:"○ ";font-weight:700}
+.opt.no{border-color:#c62828;background:#fdecec;color:#a41e1e}
+.opt.no::before{content:"✕ ";font-weight:700}
+.opt:disabled{cursor:default}
+.fb{padding:12px;border-radius:9px;font-size:14px}
+.fb.ok{background:#e9f8f0;color:#0d6b3c}
+.fb.no{background:#fdecec;color:#a41e1e}
+.fb.wa{background:#fff6e5;color:#7a4f07}
+
+.chk{display:flex;align-items:center;gap:11px;padding:12px;border-bottom:1px solid #eef1f5;
+     cursor:pointer;width:100%;background:none;border-left:0;border-right:0;border-top:0;
+     font-family:inherit;text-align:left;color:inherit}
+.chk:last-child{border-bottom:none}
+.box{width:24px;height:24px;border:2px solid #c4ccd7;border-radius:6px;flex:none;
+     display:flex;align-items:center;justify-content:center;font-size:14px;color:transparent}
+.chk.on .box{background:#1f6feb;border-color:#1f6feb;color:#fff}
+.chk .w{font-size:16px;font-weight:600}
+.chk .st{margin-left:auto;font-size:12px;color:#5b6371}
+
+.wordrow{padding:10px 0;border-bottom:1px solid #eef1f5}
+.wordrow:last-child{border-bottom:none}
+.wordrow .h{font-size:15px;font-weight:700}
+.wordrow .h span{font-size:13px;font-weight:400;color:#5b6371;margin-left:6px}
+.chip{background:#fff5e8;border:1px solid #f0cfa0;color:#8a4b09;border-radius:7px;
+      padding:5px 10px;font-size:13.5px;font-weight:600;display:inline-block;margin-top:4px}
+
+.big{font-size:33px;font-weight:800;text-align:center;color:#1f6feb;margin:4px 0}
+.mid{text-align:center;color:#3f4855;font-size:14px}
+.done{text-align:center;padding:20px 8px}
+.done .em{font-size:40px}
+.wrong{background:#fdf0f0;border:1px solid #f3c9c9;border-radius:9px;padding:12px;
+       font-size:13.5px;color:#8b2020;margin-top:10px;text-align:left}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
+table.cmp td{padding:10px 8px;border-bottom:1px solid #eef1f5}
+table.cmp td:last-child{text-align:right;font-weight:700;font-size:16px}
+table.cmp tr.hi td{background:#fff6e5;color:#7a4f07}
+table.cmp tr.gd td{background:#e9f8f0;color:#0d6b3c}
+
+/* 돌아보기 — 분류별 단어 목록 */
+.grp{border:1px solid #e3e7ed;border-radius:10px;padding:12px 14px;margin-bottom:9px;background:#fff}
+.grp.hi{background:#fff8ec;border-color:#f0d9a8}
+.grp.gd{background:#eefaf3;border-color:#b6e2c8}
+.grp .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.grp .nm{font-size:15px;font-weight:700}
+.grp.hi .nm{color:#7a4f07} .grp.gd .nm{color:#0d6b3c}
+.grp .ct{font-size:17px;font-weight:800;white-space:nowrap}
+.grp .sub{font-size:12.5px;color:#5b6371;margin-top:1px}
+.grp .wl{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.grp .wl span{background:#fff;border:1px solid #d9dfe7;border-radius:6px;
+              padding:4px 9px;font-size:14px;font-weight:600}
+.grp.hi .wl span{border-color:#e6c98f;color:#8a5a08}
+.grp.gd .wl span{border-color:#a8dcc0;color:#0d6b3c}
+.grp .none{margin-top:6px;font-size:13px;color:#7b828c}
+.grp summary{font-size:13px;color:#5b6371;cursor:pointer;margin-top:6px}
+#banner{margin-bottom:12px}
+
+/* ── 태블릿 (갤럭시탭 등, 700px 이상) ──
+   폰보다 화면을 멀리 두고 보므로 전체를 키운다. */
+@media (min-width:700px){
+  body{font-size:17px;line-height:1.6}
+  .wrap{max-width:860px;padding:18px}
+  header{padding:18px}
+  header .t{font-size:21px}
+  header .who{font-size:14px;padding:6px 12px}
+  .steps{gap:7px}
+  .step{min-width:96px;min-height:52px;font-size:14.5px;padding:10px 6px}
+  .navhint{font-size:13.5px}
+  .card{padding:20px 22px;border-radius:14px}
+  .card h2{font-size:18px}
+  .muted{font-size:14.5px}
+  label{font-size:14.5px}
+  input[type=text],select,textarea{padding:14px;font-size:17px}
+  textarea{min-height:110px}
+  button.b{padding:17px;font-size:17px;border-radius:12px}
+  button.sm{padding:14px;font-size:15px}
+  .q{font-size:20px;line-height:1.6;margin-bottom:16px}
+  .opt{font-size:18px;padding:17px 18px;border-radius:12px}
+  .fb{font-size:15.5px;padding:14px}
+  .flash{min-height:280px;padding:36px 24px}
+  .flash .w{font-size:40px}
+  .flash .ko{font-size:28px}
+  .flash .def{font-size:16.5px}
+  .flash .ex{font-size:16px}
+  .flash .hint{font-size:14.5px}
+  .chk{padding:15px}
+  .chk .w{font-size:18px}
+  .box{width:28px;height:28px}
+  .chip{font-size:15px;padding:7px 13px}
+  .big{font-size:40px}
+  .mid{font-size:16px}
+  .count{font-size:14px}
+  .prog{height:10px}
+  table.cmp{font-size:16px}
+  table.cmp td{padding:13px 10px}
+  table.cmp td:last-child{font-size:19px}
+  .grp .nm{font-size:17px}
+  .grp .ct{font-size:20px}
+  .grp .wl span{font-size:16px;padding:6px 12px}
+  .wordrow .h{font-size:17px}
+  .wrong{font-size:15px;padding:14px}
+}
+/* 가로로 넓은 태블릿에서 사전점검을 2열로 — 스크롤을 줄인다 */
+@media (min-width:900px){
+  #list{display:grid;grid-template-columns:1fr 1fr;column-gap:8px}
+  .chk{border-bottom:1px solid #eef1f5}
+}
+</style>
+
+<header><div class="wrap" style="padding:0">
+  <div class="t" id="htitle"></div>
+  <div class="who" id="who" hidden></div>
+</div></header>
+
+<div class="wrap">
+  <div class="steps" id="steps"></div>
+  <div class="navhint" id="navhint"></div>
+  <div id="banner"></div>
+  <div id="view"></div>
+</div>
+
+<script>
+// ════ 설정 — 단원을 바꿀 때 여기만 고치면 됩니다 ════════════
+const UNIT   = {id:"L5", title:"Lesson 5 · Love, Act, Save!", grade:"중학교 2학년 · 2학기"};
+const POST_URL = "https://script.google.com/macros/s/AKfycby8AMoVmgDVED0l-4qk06ROF5MSlI6O6d5UC6EPjTr6QUX84LwTnVjkgqICRDUkNowS/exec";
+const PREFIX = {"re-":"다시", "under-":"아래·밑"};
+
+// ════ 데이터 ═══════════════════════════════════════════════
+// [단어, 뜻, 품사, 영영정의, 예문, 자주쓰는짝]
+const WORDS=[
+["canal","운하","n","a long, narrow waterway made by people","Venice is famous for its canals.","famous for its canals"],
+["historic","역사적인","adj","important in history; very old and famous","Many tourists come to see the historic buildings.","historic buildings"],
+["tourist","관광객","n","a person who travels to visit a place","Many tourists visit Venice every year.","many tourists visit"],
+["flood","홍수","n","a large amount of water covering a place that is usually dry","Last week the streets were flooded in Venice.","the streets were flooded"],
+["underwater","물속의","adj","below the surface of the water","Venice could be underwater soon.","be underwater"],
+["rise","오르다","v","to go up to a higher level","The warmer the Earth gets, the higher the water rises.","the water rises"],
+["greenhouse","온실","n","a glass building where plants are grown","Animal farms increase greenhouse gases.","greenhouse gases"],
+["planet","행성·지구","n","a large round object in space, like the Earth","The more meat we eat, the hotter our planet gets.","our planet"],
+["increase","증가시키다","v","to make something larger in number or amount","Cutting down trees increases greenhouse gases.","increase gases"],
+["habit","습관","n","something you do often, almost without thinking","It isn't easy to change my eating habits.","eating habits"],
+["campaign","캠페인·운동","n","a planned group of actions to reach a goal","We started the 3R campaign at our school.","start a campaign"],
+["reduce","줄이다","v","to make something smaller in size or amount","What can I do to reduce plastic waste?","reduce waste"],
+["reuse","재사용하다","v","to use something again instead of throwing it away","The 3Rs are Recycle, Reuse, and Reduce.","reuse paper"],
+["recycle","재활용하다","v","to change used things so they can be used again","You can recycle plastic cups and bottles.","recycle plastic"],
+["reusable","재사용 가능한","adj","able to be used more than once","Don't forget to carry a reusable bottle.","a reusable bottle"],
+["waste","쓰레기·낭비","n","things people throw away because they are not needed","It is difficult to reduce food waste.","food waste"],
+["pollution","오염","n","dirty air, water, or land that harms living things","We should reduce air pollution in our city.","air pollution"],
+["energy","에너지","n","power used to make machines work or give heat and light","What can I do to save energy?","save energy"],
+["nearby","근처의","adj","close to here; not far away","I will walk to nearby places.","nearby places"],
+["situation","상황","n","the things that are happening at a certain time","The situation in Venice must be scary.","a difficult situation"],
+["scary","무서운","adj","making you feel afraid","Sometimes we have floods and they are really scary.","a scary story"],
+["difference","차이·변화","n","the way that things are not the same","Together, we can make a difference!","make a difference"],
+["underline","밑줄을 긋다","v","to draw a line under a word","I underline my favorite sentences.","underline a word"],
+["underground","지하의","adj","under the surface of the ground","Frogs sleep underground in winter.","an underground station"],
+["remake","다시 만들다","v","to make something again in a new way","We can remake old clothes into bags.","remake old clothes"],
+["rewrite","다시 쓰다","v","to write something again to make it better","It is a good idea to rewrite your email.","rewrite a letter"],
+["donate","기부하다","v","to give something to help a person or group","Don't forget to donate old clothing.","donate clothes"],
+["contact","연락하다","v","to call or write to someone","Please contact your friends and join the campaign.","contact me"],
+["stairs","계단","n","steps that take you from one floor to another","We often took the stairs instead of the elevator.","take the stairs"],
+["danger","위험","n","the chance that something bad will happen","Polar bears are in danger because of global warming.","in danger"]
+].map(a=>({w:a[0],ko:a[1],pos:a[2],def:a[3],ex:a[4],col:a[5]}));
+
+// [문장, 빈칸에 들어갈 형태, 관련 단어, 유형]
+// 빈칸 형태와 단어가 다를 수 있음(canals/canal). 보기는 이 목록의 형태들로만 만든다.
+const CHUNKS=[
+["Venice is famous for its ______.","canals","canal","prep"],
+["Many tourists come to see the ______ buildings.","historic","historic","adj"],
+["Last week the streets were ______ in Venice.","flooded","flood","verb"],
+["Venice could be ______ soon.","underwater","underwater","adj"],
+["The warmer the Earth gets, the higher the water ______.","rises","rise","verb"],
+["Animal farms increase ______ gases.","greenhouse","greenhouse","adj"],
+["The more meat we eat, the hotter our ______ gets.","planet","planet","adj"],
+["It isn't easy to change my eating ______.","habits","habit","adj"],
+["We started the 3R ______ at our school.","campaign","campaign","adj"],
+["What can I do to ______ plastic waste?","reduce","reduce","verb"],
+["Don't forget to carry a ______ bottle.","reusable","reusable","adj"],
+["It is difficult to reduce food ______.","waste","waste","adj"],
+["We should reduce air ______.","pollution","pollution","adj"],
+["What can I do to save ______?","energy","energy","verb"],
+["I will walk to ______ places.","nearby","nearby","adj"],
+["Together, we can make a ______!","difference","difference","verb"],
+["Polar bears are in ______ because of global warming.","danger","danger","prep"],
+["We often took the ______ instead of the elevator.","stairs","stairs","verb"],
+["Cutting down trees ______ greenhouse gases.","increases","increase","verb"],
+["The 3Rs are Recycle, ______, and Reduce.","Reuse","reuse","verb"]
+];
+
+// [단어, 접두사, 이 단어에서의 뜻, 문장, 정답, 오답3]
+// 오답에도 '다시'를 섞어 접두사만 보고 찍지 못하게 한다.
+const TRANSFER=[
+["rebuild","re-","다시","After the flood, the city had to rebuild many houses.",
+  "다시 짓다",["다시 부수다","다시 팔다","크게 짓다"]],
+["rethink","re-","다시","We should rethink our plan for the campaign.",
+  "다시 생각하다",["다시 설명하다","다시 시작하다","빨리 정하다"]],
+["refill","re-","다시","You can refill your bottle at the water fountain.",
+  "다시 채우다",["다시 비우다","다시 씻다","새로 사다"]],
+["reheat","re-","다시","Don't reheat the food too many times.",
+  "다시 데우다",["다시 식히다","다시 요리하다","다시 얼리다"]],
+["underpass","under-","아래·밑","Take the underpass to cross the road safely.",
+  "지하도",["육교","넓은 길","지하철역"]],
+["undersea","under-","아래·밑","They made a film about the undersea world.",
+  "바다 밑의",["바다 위의","바닷가의","강가의"]],
+["underweight","under-","기준보다 적은","The little polar bear was underweight after the long winter.",
+  "저체중의",["과체중의","키가 큰","힘이 센"]],
+["undercooked","under-","기준보다 적은","Don't eat undercooked meat.",
+  "덜 익은",["잘 익은","너무 익은","차가운"]]
+];
+
+// ════ ④ 문장 쓰기 ═════════════════════════════════════════
+// 수행과제(설득 이메일) 구조 그대로 — 원인 1 + 실천 2 + 강조 1
+const RE_CAUSE = /\bbecause\b|\bso\b|\bthe\s+\w+(er|est)?\b[\s\S]*\bthe\s+\w+(er|est)?\b/i;
+const RE_ACTION= /\b(i|we)\s+(will|can|should)\b|\bdon'?t\s+forget\s+to\b/i;
+const RE_EMPH  = /\bit\s+(is|isn'?t|was)\s+\w+\s+to\s+\w+/i;
+
+const WRITE=[
+ {id:"cause", tag:"원인", why:true,
+  ask:"베네치아에 왜 이런 일이 생겼을까요? <b>원인</b>을 한 문장으로 쓰세요.",
+  hint:"<b>because</b> 나 <b>The 비교급~, the 비교급…</b> 을 쓰면 원인이 분명해집니다.",
+  chips:["greenhouse gases","global warming","the water rises","increase"],
+  rule:{re:RE_CAUSE, label:"원인을 잇는 말 (because / The 비교급)"},
+  models:["The more meat we eat, the hotter our planet gets.",
+          "The streets were flooded because the water rises every year."]},
+
+ {id:"act1", tag:"실천 1", why:false,
+  ask:"내가 <b>할 수 있는 일</b>을 한 문장으로 쓰세요.",
+  hint:"<b>I will ~</b> 또는 <b>We can ~</b> 으로 시작해 보세요.",
+  chips:["reduce waste","take the stairs","a reusable bottle","nearby places"],
+  rule:{re:RE_ACTION, label:"실천을 나타내는 말 (I will / We can)"},
+  models:["I will walk to nearby places instead of taking a car.",
+          "We can carry a reusable bottle every day."]},
+
+ {id:"act2", tag:"실천 2", why:false,
+  ask:"<b>또 하나</b>의 실천을 다른 문장으로 쓰세요.",
+  hint:"앞 문장과 <b>다른 동사</b>를 쓰면 좋아요.",
+  chips:["recycle plastic","save energy","eat less meat","donate clothes"],
+  rule:{re:RE_ACTION, label:"실천을 나타내는 말 (I will / We can)"},
+  models:["We can recycle plastic cups and bottles at school.",
+          "I will turn off the lights when I go out."]},
+
+ {id:"emph", tag:"강조", why:true,
+  ask:"Monica에게 <b>왜 함께 해야 하는지</b> 강조하는 문장을 쓰세요.",
+  hint:"<b>It is ______ to ______.</b> 골격을 그대로 써도 됩니다.",
+  chips:["It is important to","It is difficult to","do our part","make a difference"],
+  rule:{re:RE_EMPH, label:"강조 구문 (It is ~ to …)"},
+  models:["It is important to do our part for Venice.",
+          "It is not easy to change our habits, but we can try."]}
+];
+const WHY_TAGS=["원인을 분명하게","실천을 구체적으로","읽는 사람이 느끼도록","문법을 정확하게"];
+
+function checkSentence(txt,item){
+  const t=(txt||"").trim();
+  const words=t?t.split(/\s+/).length:0;
+  const used=WORDS.filter(w=>new RegExp("\\b"+w.w+"\\w*\\b","i").test(t)).map(w=>w.w);
+  return {words, used, rule:item.rule.re.test(t),
+          full:/[.!?]\s*$/.test(t)&&words>=5};
+}
+
+// ════ 안전한 저장소 ════════════════════════════════════════
+const KEY="vocab_"+UNIT.id+"_v4";
+let storageOK=true;
+const LS={
+  get(k){ try{return localStorage.getItem(k)}catch(e){storageOK=false;return null} },
+  set(k,v){ try{localStorage.setItem(k,v);return true}catch(e){storageOK=false;return false} },
+  del(k){ try{localStorage.removeItem(k)}catch(e){} }
+};
+const blank=()=>({unit:UNIT.id,name:"",cls:"",no:"",pre:null,level:0,
+  w:null,c:null,t:null,write:null,reflect:{a:"",b:""},sent:false,receipt:"",
+  history:[],miss:{},sid:"",prog:null});
+
+let S=blank();
+(function load(){
+  try{
+    const raw=JSON.parse(LS.get(KEY)||"{}");
+    if(raw && typeof raw==="object" && raw.unit===UNIT.id){
+      S=Object.assign(blank(),raw);
+      S.reflect=Object.assign({a:"",b:""},raw.reflect||{});
+      S.miss=(raw.miss&&typeof raw.miss==="object")?raw.miss:{};
+      S.history=Array.isArray(raw.history)?raw.history:[];
+      // 스키마가 안 맞는 결과는 버린다 (구버전 데이터 방어)
+      if(S.w&&!Array.isArray(S.w.plan)) S.w=null;
+      if(S.c&&!Array.isArray(S.c.plan)) S.c=null;
+      if(S.t&&!(S.t.byPre)) S.t=null;
+    }
+  }catch(e){ LS.del(KEY); S=blank(); }
+})();
+const save=()=>LS.set(KEY,JSON.stringify(S));
+
+const view=document.getElementById("view");
+const banner=document.getElementById("banner");
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const face=(s,t)=>s/t>=.9?"🎉":s/t>=.65?"👍":"💪";
+
+document.getElementById("htitle").textContent=UNIT.title;
+
+// ════ 난도 ═════════════════════════════════════════════════
+const LEVELS=[
+ {n:1,name:"기초",desc:"뜻 → 단어 위주",       mix:{def:.15,type:0}},
+ {n:2,name:"보통",desc:"뜻과 영영 정의 번갈아", mix:{def:.50,type:0}},
+ {n:3,name:"심화",desc:"영영 정의 위주",        mix:{def:.75,type:0}},
+ {n:4,name:"도전",desc:"영영 정의 + 직접 쓰기", mix:{def:.65,type:.20}}
+];
+const levelFromPre=()=>{
+  const k=Object.values(S.pre||{}).filter(Boolean).length/WORDS.length;
+  return k<.30?1:k<.70?2:k<.90?3:4;
+};
+const curLevel=()=>LEVELS[(S.level||levelFromPre())-1];
+function adjustLevel(rate){
+  const old=S.level||levelFromPre();
+  let next=old;
+  if(rate>=.90&&old<4)next=old+1; else if(rate<.60&&old>1)next=old-1;
+  S.level=next; return {old,next};
+}
+function noteMiss(w){ S.miss=S.miss||{}; S.miss[w]=(S.miss[w]||0)+1; }
+
+// ════ 세트 (한 번에 10문항씩) ══════════════════════════════
+const SETSIZE=10;
+function makeSets(a,size){const o=[];for(let i=0;i<a.length;i+=size)o.push(a.slice(i,i+size));return o}
+
+// 세트 구성은 처음 한 번만 정해 고정한다. 그래야 '안 푼 세트'가 의미를 가진다.
+// 첫 구성은 무작위 — 어려운 단어가 1세트에 몰리지 않게.
+function ensureSets(slot,ids){
+  if(!S[slot]) S[slot]={plan:null,results:[],first:[],attempts:0};
+  const st=S[slot];
+  if(!st.plan||!st.plan.length){
+    st.plan=makeSets(shuffle(ids),SETSIZE);
+    st.results=st.plan.map(()=>null);
+    st.first=st.plan.map(()=>null);
+    save();
+  }
+  return st;
+}
+function agg(st){
+  if(!st||!st.plan) return null;
+  let score=0,total=0,fscore=0,ftotal=0,wrong=[],fwrong=[];
+  st.results.forEach((r,i)=>{ if(r){score+=r.score; total+=st.plan[i].length; wrong=wrong.concat(r.wrong||[])} });
+  st.first.forEach((r,i)=>{ if(r){fscore+=r.score; ftotal+=st.plan[i].length; fwrong=fwrong.concat(r.wrong||[])} });
+  return {score,total,fscore,ftotal,wrong,fwrong,
+          done:st.results.filter(Boolean).length, sets:st.plan.length};
+}
+// 다음에 풀 세트: 아직 안 푼 것 먼저, 다 풀었으면 점수가 가장 낮았던 것
+function nextSet(st){
+  const i=st.results.findIndex(r=>!r);
+  if(i>=0) return i;
+  let lo=0,best=1e9;
+  st.results.forEach((r,k)=>{const p=r.score/st.plan[k].length; if(p<best){best=p;lo=k}});
+  return lo;
+}
+function setMenu(st,label,onPick){
+  const a=agg(st);
+  return `<div class="card">
+    <h2>${label} <span class="muted" style="font-weight:400">· ${a.done}/${a.sets}세트 완료</span></h2>
+    <p class="muted">한 세트는 ${SETSIZE}문항, 3~4분이면 끝나요.
+      세트를 마치면 저장되고 <b>거기서 제출해도 됩니다.</b> 다음에 오면 안 푼 세트부터 나와요.</p>
+    <div style="height:6px"></div>
+    ${st.plan.map((s,i)=>{
+      const r=st.results[i], nx=nextSet(st)===i;
+      return `<button class="opt" data-s="${i}" style="display:flex;justify-content:space-between;align-items:center">
+        <span><b>${i+1}세트</b> <span class="muted">${s.length}문항</span></span>
+        <span>${r?`${r.score}/${s.length} ✓`:nx?`<b style="color:#1f6feb">지금 풀기 →</b>`:`<span class="muted">아직</span>`}</span>
+      </button>`}).join("")}
+  </div>`;
+}
+function weighted(list,key){
+  return shuffle(list).sort((a,b)=>((S.miss||{})[key(b)]||0)-((S.miss||{})[key(a)]||0));
+}
+// 철자 판정.
+// 편집거리 1이어도 정답으로 인정하지 않는다 — refuse/reuse, blood/flood, dancer/danger처럼
+// 뜻이 전혀 다른 진짜 단어가 통과해 버리기 때문. "near"는 격려 문구와 기록용일 뿐 오답이다.
+function near(a,b){
+  a=a.toLowerCase().trim(); b=b.toLowerCase().trim();
+  if(a===b) return "exact";
+  if(Math.abs(a.length-b.length)>1) return "";
+  const d=[...Array(a.length+1)].map((_,i)=>[i,...Array(b.length).fill(0)]);
+  for(let j=0;j<=b.length;j++)d[0][j]=j;
+  for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)
+    d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+  return d[a.length][b.length]<=1?"near":"";
+}
+
+// ════ 화면 이동 ════════════════════════════════════════════
+const STEPS=["시작","사전점검","① 단어","② 짝꿍 표현","③ 처음 보는 말","④ 문장 쓰기",
+             "돌아보기","내 기록","제출"];
+const SUBMIT_STEP=8;
+let cur=0, inQuiz=false;
+
+function tell(msg,go){
+  banner.innerHTML=`<div class="fb wa">${msg}
+    ${go!=null?` <button class="b sm" id="jump" style="width:auto;display:inline-block;margin:6px 0 0">지금 가기</button>`:""}</div>`;
+  const j=document.getElementById("jump");
+  if(j) j.onclick=()=>{banner.innerHTML="";open(go)};
+  window.scrollTo(0,0);
+}
+const hasDone=slot=>!!(S[slot]&&S[slot].results&&S[slot].results.some(Boolean));
+function locked(n){
+  if(n>0&&!S.name) return ["먼저 <b>시작</b>에서 이름을 입력하세요.",0];
+  if(n>=2&&!S.pre) return ["먼저 <b>사전점검</b>에서 아는 단어를 체크하세요.",1];
+  if(n===6&&!hasDone("w")) return ["돌아보기는 <b>① 단어</b>를 한 세트라도 푼 뒤에 열려요.",2];
+  return null;
+}
+const wrItems=()=>{ if(!S.write) S.write={i:0,items:WRITE.map(()=>({text:"",why:null,seen:false,revised:""}))};
+                    return S.write; };
+const wrDone=()=>((S.write&&S.write.items)||[]).filter(x=>x.text).length;
+// 세트별 byKind / byType 을 합친다
+function mergeCounts(st,field){
+  const out={};
+  (st&&st.results||[]).forEach(r=>{ if(!r||!r[field])return;
+    Object.entries(r[field]).forEach(([k,v])=>{
+      out[k]=out[k]||{ok:0,n:0}; out[k].ok+=v.ok; out[k].n+=v.n; }); });
+  return out;
+}
+const fmt=o=>o&&o.n?`${o.ok}/${o.n}`:"";
+function open(n){
+  if(inQuiz&&!confirm("지금 나가면 풀던 문제가 저장되지 않아요. 나갈까요?")) return;
+  inQuiz=false;
+  const L=locked(n);
+  if(L) return tell(L[0],L[1]);
+  banner.innerHTML=""; cur=n; drawSteps();
+  [start,preCheck,wordTab,chunkTab,transTab,writeTab,reflectTab,historyTab,submitTab][n]();
+  window.scrollTo(0,0);
+}
+function drawSteps(){
+  const done=[!!S.name,!!S.pre,hasDone("w"),hasDone("c"),!!S.t,wrDone()>0,
+              !!(S.reflect.a||S.reflect.b),(S.history||[]).length>0,S.sent];
+  document.getElementById("steps").innerHTML=STEPS.map((t,i)=>
+    `<button class="step ${i===cur?"on":done[i]?"ok":""} ${locked(i)?"lock":""}" data-i="${i}">${t}</button>`).join("");
+  document.querySelectorAll(".step").forEach(d=>d.onclick=()=>open(+d.dataset.i));
+  const el=document.querySelector(".step.on");
+  if(el&&el.scrollIntoView) el.scrollIntoView({inline:"center",block:"nearest"});
+  document.getElementById("navhint").textContent=
+    `${cur+1}번째 / 전체 ${STEPS.length}단계 · 끝낸 단계 ${done.filter(Boolean).length}개`;
+  const who=document.getElementById("who");
+  if(S.name){ who.hidden=false;
+    who.innerHTML=`${esc(S.cls)}반 ${esc(S.no)}번 ${esc(S.name)} · 내가 아니면 여기를 누르세요`;
+    who.onclick=()=>{ if(confirm("다른 사람이 쓰던 기록을 지우고 처음부터 시작할까요?")){
+      LS.del(KEY); S=blank(); location.reload(); } };
+  } else who.hidden=true;
+}
+
+// ════ 0. 시작 ══════════════════════════════════════════════
+function start(){
+  const opts=(n,sel)=>Array.from({length:n},(_,i)=>
+    `<option value="${i+1}" ${String(sel)===String(i+1)?"selected":""}>${i+1}</option>`).join("");
+  view.innerHTML=`
+  ${!storageOK?`<div class="fb no" style="margin-bottom:12px">이 기기는 기록을 저장하지 못해요.
+    <b>한 번에 끝까지</b> 풀고 바로 제출하세요.</div>`:""}
+  <div class="card">
+    <h2>누구인지 알려주세요</h2>
+    <p class="muted">반과 번호는 선생님이 확인할 때 꼭 필요해요.</p>
+    <div class="row">
+      <div><label>반</label><select id="i_cls"><option value="">선택</option>${opts(8,S.cls)}</select></div>
+      <div><label>번호</label><select id="i_no"><option value="">선택</option>${opts(35,S.no)}</select></div>
+    </div>
+    <label>이름</label><input type="text" id="i_name" placeholder="김민주" value="${esc(S.name)}">
+    <div style="height:14px"></div>
+    <button class="b" id="go" style="margin:0">시작하기</button>
+    <div id="err"></div>
+  </div>
+  <div class="card">
+    <h2>공부 순서</h2>
+    <div class="wordrow"><div class="h">사전점검<span>1분</span></div>
+      <div class="muted">아는 단어를 미리 체크합니다. 맞히는 게 아니라 <b>스스로 판단</b>하는 단계예요.</div></div>
+    <div class="wordrow"><div class="h">① 단어<span>${WORDS.length}문제</span></div>
+      <div class="muted">카드로 익히고 퀴즈로 확인합니다.</div></div>
+    <div class="wordrow"><div class="h">② 짝꿍 표현<span>${CHUNKS.length}문제</span></div>
+      <div class="muted">단어를 낱개가 아니라 <b>덩어리로</b> 익힙니다.</div></div>
+    <div class="wordrow"><div class="h">③ 처음 보는 말<span>${TRANSFER.length}문제</span></div>
+      <div class="muted">교과서에 <b>없는</b> 단어를 앞부분을 보고 추론합니다.</div></div>
+    <div class="wordrow"><div class="h">돌아보기 · 제출</div>
+      <div class="muted">결과를 확인하고 짧게 쓴 뒤 선생님께 보냅니다.</div></div>
+  </div>`;
+  document.getElementById("go").onclick=()=>{
+    const n=document.getElementById("i_name").value.trim();
+    const c=document.getElementById("i_cls").value, o=document.getElementById("i_no").value;
+    if(!c||!o||!n) return document.getElementById("err").innerHTML=
+      `<div class="fb no" style="margin-top:10px">반·번호·이름을 모두 채워 주세요.</div>`;
+    S.name=n; S.cls=c; S.no=o; save(); open(1);
+  };
+}
+
+// ════ 1. 사전점검 (한국어 뜻은 숨긴다) ══════════════════════
+let preSel={};
+function preCheck(){
+  if(S.pre) preSel=Object.assign({},S.pre);
+  view.innerHTML=`
+  <div class="card">
+    <h2>아는 단어를 체크하세요</h2>
+    <p class="muted">뜻이 <b>바로 떠오르는</b> 단어만 체크하세요. 정답·오답이 없습니다.
+      <br>정직하게 체크할수록 <b>나에게 딱 맞는 문제</b>가 나옵니다.</p>
+    <div style="height:10px"></div>
+    <div class="row">
+      <button class="b g sm" id="all" style="margin:0">전체 선택</button>
+      <button class="b g sm" id="none" style="margin:0">전체 해제</button>
+    </div>
+  </div>
+  <div class="card" style="padding:4px 12px" id="list"></div>
+  <div class="card" style="position:sticky;bottom:10px">
+    <div class="count" id="cnt"></div><div style="height:8px"></div>
+    <button class="b" id="next" style="margin:0">체크 완료</button>
+  </div>`;
+  const list=document.getElementById("list");
+  list.innerHTML=WORDS.map(c=>`<button class="chk" data-w="${esc(c.w)}" aria-pressed="false">
+      <span class="box">✓</span><span class="w">${esc(c.w)}</span>
+      <span class="st"></span></button>`).join("");
+  const refresh=()=>{
+    document.querySelectorAll(".chk").forEach(d=>{
+      const on=!!preSel[d.dataset.w];
+      d.classList.toggle("on",on); d.setAttribute("aria-pressed",on);
+      d.querySelector(".st").textContent=on?"안다":"";
+    });
+    document.getElementById("cnt").textContent=
+      `${Object.values(preSel).filter(Boolean).length} / ${WORDS.length}개 체크함`;
+  };
+  list.querySelectorAll(".chk").forEach(d=>d.onclick=()=>{preSel[d.dataset.w]=!preSel[d.dataset.w];refresh()});
+  document.getElementById("all").onclick=()=>{WORDS.forEach(c=>preSel[c.w]=true);refresh()};
+  document.getElementById("none").onclick=()=>{preSel={};refresh()};
+  document.getElementById("next").onclick=()=>{
+    S.pre={}; WORDS.forEach(c=>S.pre[c.w]=!!preSel[c.w]);
+    S.level=levelFromPre();                       // 다시 해도 항상 재계산
+    save(); drawSteps();
+    view.innerHTML=`<div class="card done"><div class="em">✅</div>
+      <div class="mid">체크한 단어 ${Object.values(S.pre).filter(Boolean).length}/${WORDS.length}개</div>
+      <div class="fb wa" style="margin-top:14px;text-align:left">
+        체크 결과는 나중에 실제 점수와 비교해서 보여줄게요.
+        <b>지금 몰라도 괜찮아요</b> — 그게 무엇을 공부할지 알려주는 정보입니다.</div></div>
+      <button class="b" id="go2">단어 학습 시작</button>`;
+    document.getElementById("go2").onclick=()=>open(2);
+  };
+  refresh();
+}
+
+// ════ 공통 퀴즈 엔진 ═══════════════════════════════════════
+function runQuiz(cfg){
+  inQuiz=true;
+  let i=0, ok=0, wrong=[], t0=Date.now();
+  const step=()=>{
+    if(i>=cfg.items.length){ inQuiz=false; S.prog=null; save(); return cfg.onDone({score:ok,total:cfg.items.length,wrong}); }
+    const q=cfg.render(cfg.items[i],i); t0=Date.now();
+    S.prog={kind:cfg.kind,i,ok,wrong}; save();
+    view.innerHTML=`
+      <div class="prog"><i style="width:${(i+1)/cfg.items.length*100}%"></i></div>
+      <div class="count">${i+1} / ${cfg.items.length}${ok?" · 맞은 개수 "+ok:""}${cfg.badge?" · "+cfg.badge:""}</div>
+      <div style="height:11px"></div>
+      <div class="card">
+        <div class="q">${q.text}</div>
+        ${q.input
+          ? `<input type="text" id="ti" autocomplete="off" autocapitalize="off" spellcheck="false"
+                   placeholder="영어로 쓰세요">
+             <div style="height:10px"></div>
+             <div class="row"><button class="b" id="ok" style="margin:0">확인</button>
+             <button class="b g" id="skip" style="margin:0">모르겠어요</button></div>`
+          : `<div id="opts">${q.opts.map((o,k)=>`<button class="opt" data-k="${k}">${esc(o)}</button>`).join("")}</div>
+             <button class="b g sm" id="skip" style="margin:4px 0 0">모르겠어요</button>
+             <div class="muted" style="margin-top:6px;text-align:center">
+               찍지 말고 눌러도 돼요. 이 단어는 다음에 먼저 나옵니다.</div>`}
+        <div id="fb"></div>
+      </div>`;
+    const finish=(pick,good,head,tone,flag)=>{
+      const ms=Date.now()-t0;
+      if(good) ok++;
+      else wrong.push(Object.assign({picked:pick||"(모름)",ms,flag:flag||""},q.meta));
+      document.getElementById("fb").innerHTML=
+        `<div class="fb ${good?"ok":(tone||"no")}">${head||(good?"정답!":`정답은 <b>${esc(q.answer)}</b>`)}
+          ${q.after?`<br>${q.after}`:""}</div>
+         <div style="height:10px"></div><button class="b" id="nx" style="margin:0">다음</button>`;
+      document.getElementById("nx").onclick=()=>{i++;step()};
+    };
+    if(q.input){
+      const ti=document.getElementById("ti"), okb=document.getElementById("ok");
+      const lock=()=>{ti.disabled=true;okb.disabled=true;document.getElementById("skip").disabled=true};
+      const go=()=>{
+        const v=ti.value.trim();
+        if(!v){ document.getElementById("fb").innerHTML=
+          `<div class="fb wa">답을 쓴 뒤 확인을 누르세요. 모르겠으면 <b>모르겠어요</b>를 누르면 정답을 알려줄게요.</div>`;
+          return ti.focus(); }
+        if(/[ㄱ-ㅎ가-힣]/.test(v)){ document.getElementById("fb").innerHTML=
+          `<div class="fb wa">한글로 입력됐어요. 키보드를 <b>영어</b>로 바꾼 뒤 다시 써 주세요.</div>`;
+          ti.value=""; return ti.focus(); }
+        const m=near(v,q.answer); lock();
+        if(m==="exact") finish(v,true,"정답!");
+        else if(m==="near") finish(v,false,
+          `아깝다! 철자가 조금 달라요. 정답은 <b>${esc(q.answer)}</b>`,"wa","near");
+        else finish(v,false);
+      };
+      okb.onclick=go;
+      document.getElementById("skip").onclick=()=>{lock();
+        finish("",false,`괜찮아요. 정답은 <b>${esc(q.answer)}</b>`,"wa","skip")};
+      ti.onkeydown=e=>{ if(e.isComposing||e.keyCode===229) return; if(e.key==="Enter") go(); };
+      ti.focus();
+    }else{
+      const skb=document.getElementById("skip");
+      const shut=()=>{ view.querySelectorAll(".opt").forEach(x=>x.disabled=true); skb.disabled=true; };
+      view.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+        const pick=q.opts[+b.dataset.k], good=pick===q.answer;
+        shut();
+        view.querySelectorAll(".opt").forEach((x,k)=>{
+          if(q.opts[k]===q.answer)x.classList.add("ok"); else if(x===b)x.classList.add("no")});
+        finish(pick,good);
+      });
+      skb.onclick=()=>{
+        shut();
+        view.querySelectorAll(".opt").forEach((x,k)=>{ if(q.opts[k]===q.answer)x.classList.add("ok") });
+        finish("(모르겠어요)",false,`솔직하게 눌렀네요. 정답은 <b>${esc(q.answer)}</b>`,"wa","skip");
+      };
+    }
+  };
+  step();
+}
+
+// ════ 2. 단어 ══════════════════════════════════════════════
+let wMode="menu",cards=[],ci=0,flip=false;
+function wordTab(){
+  if(wMode==="card") return renderCard();
+  const st=ensureSets("w",WORDS.map(c=>c.w)), a=agg(st), L=curLevel();
+  const known=Object.values(S.pre||{}).filter(Boolean).length;
+  view.innerHTML=`
+  <div class="card">
+    <h2>① 단어 ${WORDS.length}개</h2>
+    <div class="fb wa" style="margin-bottom:10px">
+      <b>난이도 ${L.n}단계 · ${L.name}</b> — ${L.desc}
+      <br>사전점검에서 ${known}/${WORDS.length}개를 체크했어요. 세트를 마칠 때마다 난이도가 조정됩니다.</div>
+    ${a.done?`<div class="fb ok">지금까지 ${a.score}/${a.total} 맞음 · ${a.done}/${a.sets}세트 완료</div>
+      <div style="height:10px"></div>`:""}
+    <button class="b g" id="c" style="margin:0">먼저 카드로 익히기</button>
+  </div>
+  ${setMenu(st,"세트 고르기")}`;
+  document.getElementById("c").onclick=()=>{wMode="card";cards=shuffle(WORDS);ci=0;flip=false;renderCard()};
+  view.querySelectorAll(".opt[data-s]").forEach(b=>b.onclick=()=>startWQuiz(+b.dataset.s));
+}
+function renderCard(){
+  const c=cards[ci];
+  view.innerHTML=`
+    <div class="prog"><i style="width:${(ci+1)/cards.length*100}%"></i></div>
+    <div class="count">${ci+1} / ${cards.length}</div><div style="height:10px"></div>
+    <button class="flash" id="f">${flip
+      ?`<div class="ko">${esc(c.ko)}</div><div class="def">${esc(c.def)}</div>
+        <div class="ex">${esc(c.ex)}</div><div class="hint">눌러서 단어 보기</div>`
+      :`<div><span class="w">${esc(c.w)}</span></div><div><span class="p">${esc(c.pos)}</span></div>
+        <div class="hint">눌러서 뜻 보기</div>`}</button>
+    <div style="height:12px"></div>
+    <div class="row"><button class="b g sm" id="pv" ${ci?"":"disabled"} style="margin:0">이전</button>
+      <button class="b sm" id="nx" style="margin:0">${ci===cards.length-1?"끝내기":"다음"}</button></div>
+    <div style="height:8px"></div><button class="b g sm" id="bk">메뉴로</button>`;
+  document.getElementById("f").onclick=()=>{flip=!flip;renderCard()};
+  document.getElementById("pv").onclick=()=>{if(ci){ci--;flip=false;renderCard()}};
+  document.getElementById("nx").onclick=()=>{ci===cards.length-1?(wMode="menu",wordTab()):(ci++,flip=false,renderCard())};
+  document.getElementById("bk").onclick=()=>{wMode="menu";wordTab()};
+}
+function startWQuiz(si){
+  const st=ensureSets("w",WORDS.map(c=>c.w)), L=curLevel();
+  const list=st.plan[si].map(w=>WORDS.find(x=>x.w===w)).filter(Boolean);
+  const n=list.length;
+  const nType=Math.round(n*L.mix.type), nDef=Math.round(n*L.mix.def);
+  const kinds=[...Array(nType).fill("type"),...Array(nDef).fill("def")];
+  while(kinds.length<n) kinds.push("ko");
+  const mixed=shuffle(kinds.slice(0,n));
+  // 재응시일 때만 전에 틀린 단어를 앞으로
+  const order=st.results[si]?weighted(list,c=>c.w):shuffle(list);
+  const items=order.map((c,i)=>({c,kind:mixed[i]}));
+  runQuiz({items,kind:"word",badge:`${si+1}세트 · 난이도 ${L.n}단계`,
+    render:({c,kind})=>{
+      const base={answer:c.w,after:`<span style="font-style:italic">${esc(c.ex)}</span>`,
+                  meta:{w:c.w,ko:c.ko,kind}};
+      if(kind==="type") return Object.assign(base,{input:true,
+        text:`<b>${esc(c.ko)}</b><br><span class="muted">이 뜻의 영어 단어를 직접 쓰세요. (${esc(c.pos)})</span>`});
+      const opts=shuffle([c,...shuffle(WORDS.filter(x=>x.w!==c.w&&x.pos===c.pos)).slice(0,3)]);
+      while(opts.length<4){ const f=WORDS.find(x=>x.w!==c.w&&!opts.includes(x)); if(!f)break; opts.push(f); }
+      return Object.assign(base,{opts:shuffle(opts).map(x=>x.w),
+        text:kind==="ko"?`뜻이 <b>${esc(c.ko)}</b>인 단어는?`
+             :`<b>${esc(c.def)}</b><br><span class="muted">위 설명에 맞는 단어는?</span>`});
+    },
+    onDone:r=>{
+      const byKind={ko:{ok:0,n:0},def:{ok:0,n:0},type:{ok:0,n:0}};
+      items.forEach(it=>byKind[it.kind].n++);
+      Object.keys(byKind).forEach(k=>byKind[k].ok=byKind[k].n);
+      r.wrong.forEach(x=>{byKind[x.kind].ok--; noteMiss(x.w)});
+      const adj=adjustLevel(r.score/r.total);
+      const rec={score:r.score,wrong:r.wrong,byKind};
+      if(!st.first[si]) st.first[si]=rec;          // 첫 시도는 덮어쓰지 않는다
+      st.results[si]=rec; st.attempts=(st.attempts||0)+1; st.level=adj.old;
+      S.history=S.history.concat([{t:Date.now(),kind:"word",set:si+1,
+        score:r.score,total:r.total,level:adj.old}]);
+      save(); wMode="menu"; drawSteps();
+      const a=agg(st), left=st.results.filter(x=>!x).length;
+      const nm={ko:"뜻→단어",def:"영영정의→단어",type:"직접 쓰기"};
+      view.innerHTML=`
+      <div class="card done"><div class="em">${face(r.score,r.total)}</div>
+        <div class="mid">${si+1}세트 완료</div>
+        <div class="big">${r.score} / ${r.total}</div>
+        <div class="mid">${Object.keys(byKind).filter(k=>byKind[k].n)
+          .map(k=>`${nm[k]} ${byKind[k].ok}/${byKind[k].n}`).join(" · ")}
+          <br>누적 ${a.score}/${a.total} · ${a.done}/${a.sets}세트</div>
+        ${adj.next!==adj.old?`<div class="fb ${adj.next>adj.old?"ok":"wa"}" style="margin-top:12px">
+          다음 세트는 <b>${LEVELS[adj.next-1].n}단계 ${LEVELS[adj.next-1].name}</b>
+          — ${LEVELS[adj.next-1].desc}</div>`:""}
+        ${r.wrong.length?`<div class="wrong"><b>다시 볼 단어</b><br>${
+          r.wrong.map(x=>`${esc(x.w)} (${esc(x.ko)}) — ${esc(x.picked)}`).join("<br>")}</div>`:""}
+      </div>
+      ${left?`<button class="b" id="nx">${nextSet(st)+1}세트 이어서 풀기 (${SETSIZE}문항)</button>`
+            :`<button class="b" id="go3">② 짝꿍 표현으로 가기</button>`}
+      <button class="b g" id="menu">세트 목록으로</button>
+      <button class="b g" id="sub">시간이 없어요 · 여기서 제출하기</button>`;
+      const $=id=>document.getElementById(id);
+      if($("nx")) $("nx").onclick=()=>startWQuiz(nextSet(st));
+      if($("go3")) $("go3").onclick=()=>open(3);
+      $("menu").onclick=()=>{wMode="menu";wordTab()};
+      $("sub").onclick=()=>open(SUBMIT_STEP);
+    }});
+}
+
+// ════ 3. 짝꿍 표현 ═════════════════════════════════════════
+let cMode="menu";
+function chunkTab(){
+  if(cMode==="explore") return renderExplore();
+  const st=ensureSets("c",CHUNKS.map((_,i)=>i)), a=agg(st);
+  view.innerHTML=`
+  <div class="card">
+    <h2>② 짝꿍 표현 — 덩어리로 외우기</h2>
+    <p class="muted">영어는 단어가 <b>짝을 지어</b> 다닙니다.
+      <b>waste</b>만 알면 <b>food waste</b>를 못 쓰지만, 덩어리로 외우면 바로 씁니다.
+      모두 교과서 본문에 나온 표현이에요.</p>
+    ${a.done?`<div class="fb ok">지금까지 ${a.score}/${a.total} 맞음</div><div style="height:10px"></div>`:""}
+    <button class="b g" id="e" style="margin:0">먼저 덩어리 살펴보기</button>
+  </div>
+  ${setMenu(st,"세트 고르기")}`;
+  document.getElementById("e").onclick=()=>{cMode="explore";renderExplore()};
+  view.querySelectorAll(".opt[data-s]").forEach(b=>b.onclick=()=>startCQuiz(+b.dataset.s));
+}
+function renderExplore(){
+  view.innerHTML=`
+  <div class="card"><h2>교과서 본문에 나온 덩어리</h2>
+    <p class="muted">Lesson 5 본문에 실제로 등장한 표현입니다.</p></div>
+  <div class="card">${WORDS.map(c=>`<div class="wordrow">
+    <div class="h">${esc(c.w)}<span>${esc(c.ko)}</span></div>
+    <div><span class="chip">${esc(c.col)}</span></div>
+    <div class="muted" style="margin-top:4px;font-style:italic">${esc(c.ex)}</div></div>`).join("")}</div>
+  <button class="b" id="q2">빈칸 채우기 풀어보기</button>
+  <button class="b g" id="bk">메뉴로</button>`;
+  document.getElementById("q2").onclick=startCQuiz;
+  document.getElementById("bk").onclick=()=>{cMode="menu";chunkTab()};
+}
+function startCQuiz(si){
+  const st=ensureSets("c",CHUNKS.map((_,i)=>i));
+  const items=shuffle(st.plan[si].map(i=>CHUNKS[i]));
+  const forms=CHUNKS.map(c=>c[1]);
+  runQuiz({items,kind:"chunk",badge:`${si+1}세트`,
+    render:([sent,ans,base,type])=>{
+      const opts=shuffle([ans,...shuffle(forms.filter(f=>f!==ans)).slice(0,3)]);
+      const full=WORDS.find(w=>w.w===base);
+      return {text:sent.replace("______","<b>______</b>"),opts,answer:ans,
+              after:full?`덩어리: <b>${esc(full.col)}</b>`:"",meta:{w:base,type}};
+    },
+    onDone:r=>{
+      const byType={adj:{ok:0,n:0},verb:{ok:0,n:0},prep:{ok:0,n:0}};
+      items.forEach(([,,,t])=>{(byType[t]=byType[t]||{ok:0,n:0}).n++});
+      Object.keys(byType).forEach(t=>byType[t].ok=byType[t].n);
+      r.wrong.forEach(x=>{byType[x.type].ok--; noteMiss(x.w)});
+      const rec={score:r.score,wrong:r.wrong,byType};
+      if(!st.first[si]) st.first[si]=rec;
+      st.results[si]=rec; st.attempts=(st.attempts||0)+1;
+      S.history=S.history.concat([{t:Date.now(),kind:"chunk",set:si+1,score:r.score,total:r.total}]);
+      save(); cMode="menu"; drawSteps();
+      const a=agg(st), left=st.results.filter(x=>!x).length;
+      view.innerHTML=`
+      <div class="card done"><div class="em">${face(r.score,r.total)}</div>
+        <div class="mid">${si+1}세트 완료</div>
+        <div class="big">${r.score} / ${r.total}</div>
+        <div class="mid">누적 ${a.score}/${a.total} · ${a.done}/${a.sets}세트</div>
+        ${r.wrong.length?`<div class="wrong"><b>다시 볼 덩어리</b><br>${
+          r.wrong.map(x=>{const f=WORDS.find(w=>w.w===x.w);
+            return `${esc(f?f.col:x.w)} — ${esc(x.picked)}`}).join("<br>")}</div>`:""}
+      </div>
+      ${left?`<button class="b" id="nx">${nextSet(st)+1}세트 이어서 풀기</button>`
+            :`<button class="b" id="go4">③ 처음 보는 말로 가기</button>`}
+      <button class="b g" id="menu">세트 목록으로</button>
+      <button class="b g" id="sub">시간이 없어요 · 여기서 제출하기</button>`;
+      const $=id=>document.getElementById(id);
+      if($("nx")) $("nx").onclick=()=>startCQuiz(nextSet(st));
+      if($("go4")) $("go4").onclick=()=>open(4);
+      $("menu").onclick=()=>{cMode="menu";chunkTab()};
+      $("sub").onclick=()=>open(SUBMIT_STEP);
+    }});
+}
+
+// ════ 4. 처음 보는 말 (접두사 추론) ════════════════════════
+function transTab(){
+  const r=S.t;
+  view.innerHTML=`
+  <div class="card">
+    <h2>③ 처음 보는 말 추론하기</h2>
+    <p class="muted">여기 나오는 단어는 <b>교과서에 없습니다.</b> 외운 걸 묻는 게 아니에요.
+      <br><br>문장을 읽고, 단어의 <b>앞부분과 뒷부분</b>을 나눠서 생각해 보세요.
+      모르는 게 당연하니 편하게 골라도 됩니다.</p>
+    <div style="height:10px"></div>
+    <button class="b" id="q" style="margin-bottom:0">추론 문제 풀기 (${TRANSFER.length}문제)</button>
+    ${r?`<div class="fb ok" style="margin-top:12px">최근 ${r.score}/${TRANSFER.length} ·
+      ${Object.entries(r.byPre).map(([k,v])=>`${k} ${v.ok}/${v.n}`).join(" · ")}</div>`:""}
+  </div>`;
+  document.getElementById("q").onclick=startTQuiz;
+}
+function startTQuiz(){
+  const items=shuffle(TRANSFER);
+  runQuiz({items,kind:"transfer",
+    render:([w,pre,sense,sent,ans,bad])=>({
+      text:`${esc(sent).replace(w,`<b>${w}</b>`)}
+            <br><span class="muted">굵게 쓴 <b>${esc(w)}</b>의 뜻은 무엇일까요?</span>`,
+      opts:shuffle([ans,...bad]),answer:ans,
+      after:`<b>${esc(pre)}</b> 가 여기서는 <b>${esc(sense)}</b> 라는 뜻이에요 →
+             ${esc(w)} = ${esc(ans)}`,
+      meta:{w,pre}}),
+    onDone:r=>{
+      const byPre={};
+      items.forEach(([,p])=>{(byPre[p]=byPre[p]||{ok:0,n:0}).n++});
+      Object.keys(byPre).forEach(p=>byPre[p].ok=byPre[p].n);
+      r.wrong.forEach(x=>{byPre[x.pre].ok--; noteMiss(x.w)});
+      const prev=S.t;
+      S.t={score:r.score,total:r.total,first:prev?prev.first:r.score,
+           best:Math.max(prev?prev.best||0:0,r.score),
+           attempts:(prev?prev.attempts:0)+1,wrong:r.wrong,byPre};
+      S.history=S.history.concat([{t:Date.now(),kind:"transfer",score:r.score,total:r.total}]);
+      save(); drawSteps();
+      view.innerHTML=`
+      <div class="card done"><div class="em">${face(r.score,r.total)}</div>
+        <div class="big">${r.score} / ${r.total}</div>
+        <div class="mid">${Object.entries(byPre).map(([k,v])=>`${k} ${v.ok}/${v.n}`).join(" · ")}</div>
+        <div class="fb wa" style="margin-top:12px;text-align:left">
+          같은 <b>under-</b> 라도 뜻이 하나가 아니에요.
+          <b>underpass</b>는 '아래', <b>underweight</b>는 '기준보다 적은'입니다.
+          앞부분만 보고 단정하지 말고 <b>문장 전체</b>를 함께 보세요.</div>
+        ${r.wrong.length?`<div class="wrong"><b>다시 볼 단어</b><br>${
+          r.wrong.map(x=>`${esc(x.w)} — ${esc(x.picked)}`).join("<br>")}</div>`:""}
+      </div>
+      <button class="b" id="nx2">④ 문장 쓰러 가기</button>
+      <button class="b g" id="ag">한 번 더 풀기</button>`;
+      document.getElementById("ag").onclick=startTQuiz;
+      document.getElementById("nx2").onclick=()=>open(5);
+    }});
+}
+
+// ════ 5. 문장 쓰기 ═════════════════════════════════════════
+let wrMode="menu", wrIdx=0;
+
+function writeTab(){
+  const st=wrItems();
+  if(wrMode==="write") return wrWrite();
+  if(wrMode==="why")   return wrWhy();
+  if(wrMode==="model") return wrModel();
+  view.innerHTML=`
+  <div class="card">
+    <h2>④ 문장 쓰기 <span class="muted" style="font-weight:400">· ${wrDone()}/${WRITE.length}</span></h2>
+    <p class="muted">지금까지 익힌 단어와 덩어리로 <b>내 문장</b>을 만들어 봅니다.
+      여기서 쓴 네 문장이 곧 <b>Monica에게 보낼 이메일의 재료</b>가 돼요.</p>
+    <div class="fb wa" style="margin-top:10px">
+      정답을 맞히는 게 아닙니다. <b>틀려도 괜찮으니 내 말로</b> 쓰세요.</div>
+  </div>
+  <div class="card">
+    ${WRITE.map((it,i)=>{const d=st.items[i];
+      return `<button class="opt" data-i="${i}" style="display:block">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <b>${it.tag}</b>
+          <span>${d.text?`<span class="muted">완료 ✓</span>`:`<b style="color:#1f6feb">쓰러 가기 →</b>`}</span>
+        </div>
+        ${d.text?`<div class="muted" style="margin-top:5px;font-style:italic">${esc(d.revised||d.text)}</div>`:""}
+      </button>`}).join("")}
+  </div>
+  ${wrDone()===WRITE.length?`<button class="b" id="nx">돌아보기로 가기</button>`:""}
+  <button class="b g" id="sub">시간이 없어요 · 여기서 제출하기</button>`;
+  view.querySelectorAll(".opt[data-i]").forEach(b=>b.onclick=()=>{
+    wrIdx=+b.dataset.i; wrMode="write"; wrWrite(); });
+  const nx=document.getElementById("nx"); if(nx) nx.onclick=()=>open(6);
+  document.getElementById("sub").onclick=()=>open(SUBMIT_STEP);
+}
+
+function wrWrite(){
+  const it=WRITE[wrIdx], d=wrItems().items[wrIdx];
+  view.innerHTML=`
+  <div class="count">${wrIdx+1} / ${WRITE.length} · ${it.tag}</div>
+  <div style="height:10px"></div>
+  <div class="card">
+    <div class="q">${it.ask}</div>
+    <div class="fb wa">${it.hint}</div>
+    <div style="height:10px"></div>
+    <textarea id="tx" placeholder="영어로 한 문장">${esc(d.text)}</textarea>
+    <div class="muted" style="margin-top:6px">이런 표현을 써 보세요 — 눌러서 넣기</div>
+    <div class="chunk" style="margin-top:5px">
+      ${it.chips.map(c=>`<button class="chip" data-c="${esc(c)}" style="cursor:pointer">${esc(c)}</button>`).join("")}</div>
+    <div id="live" class="muted" style="margin-top:10px"></div>
+    <div style="height:12px"></div>
+    <button class="b" id="ok" style="margin:0">다 썼어요</button>
+  </div>
+  <button class="b g" id="bk">목록으로</button>`;
+  const tx=document.getElementById("tx");
+  const live=()=>{const c=checkSentence(tx.value,it);
+    document.getElementById("live").innerHTML=
+      `${c.words}단어 · 단원 어휘 ${c.used.length}개${c.used.length?" ("+c.used.slice(0,4).join(", ")+")":""}`;};
+  tx.oninput=live; live();
+  view.querySelectorAll(".chip[data-c]").forEach(b=>b.onclick=()=>{
+    tx.value=(tx.value.trim()+" "+b.dataset.c).trim(); tx.focus(); live(); });
+  document.getElementById("ok").onclick=()=>{
+    const v=tx.value.trim();
+    if(v.split(/\s+/).length<4) return document.getElementById("live").innerHTML=
+      `<span style="color:#a41e1e">조금 더 길게 써 주세요. (4단어 이상)</span>`;
+    d.text=v; save(); drawSteps();
+    wrMode=it.why?"why":"model"; it.why?wrWhy():wrModel();
+  };
+  document.getElementById("bk").onclick=()=>{wrMode="menu";writeTab()};
+}
+
+function wrWhy(){
+  const it=WRITE[wrIdx], d=wrItems().items[wrIdx];
+  const sel=(d.why&&d.why.tags)||[];
+  view.innerHTML=`
+  <div class="count">${wrIdx+1} / ${WRITE.length} · ${it.tag}</div>
+  <div style="height:10px"></div>
+  <div class="card">
+    <h2>왜 이렇게 썼나요?</h2>
+    <div class="fb ok" style="font-style:italic">${esc(d.text)}</div>
+    <div style="height:12px"></div>
+    <label>이 문장에서 가장 신경 쓴 것은? (여러 개 고를 수 있어요)</label>
+    ${WHY_TAGS.map((t,i)=>`<button class="chk ${sel.includes(t)?"on":""}" data-t="${esc(t)}"
+        style="border:1px solid #e3e7ed;border-radius:9px;margin-bottom:6px">
+        <span class="box">✓</span><span class="w" style="font-size:15px">${esc(t)}</span></button>`).join("")}
+    <label>왜 그렇게 했는지 한 줄로 써 주세요</label>
+    <input type="text" id="note" placeholder="예: 원인을 먼저 말해야 이해될 것 같아서"
+           value="${esc((d.why&&d.why.note)||"")}">
+    <div class="fb wa" style="margin-top:12px">
+      이걸 저장하면 <b>예시 문장</b>이 열립니다. 저장한 뒤에는 이 답을 고칠 수 없어요.</div>
+    <div style="height:10px"></div>
+    <button class="b" id="ok" style="margin:0">저장하고 예시 보기</button>
+    <div id="err"></div>
+  </div>`;
+  let picked=sel.slice();
+  view.querySelectorAll(".chk[data-t]").forEach(b=>b.onclick=()=>{
+    const t=b.dataset.t;
+    picked=picked.includes(t)?picked.filter(x=>x!==t):picked.concat([t]);
+    b.classList.toggle("on",picked.includes(t)); });
+  document.getElementById("ok").onclick=()=>{
+    const note=document.getElementById("note").value.trim();
+    if(!picked.length&&!note) return document.getElementById("err").innerHTML=
+      `<div class="fb no" style="margin-top:10px">하나라도 고르거나 한 줄 써 주세요.</div>`;
+    d.why={tags:picked,note}; save();
+    wrMode="model"; wrModel();
+  };
+}
+
+function wrModel(){
+  const it=WRITE[wrIdx], d=wrItems().items[wrIdx];
+  d.seen=true; save();
+  const c=checkSentence(d.revised||d.text,it);
+  view.innerHTML=`
+  <div class="count">${wrIdx+1} / ${WRITE.length} · ${it.tag}</div>
+  <div style="height:10px"></div>
+  <div class="card">
+    <h2>내 문장 점검</h2>
+    <div class="fb ok" style="font-style:italic">${esc(d.revised||d.text)}</div>
+    <table class="cmp">
+      <tr><td>${it.rule.label}</td><td>${c.rule?"✅ 썼어요":"⬜ 안 썼어요"}</td></tr>
+      <tr><td>단원 어휘</td><td>${c.used.length}개</td></tr>
+      <tr><td>길이</td><td>${c.words}단어</td></tr>
+    </table>
+    <div class="muted" style="margin-top:8px">형식만 본 것입니다.
+      내용이 잘 통하는지는 선생님이 봐 주실 거예요.</div>
+  </div>
+  <div class="card">
+    <h2>이렇게도 쓸 수 있어요</h2>
+    <p class="muted">정답이 아니라 <b>참고</b>입니다. 내 문장과 무엇이 다른지 보세요.</p>
+    ${it.models.map(m=>`<div class="fb wa" style="margin-bottom:7px;font-style:italic">${esc(m)}</div>`).join("")}
+  </div>
+  <div class="card">
+    <details><summary class="muted">내 문장을 고치고 싶다면 (원래 문장은 그대로 남습니다)</summary>
+      <div style="height:10px"></div>
+      <textarea id="rv" placeholder="고쳐 쓴 문장">${esc(d.revised)}</textarea>
+      <div style="height:8px"></div>
+      <button class="b g sm" id="sv" style="margin:0">고쳐쓰기 저장</button>
+    </details>
+  </div>
+  ${wrIdx<WRITE.length-1?`<button class="b" id="nx">다음 문장 쓰기</button>`
+    :`<button class="b" id="fin">네 문장 완성! 돌아보기로</button>`}
+  <button class="b g" id="bk">목록으로</button>`;
+  document.getElementById("sv").onclick=()=>{
+    d.revised=document.getElementById("rv").value.trim(); save(); wrModel(); };
+  const $=id=>document.getElementById(id);
+  if($("nx")) $("nx").onclick=()=>{wrIdx++;wrMode="write";wrWrite()};
+  if($("fin")) $("fin").onclick=()=>open(6);
+  $("bk").onclick=()=>{wrMode="menu";writeTab()};
+}
+
+// ════ 6. 돌아보기 ══════════════════════════════════════════
+function compare(){
+  const st=S.w;
+  if(!st||!st.plan) return null;
+  // 첫 시도 기준. 아직 안 푼 세트의 단어는 판정에서 제외한다.
+  const judged=new Set(), wrongSet=new Set();
+  st.first.forEach((r,i)=>{ if(!r) return;
+    st.plan[i].forEach(w=>judged.add(w));
+    (r.wrong||[]).forEach(x=>wrongSet.add(x.w)); });
+  const g={kw:[],ku:[],uk:[],uu:[],pending:0};
+  WORDS.forEach(c=>{
+    if(!judged.has(c.w)){ g.pending++; return; }
+    const said=!!(S.pre&&S.pre[c.w]), missed=wrongSet.has(c.w);
+    if(said&&!missed)g.kw.push(c.w); else if(said&&missed)g.ku.push(c.w);
+    else if(!said&&!missed)g.uk.push(c.w); else g.uu.push(c.w);
+  });
+  return g;
+}
+// 분류 한 칸 — 개수 바로 아래에 해당 단어를 보여준다
+function grp(cls,name,sub,list,empty){
+  return `<div class="grp ${cls}">
+    <div class="top"><span class="nm">${name}</span><span class="ct">${list.length}개</span></div>
+    <div class="sub">${sub}</div>
+    ${list.length?`<div class="wl">${list.map(w=>`<span>${esc(w)}</span>`).join("")}</div>`
+                 :`<div class="none">${empty}</div>`}
+  </div>`;
+}
+function reflectTab(){
+  const g=compare();
+  view.innerHTML=`
+  <div class="card">
+    <h2>체크한 것과 실제 결과</h2>
+    <p class="muted">시작할 때 체크한 것과 <b>각 세트를 처음 풀었을 때</b>의 결과를 비교했어요.
+      ${g.pending?`<br>아직 안 푼 세트의 단어 <b>${g.pending}개</b>는 빠져 있습니다.`:""}</p>
+    ${grp("hi","안다고 했는데 틀림","가장 주의할 단어 — 안다고 생각했지만 아니었어요",g.ku,"없어요! 체크한 단어를 모두 맞혔어요 👏")}
+    ${grp("gd","모른다 했는데 맞음","공부한 게 통했어요",g.uk,"아직 없어요")}
+    ${grp("","모른다 했고 틀림","솔직했어요 — 여기부터 외우면 됩니다",g.uu,"없어요")}
+    ${g.kw.length?`<details class="grp"><summary>안다 했고 맞음 ${g.kw.length}개 — 눌러서 보기</summary>
+      <div class="wl">${g.kw.map(w=>`<span>${esc(w)}</span>`).join("")}</div></details>`:""}
+  </div>
+  <div class="card">
+    <h2>짧게 돌아보기</h2>
+    <label>1. ${g.ku.length
+      ? `<b>${g.ku.map(esc).join(", ")}</b> — 안다고 했는데 틀렸어요. 왜 그랬을까요?`
+      : `틀린 단어들은 왜 틀렸다고 생각하나요?`}</label>
+    <textarea id="ra" placeholder="자유롭게 쓰세요">${esc(S.reflect.a)}</textarea>
+    <label>2. 다음에 단어를 외울 때 무엇을 다르게 해볼까요?</label>
+    <textarea id="rb" placeholder="자유롭게 쓰세요">${esc(S.reflect.b)}</textarea>
+    <div style="height:12px"></div>
+    <button class="b" id="sv" style="margin:0">저장하고 내 기록 보기</button>
+  </div>`;
+  const keep=()=>{S.reflect.a=document.getElementById("ra").value.trim();
+                  S.reflect.b=document.getElementById("rb").value.trim();save()};
+  document.getElementById("ra").oninput=keep; document.getElementById("rb").oninput=keep;
+  document.getElementById("sv").onclick=()=>{keep();drawSteps();open(7)};
+}
+
+// ════ 6. 내 기록 ═══════════════════════════════════════════
+function historyTab(){
+  const H=(S.history||[]).slice().reverse();
+  const nm={word:"① 단어",chunk:"② 짝꿍 표현",transfer:"③ 처음 보는 말"};
+  const tot={word:WORDS.length,chunk:CHUNKS.length,transfer:TRANSFER.length};
+  const missTop=Object.entries(S.miss||{}).filter(([,n])=>n>0).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  view.innerHTML=`
+  <div class="card">
+    <h2>내 기록</h2>
+    ${!H.length?`<div class="fb wa">아직 푼 퀴즈가 없어요.</div>`:(()=>{
+      const aw=agg(S.w), ac=agg(S.c);
+      return `<table class="cmp">
+      <tr><td>현재 난이도</td><td>${curLevel().n}단계 ${curLevel().name}</td></tr>
+      <tr><td>① 단어</td><td>${aw&&aw.done?`${aw.score}/${aw.total} · ${aw.done}/${aw.sets}세트`:"—"}</td></tr>
+      <tr><td>② 짝꿍 표현</td><td>${ac&&ac.done?`${ac.score}/${ac.total} · ${ac.done}/${ac.sets}세트`:"—"}</td></tr>
+      <tr><td>③ 처음 보는 말</td><td>${S.t?S.t.best+"/"+tot.transfer:"—"}</td></tr>
+      <tr><td>총 응시</td><td>${H.length}회</td></tr>
+    </table>`})()}
+  </div>
+  ${H.length?`<div class="card"><h2>회차별 점수</h2>
+    ${H.map(h=>{const p=Math.round(h.score/h.total*100),d=new Date(h.t);
+      return `<div style="margin:9px 0">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px">
+          <span><b>${nm[h.kind]}</b>${h.set?` ${h.set}세트`:""}
+            <span class="muted">${d.getMonth()+1}/${d.getDate()}</span></span>
+          <span style="font-weight:700">${h.score}/${h.total}</span></div>
+        <div class="prog" style="margin:0"><i style="width:${p}%;background:${p>=90?"#128a4e":p>=60?"#1f6feb":"#c47a13"}"></i></div>
+      </div>`}).join("")}</div>`:""}
+  ${missTop.length?`<div class="card"><h2>계속 틀리는 단어</h2>
+    <p class="muted">여러 번 틀린 단어가 위에 있습니다. 다음 퀴즈에서 앞쪽에 나와요.</p>
+    ${missTop.map(([w,n])=>{const c=WORDS.find(x=>x.w===w);
+      return `<div class="wordrow"><div class="h">${esc(w)}<span>${esc(c?c.ko:"")}</span>
+        <span style="float:right;color:#a41e1e">${n}회</span></div>
+        ${c?`<div><span class="chip">${esc(c.col)}</span></div>`:""}</div>`}).join("")}</div>`:""}
+  <button class="b" id="go">마지막 단계 · 선생님께 제출하기</button>
+  <button class="b g" id="back">퀴즈 더 풀기</button>`;
+  document.getElementById("go").onclick=()=>open(SUBMIT_STEP);
+  document.getElementById("back").onclick=()=>open(2);
+}
+
+// ════ 7. 제출 ══════════════════════════════════════════════
+function payload(){
+  const g=compare(), aw=agg(S.w), ac=agg(S.c), wk=mergeCounts(S.w,"byKind");
+  const wi=wrItems().items;
+  const whyStr=d=>d.why?[(d.why.tags||[]).join("/"),d.why.note].filter(Boolean).join(" — "):"";
+  const conf=a=>(a||[]).map(x=>`${x.w}>${x.picked}`).join(" | ");
+  const bits=WORDS.map(c=>(S.pre&&S.pre[c.w])?"1":"0").join("");
+  const p={
+    unit:UNIT.id, sid:S.sid,
+    cls:S.cls, no:S.no, name:S.name,
+    pre_known:Object.values(S.pre||{}).filter(Boolean).length,
+    pre_bits:bits,
+    level_start:levelFromPre(), level_now:S.level||levelFromPre(),
+    attempts:(S.history||[]).length,
+    w_sets:aw?`${aw.done}/${aw.sets}`:"", w_score:aw?`${aw.score}/${aw.total}`:"",
+    w_first:aw?`${aw.fscore}/${aw.ftotal}`:"",
+    w_ko:fmt(wk.ko), w_def:fmt(wk.def), w_type:fmt(wk.type),
+    w_conf:aw?conf(aw.wrong):"",
+    w_spell:aw?aw.wrong.filter(x=>x.flag==="near").map(x=>`${x.w}(${x.picked})`).join(" "):"",
+    skips:[aw&&aw.wrong,ac&&ac.wrong,S.t&&S.t.wrong].filter(Boolean)
+            .reduce((n,a)=>n+a.filter(x=>x.flag==="skip").length,0),
+    skip_words:[...new Set([aw&&aw.wrong,ac&&ac.wrong,S.t&&S.t.wrong].filter(Boolean)
+            .flat().filter(x=>x.flag==="skip").map(x=>x.w))].join(" "),
+    c_sets:ac?`${ac.done}/${ac.sets}`:"", c_score:ac?`${ac.score}/${ac.total}`:"",
+    c_first:ac?`${ac.fscore}/${ac.ftotal}`:"", c_conf:ac?conf(ac.wrong):"",
+    t_best:S.t?S.t.best:"", t_pre:S.t?Object.entries(S.t.byPre).map(([k,v])=>`${k} ${v.ok}/${v.n}`).join(" · "):"",
+    t_conf:S.t?conf(S.t.wrong):"",
+    wr_done:`${wrDone()}/${WRITE.length}`,
+    wr_rules:WRITE.map((it,i)=>wi[i].text
+      ? `${it.tag} ${checkSentence(wi[i].revised||wi[i].text,it).rule?"O":"X"}` : `${it.tag} -`).join(" · "),
+    wr_vocab:WRITE.reduce((s,it,i)=>s+(wi[i].text
+      ? checkSentence(wi[i].revised||wi[i].text,it).used.length : 0),0),
+    wr_s1:wi[0].text, wr_s2:wi[1].text, wr_s3:wi[2].text, wr_s4:wi[3].text,
+    wr_rev:WRITE.map((it,i)=>wi[i].revised?`${it.tag}: ${wi[i].revised}`:"").filter(Boolean).join(" || "),
+    wr_why_cause:whyStr(wi[0]), wr_why_emph:whyStr(wi[3]),
+    repeat_miss:Object.entries(S.miss||{}).filter(([,n])=>n>1).sort((a,b)=>b[1]-a[1])
+                  .map(([w,n])=>`${w}x${n}`).join(" "),
+    known_wrong:g?g.ku.join(" "):"",
+    reflect1:S.reflect.a, reflect2:S.reflect.b
+  };
+  return p;
+}
+async function send(P,tries=4){
+  for(let i=0;i<tries;i++){
+    try{
+      const opt={method:"POST",
+        headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
+        body:new URLSearchParams(P).toString()};
+      if(window.AbortSignal&&AbortSignal.timeout) opt.signal=AbortSignal.timeout(45000);
+      const r=await fetch(POST_URL,opt);
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      const j=await r.json();
+      if(!j.ok) throw new Error(j.error||"server");
+      return j;
+    }catch(e){
+      if(i===tries-1) throw e;
+      await new Promise(s=>setTimeout(s,(2**i)*2000+Math.random()*3000));
+    }
+  }
+}
+function submitTab(){
+  if(!S.sid){ S.sid=(crypto&&crypto.randomUUID)?crypto.randomUUID()
+              :Date.now()+"-"+Math.random().toString(36).slice(2); save(); }
+  const P=payload(), aw=agg(S.w), ac=agg(S.c);
+  const nothing=!hasDone("w")&&!hasDone("c")&&!S.t;
+  const left=[];
+  if(aw&&aw.done<aw.sets) left.push(`① 단어 ${aw.sets-aw.done}세트`);
+  if(ac&&ac.done<ac.sets) left.push(`② 짝꿍 표현 ${ac.sets-ac.done}세트`);
+  if(!S.t) left.push("③ 처음 보는 말");
+  const cell=(v)=>v?v:`<span class="muted">아직 안 풂</span>`;
+  const txt=Object.entries(P).map(([k,v])=>`${k}: ${v}`).join("\n");
+  view.innerHTML=`
+  <div class="card">
+    <h2>제출</h2>
+    <div class="mid" style="text-align:left">
+      ① 단어 ${cell(P.w_score)} ${aw&&aw.done?`<span class="muted">(${P.w_sets}세트)</span>`:""}<br>
+      ② 짝꿍 표현 ${cell(P.c_score)} ${ac&&ac.done?`<span class="muted">(${P.c_sets}세트)</span>`:""}<br>
+      ③ 처음 보는 말 ${cell(P.t_best?P.t_best+"/"+TRANSFER.length:"")}</div>
+    ${left.length?`<div class="fb wa" style="margin-top:10px">
+      아직 <b>${left.join(" · ")}</b>가 남았어요.
+      <b>지금 제출해도 괜찮습니다</b> — 나중에 이어서 풀고 다시 제출하면 됩니다.
+      <button class="b sm" id="jump2" style="width:auto;display:inline-block;margin:6px 0 0">이어서 풀기</button></div>`:""}
+    ${nothing?`<div class="fb no" style="margin-top:10px">아직 아무 세트도 풀지 않았어요.
+      한 세트라도 풀고 제출해 주세요.</div>`:""}
+    ${!S.reflect.a&&!S.reflect.b?`<div class="fb wa" style="margin-top:8px">
+      돌아보기가 비어 있어요. 짧게라도 써 주세요.</div>`:""}
+    ${S.receipt?`<div class="fb ok" style="margin-top:10px">
+      제출 완료 · <b>접수번호 ${esc(S.receipt)}</b><br>선생님 화면에 이 번호로 기록됐어요.</div>`:""}
+    <div style="height:12px"></div>
+    <button class="b" id="send" ${nothing?"disabled":""} style="margin:0">
+      ${S.sent?"다시 제출하기 (최신 기록으로 갱신)":"선생님께 제출하기"}</button>
+    <div id="msg"></div>
+  </div>
+  <div class="card">
+    <h2>전송이 안 될 때</h2>
+    <p class="muted">아래 내용을 복사해서 선생님이 알려준 곳에 붙여넣으세요.</p>
+    <textarea id="code" readonly style="min-height:150px;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:#f9fafb">${esc(txt)}</textarea>
+    <div style="height:10px"></div>
+    <button class="b g sm" id="copy" style="margin:0">내용 복사</button>
+  </div>
+  <div class="card">
+    <details><summary class="muted">처음부터 다시 하고 싶다면</summary>
+      <div style="height:10px"></div>
+      <button class="danger b sm" id="reset" style="margin:0">기록을 모두 지우기</button></details>
+  </div>`;
+
+  const j2=document.getElementById("jump2");
+  if(j2) j2.onclick=()=>open((aw&&aw.done<aw.sets)?2:(ac&&ac.done<ac.sets)?3:4);
+  const msg=t=>document.getElementById("msg").innerHTML=t;
+
+  document.getElementById("copy").onclick=async()=>{
+    const ta=document.getElementById("code");
+    try{ await navigator.clipboard.writeText(ta.value);
+      msg(`<div class="fb ok" style="margin-top:10px">복사했어요. 선생님이 알려준 곳에 붙여넣으세요.</div>`);
+    }catch(e){ ta.focus(); ta.select();
+      msg(`<div class="fb wa" style="margin-top:10px">자동 복사가 안 됐어요.
+        위 상자의 글자가 선택돼 있으니 길게 눌러 <b>복사</b>를 선택하세요.</div>`);
+    }
+  };
+  const btn=document.getElementById("send");
+  btn.onclick=async()=>{
+    if(!POST_URL) return msg(`<div class="fb wa" style="margin-top:10px">
+      아직 제출 주소가 연결되지 않았어요. 아래 <b>내용 복사</b>를 눌러
+      선생님이 알려준 곳에 붙여넣어 제출하세요.</div>`);
+    if(S.sent&&!confirm("이미 제출했어요. 다시 보낼까요?")) return;
+    btn.disabled=true; btn.textContent="보내는 중… (최대 1분)";
+    msg(`<div class="fb wa" style="margin-top:10px">전송 중이에요. 창을 닫지 마세요.</div>`);
+    try{
+      const j=await send(payload());
+      S.sent=true; S.receipt=String(j.row||"");
+      S.sid="";                    // 다음에 더 풀고 다시 내면 새 줄로 기록된다
+      save(); drawSteps();
+      msg(`<div class="fb ok" style="margin-top:10px">제출 완료 ·
+        <b>접수번호 ${esc(S.receipt)}</b> 👏<br>수고했어요!</div>`);
+      btn.textContent="다시 제출하기";
+    }catch(e){
+      msg(`<div class="fb no" style="margin-top:10px">전송에 실패했어요 (${esc(e.message)}).
+        아래 <b>내용 복사</b>를 눌러 선생님께 전달해 주세요.</div>`);
+      btn.textContent="다시 시도";
+    }
+    btn.disabled=false;
+  };
+  document.getElementById("reset").onclick=()=>{
+    if(confirm("점수·오답 기록·돌아보기 글이 모두 지워지고 되돌릴 수 없어요.\n제출을 안 했다면 선생님께 아무것도 전달되지 않습니다.\n정말 지울까요?")){
+      LS.del(KEY); location.reload();
+    }
+  };
+}
+
+// ════ 시작 ═════════════════════════════════════════════════
+(function boot(){
+  // 데이터 자가검증 — 교사가 단원을 바꿀 때 조용히 깨지는 것을 막는다
+  const bad=[];
+  CHUNKS.forEach(c=>{ if(!WORDS.some(w=>w.w===c[2])) bad.push("연어 기준단어 없음: "+c[2]);
+                      if(c[0].indexOf("______")<0) bad.push("빈칸 없음: "+c[0]); });
+  TRANSFER.forEach(t=>{ if(t[5].length!==3) bad.push("오답 3개 아님: "+t[0]);
+                        if(t[3].indexOf(t[0])<0) bad.push("문장에 단어 없음: "+t[0]); });
+  if(bad.length){ document.body.innerHTML=
+    "<pre style='padding:20px;white-space:pre-wrap'>⚠ 데이터 오류\n\n"+bad.join("\n")+"</pre>"; return; }
+  drawSteps();
+  open(S.name?(S.pre?2:1):0);
+})();
+</script>
