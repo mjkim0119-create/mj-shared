@@ -1,0 +1,751 @@
+<title>온라인교무실 접속 준비</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --paper:#ffffff;
+    --ground:#eef1f6;
+    --ink:#15181e;
+    --ink-2:#3d4552;
+    --muted:#6b7484;
+    --line:#d9dee7;
+    --line-soft:#e9edf3;
+    --red:#c8102e;
+    --red-soft:#fdecef;
+    --amber:#8a5a00;
+    --amber-soft:#fdf4e3;
+    --shadow:0 1px 2px rgba(20,26,40,.06),0 8px 24px rgba(20,26,40,.07);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#171a21;
+      --ground:#0f1116;
+      --ink:#eef1f6;
+      --ink-2:#c2c9d6;
+      --muted:#8b94a4;
+      --line:#2b313c;
+      --line-soft:#232935;
+      --red:#ff5f74;
+      --red-soft:#331920;
+      --amber:#e8b45c;
+      --amber-soft:#2a2213;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#171a21;
+    --ground:#0f1116;
+    --ink:#eef1f6;
+    --ink-2:#c2c9d6;
+    --muted:#8b94a4;
+    --line:#2b313c;
+    --line-soft:#232935;
+    --red:#ff5f74;
+    --red-soft:#331920;
+    --amber:#e8b45c;
+    --amber-soft:#2a2213;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--ground);
+    color:var(--ink);
+    font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    font-size:16px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .sheet{max-width:980px;margin:0 auto;padding:0 20px 80px}
+
+  /* ---------- header ---------- */
+  header{padding:56px 0 36px}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12px;letter-spacing:.14em;
+    color:var(--red);font-weight:600;margin:0 0 14px;
+  }
+  h1{
+    font-size:clamp(28px,4.6vw,42px);line-height:1.28;font-weight:700;
+    letter-spacing:-.02em;margin:0 0 16px;text-wrap:balance;
+  }
+  .lede{font-size:17px;color:var(--ink-2);max-width:60ch;margin:0}
+  .lede b{color:var(--ink);font-weight:600}
+  .meta{
+    display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:24px;
+    padding-top:20px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--muted);
+  }
+  .meta b{color:var(--ink-2);font-weight:600}
+
+  /* ---------- part ---------- */
+  .part{margin-top:56px}
+  .part-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+  .part-num{
+    font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:600;
+    color:var(--paper);background:var(--ink);
+    padding:3px 9px;border-radius:4px;letter-spacing:.04em;flex:none;
+  }
+  .part-head h2{font-size:24px;font-weight:700;letter-spacing:-.01em;margin:0}
+  .part-note{color:var(--muted);font-size:14px;margin:0 0 28px;padding-left:2px}
+  .part-note b{color:var(--ink-2);font-weight:600}
+
+  /* ---------- step ---------- */
+  .step{
+    background:var(--paper);border:1px solid var(--line);border-radius:10px;
+    box-shadow:var(--shadow);padding:26px 30px 30px;margin-bottom:18px;
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);
+    gap:30px;align-items:center;
+  }
+  .step.solo{grid-template-columns:1fr}
+  @media (max-width:780px){ .step{grid-template-columns:1fr;gap:22px;padding:22px} }
+
+  .say{min-width:0}
+  .n{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:30px;height:30px;border-radius:50%;
+    background:var(--red);color:#fff;
+    font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:15px;
+    margin-bottom:12px;
+  }
+  .say h3{font-size:18px;font-weight:600;margin:0 0 9px;line-height:1.5;letter-spacing:-.01em}
+  .say p{margin:0 0 8px;color:var(--ink-2);font-size:15px}
+  .say p:last-child{margin-bottom:0}
+  .say strong{font-weight:600;color:var(--ink);background:var(--red-soft);
+    padding:1px 5px;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  .say b{color:var(--ink);font-weight:600}
+  .tip{
+    margin-top:13px;font-size:13.5px;color:var(--ink-2);line-height:1.6;
+    background:var(--amber-soft);border-left:3px solid var(--amber);
+    padding:10px 13px;border-radius:0 5px 5px 0;
+  }
+  .tip b{color:var(--amber);font-weight:600}
+
+  .shot{min-width:0;padding:18px 0}
+
+  /* ---------- annotation ---------- */
+  .hl{
+    position:relative;
+    outline:2.5px solid var(--red);outline-offset:2px;
+    border-radius:6px;
+  }
+  .cue{
+    position:absolute;z-index:6;
+    font-family:"IBM Plex Sans KR",sans-serif;
+    font-size:11.5px;font-weight:600;line-height:1.5;
+    color:#fff;background:var(--red);
+    padding:2px 9px;border-radius:20px;white-space:nowrap;
+    box-shadow:0 2px 7px rgba(0,0,0,.28);
+  }
+  .cue.above{left:50%;bottom:calc(100% + 9px);transform:translateX(-50%)}
+  .cue.below{left:50%;top:calc(100% + 9px);transform:translateX(-50%)}
+  .cue.right{left:calc(100% + 13px);top:50%;transform:translateY(-50%)}
+  .cue.inside{right:7px;top:50%;transform:translateY(-50%)}
+
+  /* ---------- UI mockups (fixed light: they represent screenshots) ---------- */
+  .win,.bubble,.menu,.submenu,.dlg,.desktop{
+    font-family:"IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;
+    color:#1f2328;
+  }
+  .win{
+    background:#dee3ea;border:1px solid #c4ccd6;border-radius:9px;
+    box-shadow:0 2px 10px rgba(20,26,40,.14);
+  }
+  .win-top{display:flex;align-items:flex-end;gap:6px;padding:7px 9px 0;height:34px}
+  .dots{display:flex;gap:5px;padding-bottom:9px;margin-right:4px}
+  .dots i{width:9px;height:9px;border-radius:50%;background:#b9c1cc;display:block}
+  .tab{
+    background:#f7f9fb;border-radius:7px 7px 0 0;padding:5px 12px;
+    font-size:11.5px;color:#3c4450;max-width:190px;overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap;
+  }
+  .win-bar{
+    display:flex;align-items:center;gap:9px;background:#f7f9fb;
+    padding:9px 11px;border-top:1px solid #e4e9ef;border-radius:0 0 8px 8px;
+  }
+  .nav{color:#6b7484;font-size:13px;letter-spacing:2px;flex:none}
+  .omni{
+    flex:1;min-width:0;background:#eaeef3;border-radius:16px;
+    padding:5px 12px;font-size:11.5px;color:#4a5261;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .kebab{flex:none;color:#3c4450;font-size:16px;line-height:1;padding:0 4px;font-weight:700}
+  .avatar{
+    flex:none;width:26px;height:26px;border-radius:50%;
+    background:#1a73e8;color:#fff;font-size:12px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .avatar.grey{background:#7b8493}
+  .avatar.green{background:#0b8043}
+
+  /* profile bubble */
+  .bubble{
+    background:#fff;border:1px solid #dbe0e8;border-radius:11px;
+    box-shadow:0 6px 22px rgba(20,26,40,.16);width:250px;
+  }
+  .bub-head{padding:16px 16px 13px;text-align:center;border-bottom:1px solid #eef1f5}
+  .bub-head .avatar{width:42px;height:42px;font-size:16px;margin:0 auto 8px}
+  .bub-name{font-size:13.5px;font-weight:600}
+  .bub-mail{font-size:11px;color:#6b7484}
+  .bub-sec{font-size:10.5px;color:#6b7484;padding:11px 16px 4px;font-weight:600}
+  .row{display:flex;align-items:center;gap:11px;padding:9px 16px;font-size:13px}
+  .row .avatar{width:22px;height:22px;font-size:10.5px}
+  .row.add{border-top:1px solid #eef1f5;margin-top:5px;font-weight:500;border-radius:0 0 10px 10px}
+  .plus{
+    width:22px;height:22px;border-radius:50%;border:1px solid #c9d0da;
+    display:flex;align-items:center;justify-content:center;font-size:13px;color:#4a5261;flex:none;
+  }
+
+  /* dropdown menu */
+  .menu,.submenu{
+    background:#fff;border:1px solid #dbe0e8;border-radius:9px;
+    box-shadow:0 6px 22px rgba(20,26,40,.16);padding:6px 0;
+  }
+  .menu{width:225px}
+  .submenu{width:210px}
+  .mrow{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:6px 15px;font-size:12.5px;color:#2b313c;
+  }
+  .mrow.dim{color:#8b94a4}
+  .mrow .car{color:#9aa2b1;font-size:10px}
+  .msep{height:1px;background:#eef1f5;margin:5px 0}
+
+  /* dialog */
+  .dlg{
+    background:#fff;border:1px solid #dbe0e8;border-radius:11px;
+    box-shadow:0 6px 22px rgba(20,26,40,.16);padding:24px 22px;
+    text-align:center;width:280px;
+  }
+  .glogo{font-size:19px;font-weight:600;letter-spacing:-.02em;margin-bottom:4px}
+  .glogo i{font-style:normal}
+  .glogo i:nth-child(1){color:#4285f4}
+  .glogo i:nth-child(2){color:#ea4335}
+  .glogo i:nth-child(3){color:#fbbc05}
+  .glogo i:nth-child(4){color:#4285f4}
+  .glogo i:nth-child(5){color:#34a853}
+  .glogo i:nth-child(6){color:#ea4335}
+  .dlg h4{font-size:14.5px;font-weight:500;margin:8px 0 4px}
+  .dlg .sub{font-size:11.5px;color:#6b7484;margin:0 0 18px;line-height:1.6}
+  .field{
+    border:1px solid #c9d0da;border-radius:5px;padding:11px 13px;
+    font-size:12px;color:#2b313c;text-align:left;margin-bottom:14px;
+  }
+  .btn{
+    display:inline-block;background:#1a73e8;color:#fff;font-size:12px;font-weight:500;
+    padding:8px 20px;border-radius:5px;
+  }
+  .btn.ghost{background:transparent;color:#1a73e8}
+  .dlg-foot{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .swatches{display:flex;gap:9px;justify-content:center;margin-bottom:18px}
+  .swatches i{width:24px;height:24px;border-radius:50%;display:block}
+  .swatches i.on{outline:2px solid #1a73e8;outline-offset:2px}
+
+  /* desktop */
+  .desktop{
+    background:linear-gradient(160deg,#3d5877,#22303f);
+    border-radius:9px;padding:26px 20px;display:flex;gap:14px;justify-content:center;
+    box-shadow:0 2px 10px rgba(20,26,40,.14);
+  }
+  .dicon{text-align:center;width:82px}
+  .dicon .sq{
+    width:50px;height:50px;border-radius:11px;background:#fff;margin:0 auto 8px;
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+    box-shadow:0 2px 6px rgba(0,0,0,.3);
+  }
+  .dicon .lb{font-size:11px;color:#fff;line-height:1.35;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+  .dicon.faint{opacity:.4}
+
+  /* centering helper for narrow mocks */
+  .mid{display:flex;justify-content:center}
+
+  /* taskbar */
+  .stack{display:grid;gap:13px;justify-items:center}
+  .arrow-d{color:var(--muted);font-size:16px;line-height:1}
+  .ctxmenu{
+    background:#fff;border:1px solid #dbe0e8;border-radius:9px;
+    box-shadow:0 6px 22px rgba(20,26,40,.16);padding:6px 0;width:185px;
+  }
+  .taskbar{
+    background:#1c2431;border-radius:9px;padding:9px 14px;
+    display:flex;gap:11px;align-items:center;
+    box-shadow:0 2px 10px rgba(20,26,40,.16);
+  }
+  .tbi{
+    width:33px;height:33px;border-radius:8px;background:#2b3545;
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;color:#c9d2e0;font-style:normal;position:relative;flex:none;
+  }
+  .tbi.on{background:#fff;color:#1a73e8;font-weight:700}
+  .badge{
+    position:absolute;right:-4px;bottom:-4px;width:17px;height:17px;border-radius:50%;
+    background:#1a73e8;color:#fff;font-size:9px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;border:2px solid #1c2431;
+  }
+
+  /* phone cards */
+  .phone-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:620px){ .phone-grid{grid-template-columns:1fr} }
+  .pcard h4{margin:0 0 10px;font-size:16px;font-weight:600}
+  .pcard ol{margin:0;padding-left:20px;font-size:14.5px;color:var(--ink-2)}
+  .pcard li{margin-bottom:6px}
+  .pcard b{color:var(--ink);font-weight:600}
+
+  /* trouble */
+  .trouble{
+    background:var(--paper);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;box-shadow:var(--shadow);
+  }
+  .trouble .tr{
+    display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);
+    gap:22px;padding:16px 24px;border-bottom:1px solid var(--line-soft);
+  }
+  .trouble .tr:last-child{border-bottom:0}
+  @media (max-width:660px){ .trouble .tr{grid-template-columns:1fr;gap:5px} }
+  .trouble .q{font-weight:600;font-size:14.5px}
+  .trouble .a{color:var(--ink-2);font-size:14.5px}
+  .trouble b{color:var(--ink);font-weight:600}
+
+  /* final check */
+  .check{
+    margin-top:46px;background:var(--paper);border:2px solid var(--red);
+    border-radius:10px;padding:26px 30px;
+  }
+  .check h3{margin:0 0 4px;font-size:19px;font-weight:700}
+  .check .sub{margin:0 0 16px;font-size:14px;color:var(--muted)}
+  .check ul{margin:0;padding:0;list-style:none;display:grid;gap:11px}
+  .check li{display:flex;gap:12px;align-items:flex-start;font-size:15.5px;color:var(--ink-2)}
+  .check li i{
+    flex:none;width:19px;height:19px;border:2px solid var(--red);border-radius:4px;
+    margin-top:5px;display:block;
+  }
+  .check b{color:var(--ink);font-weight:600}
+
+  footer{
+    margin-top:52px;padding-top:22px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--muted);display:flex;justify-content:space-between;
+    flex-wrap:wrap;gap:10px;
+  }
+
+  @media print{
+    body{background:#fff}
+    .sheet{max-width:none;padding:0}
+    .step,.check,.trouble,.pcard{break-inside:avoid}
+    .part{break-before:page}
+    header{padding-top:0}
+  }
+</style>
+
+<div class="sheet">
+
+<header>
+  <p class="eyebrow">대전대청중학교 온라인교무실</p>
+  <h1>처음 한 번만 설정하면, 다음부터는 더블클릭</h1>
+  <p class="lede">
+    학교 계정을 크롬에 추가하고 바탕화면에 아이콘을 만드는 안내서입니다.
+    한 번 해두면 다음부터는 <b>바탕화면 아이콘을 더블클릭</b>하는 것으로 끝납니다.
+    처음부터 끝까지 <b>10분</b>이면 충분합니다.
+  </p>
+  <div class="meta">
+    <span><b>준비물</b> 노트북, 학교 구글 계정(@dje.go.kr)</span>
+    <span><b>걸리는 시간</b> 약 10분</span>
+    <span><b>문의</b> 정보부</span>
+  </div>
+</header>
+
+<!-- ===================== PART 1 ===================== -->
+<section class="part">
+  <div class="part-head">
+    <span class="part-num">PART 1</span>
+    <h2>크롬에 학교 계정 추가하기</h2>
+  </div>
+  <p class="part-note">
+    개인 계정과 학교 계정을 <b>따로</b> 씁니다. 섞어 쓰면 나중에 권한이 꼬여 자료가 안 보입니다.
+  </p>
+
+  <div class="step">
+    <div class="say">
+      <div class="n">1</div>
+      <h3>크롬 오른쪽 위, 동그란 <strong>프로필 아이콘</strong>을 클릭합니다</h3>
+      <p>주소창 오른쪽 끝에 있습니다. 사람 모양이거나, 이름 첫 글자가 적힌 동그라미입니다.</p>
+      <div class="tip"><b>안 보이시나요?</b> 크롬 창을 최대화해 보세요. 창이 좁으면 아이콘이 숨습니다.</div>
+    </div>
+    <div class="shot">
+      <div class="win">
+        <div class="win-top">
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div class="tab">새 탭</div>
+        </div>
+        <div class="win-bar">
+          <span class="nav">←→⟳</span>
+          <div class="omni">검색어 또는 웹 주소 입력</div>
+          <span class="kebab">⋮</span>
+          <div class="avatar grey hl">＋<span class="cue above">여기를 클릭</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="say">
+      <div class="n">2</div>
+      <h3>창이 열리면 맨 아래 <strong>＋ 추가</strong>를 클릭합니다</h3>
+      <p>‘다른 프로필’ 아래쪽에 있습니다. 로그인이 아니라 <b>추가</b>입니다.</p>
+      <div class="tip"><b>주의</b> 지금 로그인된 개인 계정을 로그아웃하지 마세요. 그대로 두고 새로 <b>추가</b>합니다.</div>
+    </div>
+    <div class="shot mid">
+      <div class="bubble">
+        <div class="bub-head">
+          <div class="avatar grey">김</div>
+          <div class="bub-name">김○○</div>
+          <div class="bub-mail">개인계정@gmail.com</div>
+        </div>
+        <div class="bub-sec">다른 프로필</div>
+        <div class="row"><span class="avatar green">게</span><span>게스트</span></div>
+        <div class="row add hl"><span class="plus">＋</span><span>추가</span><span class="cue below">클릭</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="say">
+      <div class="n">3</div>
+      <h3>새 창이 뜨면 <strong>로그인</strong>을 클릭합니다</h3>
+      <p>‘Chrome에 오신 것을 환영합니다’ 같은 화면이 나옵니다.</p>
+      <p>왼쪽 ‘계정 없이 계속하기’는 <b>누르지 않습니다.</b></p>
+    </div>
+    <div class="shot mid">
+      <div class="dlg">
+        <div class="glogo"><i>C</i><i>h</i><i>r</i><i>o</i><i>m</i><i>e</i></div>
+        <h4>Chrome에 오신 것을 환영합니다</h4>
+        <p class="sub">계정으로 로그인하면 어느 기기에서든<br>같은 환경으로 쓸 수 있습니다</p>
+        <div class="dlg-foot">
+          <span class="btn ghost">계정 없이 계속하기</span>
+          <span class="btn hl">로그인<span class="cue below">클릭</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="say">
+      <div class="n">4</div>
+      <h3>학교 계정 <strong>@dje.go.kr</strong> 로 로그인합니다</h3>
+      <p>개인 지메일이 아니라 <b>학교에서 발급받은 계정</b>입니다.</p>
+      <p>아이디 입력 → 다음 → 비밀번호 입력 → 다음</p>
+      <div class="tip"><b>비밀번호를 모르시면</b> 정보부에 문의하세요. 첫 로그인 때는 비밀번호를 새로 정하라는 화면이 나올 수 있습니다.</div>
+    </div>
+    <div class="shot mid">
+      <div class="dlg">
+        <div class="glogo"><i>G</i><i>o</i><i>o</i><i>g</i><i>l</i><i>e</i></div>
+        <h4>로그인</h4>
+        <p class="sub">Chrome으로 이동</p>
+        <div class="field hl">t_djdcms000@dje.go.kr<span class="cue inside">학교 계정</span></div>
+        <div class="dlg-foot">
+          <span class="btn ghost">계정 찾기</span>
+          <span class="btn">다음</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="say">
+      <div class="n">5</div>
+      <h3>프로필 이름을 <strong>학교</strong>로 바꾸고, 색을 정합니다</h3>
+      <p>‘동기화 사용’ 또는 ‘예’를 누르면 이름과 색을 고르는 화면이 나옵니다.</p>
+      <p>색을 <b>개인 계정과 확실히 다르게</b> 정하세요. 지금 어느 계정으로 쓰는 중인지 한눈에 보입니다.</p>
+    </div>
+    <div class="shot mid">
+      <div class="dlg">
+        <h4 style="margin-top:0">프로필 맞춤설정</h4>
+        <p class="sub">이 프로필의 이름과 색을 정하세요</p>
+        <div class="field hl">학교<span class="cue inside">이름 바꾸기</span></div>
+        <div class="swatches">
+          <i class="on" style="background:#1a73e8"></i>
+          <i style="background:#0b8043"></i>
+          <i style="background:#e37400"></i>
+          <i style="background:#9334e6"></i>
+        </div>
+        <span class="btn">완료</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="say">
+      <div class="n">6</div>
+      <h3>확인 — 오른쪽 위 아이콘이 <strong>학교 계정</strong>으로 바뀌었나요?</h3>
+      <p>새 창이 하나 더 열리고, 그 창의 오른쪽 위 아이콘이 방금 정한 색으로 보이면 성공입니다.</p>
+      <p><b>앞으로 온라인교무실은 이 창에서 씁니다.</b></p>
+    </div>
+    <div class="shot">
+      <div class="win">
+        <div class="win-top">
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div class="tab">대전대청중 온라인교무실</div>
+        </div>
+        <div class="win-bar">
+          <span class="nav">←→⟳</span>
+          <div class="omni">sites.google.com/dje.go.kr/daecheong</div>
+          <span class="kebab">⋮</span>
+          <div class="avatar hl">학<span class="cue above">학교 계정으로 바뀜</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="say">
+      <div class="n">7</div>
+      <h3>한 걸음 더 — <strong>작업 표시줄에 고정</strong>해 두기</h3>
+      <p>프로필을 만들면 바탕화면에 <b>학교</b> 아이콘이 함께 생깁니다.
+         그 아이콘을 <b>오른쪽 클릭 → 작업 표시줄에 고정</b>.</p>
+      <p>이제 바탕화면까지 갈 필요 없이, <b>화면 맨 아래에서 바로</b> 학교 계정 크롬을 엽니다.
+         아이콘에 작은 <b>프로필 표시</b>가 붙어 있어 개인 계정과 헷갈리지 않습니다.</p>
+      <div class="tip"><b>맥을 쓰신다면</b> Dock의 크롬 아이콘을 오른쪽 클릭 → <b>옵션 → Dock에 유지</b>를 선택하세요.</div>
+    </div>
+    <div class="shot">
+      <div class="stack">
+        <div class="ctxmenu">
+          <div class="mrow dim">열기</div>
+          <div class="mrow dim">새 창</div>
+          <div class="msep"></div>
+          <div class="mrow hl">작업 표시줄에 고정<span class="cue right">클릭</span></div>
+          <div class="mrow dim">속성</div>
+        </div>
+        <span class="arrow-d">▼</span>
+        <div class="taskbar">
+          <i class="tbi">⊞</i>
+          <i class="tbi">🔍</i>
+          <i class="tbi">📁</i>
+          <i class="tbi on hl">C<span class="badge">학</span><span class="cue right">고정 완료</span></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PART 2 ===================== -->
+<section class="part">
+  <div class="part-head">
+    <span class="part-num">PART 2</span>
+    <h2>바탕화면에 바로가기 만들기</h2>
+  </div>
+  <p class="part-note">
+    주소를 외울 필요가 없어집니다. <b>이 5분이 실제로 쓰게 되느냐 마느냐를 가릅니다.</b>
+  </p>
+
+  <div class="step">
+    <div class="say">
+      <div class="n">1</div>
+      <h3>학교 계정 창에서 <strong>온라인교무실</strong>을 엽니다</h3>
+      <p>PART 1에서 만든 창이 맞는지 먼저 확인하세요. 오른쪽 위 아이콘이 학교 계정이어야 합니다.</p>
+      <p>주소는 정보부에서 안내한 링크를 쓰시면 됩니다.</p>
+    </div>
+    <div class="shot">
+      <div class="win">
+        <div class="win-top">
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div class="tab">대전대청중 온라인교무실</div>
+        </div>
+        <div class="win-bar">
+          <span class="nav">←→⟳</span>
+          <div class="omni hl">sites.google.com/dje.go.kr/daecheong<span class="cue below">학교 온라인교무실 주소</span></div>
+          <span class="kebab">⋮</span>
+          <div class="avatar">학</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="say">
+      <div class="n">2</div>
+      <h3>오른쪽 위 <strong>⋮</strong> (점 세 개)를 클릭합니다</h3>
+      <p>프로필 아이콘 <b>바로 왼쪽</b>에 있습니다.</p>
+    </div>
+    <div class="shot">
+      <div class="win">
+        <div class="win-top">
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div class="tab">대전대청중 온라인교무실</div>
+        </div>
+        <div class="win-bar">
+          <span class="nav">←→⟳</span>
+          <div class="omni">sites.google.com/dje.go.kr/daecheong</div>
+          <span class="kebab hl">⋮<span class="cue above">점 세 개</span></span>
+          <div class="avatar">학</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="say">
+      <div class="n">3</div>
+      <h3><strong>저장 및 공유</strong>에 마우스를 올립니다</h3>
+      <p>클릭이 아니라 <b>올려놓기만</b> 하면 옆으로 메뉴가 하나 더 펼쳐집니다.</p>
+      <div class="tip"><b>이름이 다를 수 있어요.</b> 크롬 버전에 따라 <b>‘캐스트, 저장 및 공유’</b>로 보이기도 합니다. 같은 메뉴입니다.</div>
+    </div>
+    <div class="shot mid">
+      <div class="menu">
+        <div class="mrow dim">새 탭</div>
+        <div class="mrow dim">새 창</div>
+        <div class="msep"></div>
+        <div class="mrow dim">방문 기록 <span class="car">▸</span></div>
+        <div class="mrow dim">다운로드</div>
+        <div class="mrow dim">북마크 <span class="car">▸</span></div>
+        <div class="msep"></div>
+        <div class="mrow hl">저장 및 공유 <span class="car">▸</span><span class="cue below">마우스 올리기</span></div>
+        <div class="mrow dim">확대/축소</div>
+        <div class="mrow dim">인쇄…</div>
+        <div class="msep"></div>
+        <div class="mrow dim">설정</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="say">
+      <div class="n">4</div>
+      <h3>펼쳐진 메뉴에서 <strong>바로가기 만들기…</strong>를 클릭합니다</h3>
+      <p>‘페이지를 북마크에 추가’가 아닙니다. 북마크는 크롬 안에만 생기고, <b>바로가기는 바탕화면에</b> 생깁니다.</p>
+    </div>
+    <div class="shot mid">
+      <div class="submenu">
+        <div class="mrow dim">페이지를 북마크에 추가…</div>
+        <div class="mrow dim">모든 탭을 북마크에 추가…</div>
+        <div class="msep"></div>
+        <div class="mrow hl">바로가기 만들기…<span class="cue below">클릭</span></div>
+        <div class="mrow dim">페이지를 QR 코드로 만들기</div>
+        <div class="mrow dim">페이지를 PDF로 저장…</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="say">
+      <div class="n">5</div>
+      <h3>이름을 <strong>온라인교무실</strong>로 바꾸고 <strong>만들기</strong></h3>
+      <p>기본 이름이 길게 나와 있으면 지우고 짧게 바꾸세요. 바탕화면에서 알아보기 쉽습니다.</p>
+      <p>‘창으로 열기’는 체크하지 않아도 됩니다.</p>
+    </div>
+    <div class="shot mid">
+      <div class="dlg" style="text-align:left">
+        <h4 style="margin-top:0">바로가기 만들기</h4>
+        <div class="field hl">온라인교무실<span class="cue inside">짧게</span></div>
+        <p class="sub" style="margin-bottom:16px">☐ 창으로 열기</p>
+        <div style="display:flex;gap:9px;justify-content:flex-end">
+          <span class="btn ghost">취소</span>
+          <span class="btn">만들기</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="say">
+      <div class="n">6</div>
+      <h3>바탕화면에 아이콘이 생겼는지 확인합니다</h3>
+      <p>모든 창을 내리고 바탕화면을 보세요. <b>온라인교무실</b> 아이콘이 있으면 끝입니다.</p>
+      <p><b>이제부터는 이 아이콘만 더블클릭하면 됩니다.</b></p>
+      <div class="tip"><b>여기도 고정해 두세요.</b> 이 아이콘을 오른쪽 클릭 → <b>작업 표시줄에 고정</b>하면,
+        바탕화면을 거치지 않고 온라인교무실이 한 번에 열립니다.</div>
+    </div>
+    <div class="shot">
+      <div class="desktop">
+        <div class="dicon faint"><div class="sq">📁</div><div class="lb">내 문서</div></div>
+        <div class="dicon"><div class="sq hl">🏫<span class="cue above">생겼습니다</span></div><div class="lb">온라인교무실</div></div>
+        <div class="dicon faint"><div class="sq">🗑</div><div class="lb">휴지통</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PART 3 ===================== -->
+<section class="part">
+  <div class="part-head">
+    <span class="part-num">PART 3</span>
+    <h2>휴대폰에도 넣어두기</h2>
+  </div>
+  <p class="part-note">
+    출장 중이거나 교실에 있을 때 유용합니다. <b>선택 사항이니 안 하셔도 됩니다.</b>
+  </p>
+
+  <div class="step solo">
+    <div class="phone-grid">
+      <div class="pcard">
+        <h4>아이폰 · Safari</h4>
+        <ol>
+          <li>사파리로 온라인교무실 주소 열기</li>
+          <li>화면 아래 <b>공유 버튼</b>(↑ 모양) 누르기</li>
+          <li>목록을 내려서 <b>홈 화면에 추가</b></li>
+          <li>이름을 <b>온라인교무실</b>로 → 추가</li>
+        </ol>
+      </div>
+      <div class="pcard">
+        <h4>안드로이드 · Chrome</h4>
+        <ol>
+          <li>크롬으로 온라인교무실 주소 열기</li>
+          <li>오른쪽 위 <b>⋮</b> 누르기</li>
+          <li><b>홈 화면에 추가</b> 누르기</li>
+          <li>이름을 <b>온라인교무실</b>로 → 추가</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 막혔을 때 ===================== -->
+<section class="part">
+  <div class="part-head">
+    <span class="part-num">막혔을 때</span>
+    <h2>자주 막히는 지점</h2>
+  </div>
+  <div class="trouble">
+    <div class="tr">
+      <div class="q">프로필 아이콘이 안 보여요</div>
+      <div class="a">크롬 창을 최대화해 보세요. 창이 좁으면 아이콘이 숨습니다.</div>
+    </div>
+    <div class="tr">
+      <div class="q">학교 계정 비밀번호를 모릅니다</div>
+      <div class="a">정보부에 문의하세요. 첫 로그인이면 비밀번호를 새로 정하라는 화면이 나옵니다.</div>
+    </div>
+    <div class="tr">
+      <div class="q">이미 크롬에 로그인이 돼 있는데요</div>
+      <div class="a">그건 개인 계정일 가능성이 높습니다. 로그아웃하지 마시고, PART 1의 <b>＋ 추가</b>로 학교 계정을 <b>따로</b> 만드세요.</div>
+    </div>
+    <div class="tr">
+      <div class="q">‘바로가기 만들기’ 메뉴가 없어요</div>
+      <div class="a">크롬 버전에 따라 <b>‘캐스트, 저장 및 공유’</b> 안에 있습니다. 그래도 없으면 크롬을 최신 버전으로 업데이트해 주세요.</div>
+    </div>
+    <div class="tr">
+      <div class="q">사이트에 들어갔더니 “권한이 없습니다”</div>
+      <div class="a">개인 계정으로 접속하셨을 확률이 높습니다. 오른쪽 위 아이콘이 <b>학교 계정</b>인지 확인하세요. 그래도 안 되면 정보부에 권한을 요청하시면 됩니다.</div>
+    </div>
+    <div class="tr">
+      <div class="q">엣지(Edge)를 쓰는데요</div>
+      <div class="a">가능하지만 메뉴 이름이 다릅니다. 이 안내서대로 하시려면 크롬을 쓰시는 편이 편합니다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 확인 ===================== -->
+<div class="check">
+  <h3>다 하셨으면 세 가지만 확인해 주세요</h3>
+  <p class="sub">이 세 개가 되면 설정은 끝난 겁니다.</p>
+  <ul>
+    <li><i></i><span>크롬 오른쪽 위 아이콘이 <b>학교 계정</b>으로 보인다</span></li>
+    <li><i></i><span>바탕화면에 <b>온라인교무실</b> 아이콘이 있다</span></li>
+    <li><i></i><span>그 아이콘을 더블클릭하면 <b>바로 사이트가 열린다</b> (로그인 화면이 뜨지 않는다)</span></li>
+  </ul>
+</div>
+
+<footer>
+  <span>대전대청중학교 온라인교무실 · 전입 교사 안내용</span>
+  <span>안내 김민주 (대전동화중학교)</span>
+</footer>
+
+</div>
